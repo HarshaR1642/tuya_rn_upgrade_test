@@ -1,0 +1,956 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		93D1D55123FE9628007D33C0 /* TuyaRNActivatorModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D51223FE9628007D33C0 /* TuyaRNActivatorModule.m */; };
+		93D1D55223FE9628007D33C0 /* TuyaRNHomeMemberModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D51623FE9628007D33C0 /* TuyaRNHomeMemberModule.m */; };
+		93D1D55323FE9628007D33C0 /* TuyaRNHomeManagerModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D51823FE9628007D33C0 /* TuyaRNHomeManagerModule.m */; };
+		93D1D55423FE9628007D33C0 /* TuyaRNHomeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D51A23FE9628007D33C0 /* TuyaRNHomeModule.m */; };
+		93D1D55523FE9628007D33C0 /* TuyaRNHomeDataManagerModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D51B23FE9628007D33C0 /* TuyaRNHomeDataManagerModule.m */; };
+		93D1D55623FE9628007D33C0 /* TuyaRNShareModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D51E23FE9628007D33C0 /* TuyaRNShareModule.m */; };
+		93D1D55723FE9628007D33C0 /* TuyaRNDeviceModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D52123FE9628007D33C0 /* TuyaRNDeviceModule.m */; };
+		93D1D55823FE9628007D33C0 /* TuyaRNRoomModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D52423FE9628007D33C0 /* TuyaRNRoomModule.m */; };
+		93D1D55923FE9628007D33C0 /* TuyaRNCoreModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D52623FE9628007D33C0 /* TuyaRNCoreModule.m */; };
+		93D1D55A23FE9628007D33C0 /* TuyaRNGroupModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D52923FE9628007D33C0 /* TuyaRNGroupModule.m */; };
+		93D1D55B23FE9628007D33C0 /* TuyaRNTimerModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D52C23FE9628007D33C0 /* TuyaRNTimerModule.m */; };
+		93D1D55C23FE9628007D33C0 /* TuyaRNMessageModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D52F23FE9628007D33C0 /* TuyaRNMessageModule.m */; };
+		93D1D55D23FE9628007D33C0 /* TuyaRNHomeListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D53523FE9628007D33C0 /* TuyaRNHomeListener.m */; };
+		93D1D55E23FE9628007D33C0 /* TuyaRNDeviceListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D53823FE9628007D33C0 /* TuyaRNDeviceListener.m */; };
+		93D1D55F23FE9628007D33C0 /* TuyaRNEventEmitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D53A23FE9628007D33C0 /* TuyaRNEventEmitter.m */; };
+		93D1D56023FE9628007D33C0 /* TuyaRNHomeManagerListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D53B23FE9628007D33C0 /* TuyaRNHomeManagerListener.m */; };
+		93D1D56123FE9628007D33C0 /* TuyaRNGroupListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D53C23FE9628007D33C0 /* TuyaRNGroupListener.m */; };
+		93D1D56223FE9628007D33C0 /* TuyaRNUtils+Cache.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D53D23FE9628007D33C0 /* TuyaRNUtils+Cache.m */; };
+		93D1D56323FE9628007D33C0 /* TuyaRNUtils+Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D53E23FE9628007D33C0 /* TuyaRNUtils+Network.m */; };
+		93D1D56423FE9628007D33C0 /* TuyaRNUtils+DeviceParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D53F23FE9628007D33C0 /* TuyaRNUtils+DeviceParser.m */; };
+		93D1D56523FE9628007D33C0 /* TuyaRNUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D54423FE9628007D33C0 /* TuyaRNUtils.m */; };
+		93D1D56623FE9628007D33C0 /* TuyaRNUserModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D54623FE9628007D33C0 /* TuyaRNUserModule.m */; };
+		93D1D56723FE9628007D33C0 /* TuyaRNFeedBackModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D54923FE9628007D33C0 /* TuyaRNFeedBackModule.m */; };
+		93D1D56823FE9628007D33C0 /* TuyaRNSceneModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D54C23FE9628007D33C0 /* TuyaRNSceneModule.m */; };
+		93D1D56923FE9628007D33C0 /* TuyaRNGatewayModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D1D55023FE9628007D33C0 /* TuyaRNGatewayModule.m */; };
+		A973FDE7257F42B00011F8FC /* TuyaSmartCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD60257F42B00011F8FC /* TuyaSmartCamera.m */; };
+		A973FDE8257F42B00011F8FC /* TuyaAppProgressUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD62257F42B00011F8FC /* TuyaAppProgressUtils.m */; };
+		A973FDE9257F42B00011F8FC /* UIViewController+TuyaAppCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD63257F42B00011F8FC /* UIViewController+TuyaAppCategory.m */; };
+		A973FDEA257F42B00011F8FC /* TuyaAppViewUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD65257F42B00011F8FC /* TuyaAppViewUtil.m */; };
+		A973FDEB257F42B00011F8FC /* TuyaAppUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD66257F42B00011F8FC /* TuyaAppUtils.m */; };
+		A973FDEC257F42B00011F8FC /* TuyaAppTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD67257F42B00011F8FC /* TuyaAppTheme.m */; };
+		A973FDED257F42B00011F8FC /* TuyaAppPermissionUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD69257F42B00011F8FC /* TuyaAppPermissionUtil.m */; };
+		A973FDEE257F42B00011F8FC /* TuyaAppCameraTimeLineModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD6F257F42B00011F8FC /* TuyaAppCameraTimeLineModel.m */; };
+		A973FDEF257F42B00011F8FC /* TuyaSmartCloudTimePieceModel+Timeline.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD70257F42B00011F8FC /* TuyaSmartCloudTimePieceModel+Timeline.m */; };
+		A973FDF0257F42B10011F8FC /* TuyaSmartCameraService.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD73257F42B00011F8FC /* TuyaSmartCameraService.m */; };
+		A973FDF1257F42B10011F8FC /* TuysAppCameraSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD75257F42B00011F8FC /* TuysAppCameraSettingViewController.m */; };
+		A973FDF2257F42B10011F8FC /* TuyaAppCameraMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD78257F42B00011F8FC /* TuyaAppCameraMessageViewController.m */; };
+		A973FDF3257F42B10011F8FC /* TuyaAppCameraPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD79257F42B00011F8FC /* TuyaAppCameraPlaybackViewController.m */; };
+		A973FDF4257F42B10011F8FC /* TuyaAppCameraSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD7C257F42B00011F8FC /* TuyaAppCameraSettingViewController.m */; };
+		A973FDF5257F42B10011F8FC /* TuyaAppCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD7E257F42B00011F8FC /* TuyaAppCameraViewController.m */; };
+		A973FDF6257F42B10011F8FC /* TuyaAppCameraSDCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD80257F42B00011F8FC /* TuyaAppCameraSDCardViewController.m */; };
+		A973FDF7257F42B10011F8FC /* TuyaAppBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD82257F42B00011F8FC /* TuyaAppBaseViewController.m */; };
+		A973FDF8257F42B10011F8FC /* TuyaAppCameraCloudViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD84257F42B00011F8FC /* TuyaAppCameraCloudViewController.m */; };
+		A973FDF9257F42B10011F8FC /* TuyaAppCameraCalendarCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD8A257F42B00011F8FC /* TuyaAppCameraCalendarCollectionViewCell.m */; };
+		A973FDFA257F42B10011F8FC /* TuyaSmartCameraControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD8B257F42B00011F8FC /* TuyaSmartCameraControlView.m */; };
+		A973FDFB257F42B10011F8FC /* TuyaAppCameraCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD8C257F42B00011F8FC /* TuyaAppCameraCalendarView.m */; };
+		A973FDFC257F42B10011F8FC /* TuyaAppCameraRecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD8D257F42B00011F8FC /* TuyaAppCameraRecordCell.m */; };
+		A973FDFD257F42B10011F8FC /* TuyaAppCloudDayCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD90257F42B00011F8FC /* TuyaAppCloudDayCollectionViewCell.m */; };
+		A973FDFE257F42B10011F8FC /* TuyaAppBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD95257F42B00011F8FC /* TuyaAppBaseView.m */; };
+		A973FDFF257F42B10011F8FC /* TuyaSmartCameraControlButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD96257F42B00011F8FC /* TuyaSmartCameraControlButton.m */; };
+		A973FE00257F42B10011F8FC /* TuyaSmartSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD97257F42B00011F8FC /* TuyaSmartSwitchCell.m */; };
+		A973FE01257F42B10011F8FC /* TuyaAppDownloadingProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD99257F42B00011F8FC /* TuyaAppDownloadingProgressView.m */; };
+		A973FE02257F42B10011F8FC /* TuyaAppEmptyView.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD9A257F42B00011F8FC /* TuyaAppEmptyView.m */; };
+		A973FE03257F42B10011F8FC /* TuyaAppCameraRecordListView.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FD9E257F42B00011F8FC /* TuyaAppCameraRecordListView.m */; };
+		A973FE04257F42B10011F8FC /* TuyaAppBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FDA0257F42B00011F8FC /* TuyaAppBarButtonItem.m */; };
+		A973FE05257F42B10011F8FC /* TuyaAppItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FDA2257F42B00011F8FC /* TuyaAppItemView.m */; };
+		A973FE06257F42B10011F8FC /* TuyaAppCellViewItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FDA3257F42B00011F8FC /* TuyaAppCellViewItem.m */; };
+		A973FE07257F42B10011F8FC /* TuyaAppTopBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FDA5257F42B00011F8FC /* TuyaAppTopBarView.m */; };
+		A973FE08257F42B10011F8FC /* UIView+TuyaAppAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FDA7257F42B00011F8FC /* UIView+TuyaAppAdditions.m */; };
+		A973FE09257F42B10011F8FC /* TuyaAppCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FDA8257F42B00011F8FC /* TuyaAppCellView.m */; };
+		A973FE0A257F42B10011F8FC /* TuyaAppLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = A973FDAB257F42B00011F8FC /* TuyaAppLoadingView.m */; };
+		A9CEB8D62577AEC8009DCE07 /* TuyaCameraModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CEB8D52577AEC8009DCE07 /* TuyaCameraModule.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		58B511D91A9E6C8500147676 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		134814201AA4EA6300B7C361 /* libRNTuyaSdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNTuyaSdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		93D1D51123FE9628007D33C0 /* TuyaRNActivatorModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNActivatorModule.h; sourceTree = "<group>"; };
+		93D1D51223FE9628007D33C0 /* TuyaRNActivatorModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNActivatorModule.m; sourceTree = "<group>"; };
+		93D1D51423FE9628007D33C0 /* TuyaRNHomeManagerModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNHomeManagerModule.h; sourceTree = "<group>"; };
+		93D1D51523FE9628007D33C0 /* TuyaRNHomeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNHomeModule.h; sourceTree = "<group>"; };
+		93D1D51623FE9628007D33C0 /* TuyaRNHomeMemberModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNHomeMemberModule.m; sourceTree = "<group>"; };
+		93D1D51723FE9628007D33C0 /* TuyaRNHomeDataManagerModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNHomeDataManagerModule.h; sourceTree = "<group>"; };
+		93D1D51823FE9628007D33C0 /* TuyaRNHomeManagerModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNHomeManagerModule.m; sourceTree = "<group>"; };
+		93D1D51923FE9628007D33C0 /* TuyaRNHomeMemberModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNHomeMemberModule.h; sourceTree = "<group>"; };
+		93D1D51A23FE9628007D33C0 /* TuyaRNHomeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNHomeModule.m; sourceTree = "<group>"; };
+		93D1D51B23FE9628007D33C0 /* TuyaRNHomeDataManagerModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNHomeDataManagerModule.m; sourceTree = "<group>"; };
+		93D1D51D23FE9628007D33C0 /* TuyaRNShareModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNShareModule.h; sourceTree = "<group>"; };
+		93D1D51E23FE9628007D33C0 /* TuyaRNShareModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNShareModule.m; sourceTree = "<group>"; };
+		93D1D52023FE9628007D33C0 /* TuyaRNDeviceModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNDeviceModule.h; sourceTree = "<group>"; };
+		93D1D52123FE9628007D33C0 /* TuyaRNDeviceModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNDeviceModule.m; sourceTree = "<group>"; };
+		93D1D52323FE9628007D33C0 /* TuyaRNRoomModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNRoomModule.h; sourceTree = "<group>"; };
+		93D1D52423FE9628007D33C0 /* TuyaRNRoomModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNRoomModule.m; sourceTree = "<group>"; };
+		93D1D52623FE9628007D33C0 /* TuyaRNCoreModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNCoreModule.m; sourceTree = "<group>"; };
+		93D1D52723FE9628007D33C0 /* TuyaRNCoreModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNCoreModule.h; sourceTree = "<group>"; };
+		93D1D52923FE9628007D33C0 /* TuyaRNGroupModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNGroupModule.m; sourceTree = "<group>"; };
+		93D1D52A23FE9628007D33C0 /* TuyaRNGroupModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNGroupModule.h; sourceTree = "<group>"; };
+		93D1D52C23FE9628007D33C0 /* TuyaRNTimerModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNTimerModule.m; sourceTree = "<group>"; };
+		93D1D52D23FE9628007D33C0 /* TuyaRNTimerModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNTimerModule.h; sourceTree = "<group>"; };
+		93D1D52F23FE9628007D33C0 /* TuyaRNMessageModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNMessageModule.m; sourceTree = "<group>"; };
+		93D1D53023FE9628007D33C0 /* TuyaRNMessageModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNMessageModule.h; sourceTree = "<group>"; };
+		93D1D53323FE9628007D33C0 /* TuyaRNEventEmitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNEventEmitter.h; sourceTree = "<group>"; };
+		93D1D53423FE9628007D33C0 /* TuyaRNDeviceListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNDeviceListener.h; sourceTree = "<group>"; };
+		93D1D53523FE9628007D33C0 /* TuyaRNHomeListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNHomeListener.m; sourceTree = "<group>"; };
+		93D1D53623FE9628007D33C0 /* TuyaRNGroupListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNGroupListener.h; sourceTree = "<group>"; };
+		93D1D53723FE9628007D33C0 /* TuyaRNHomeManagerListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNHomeManagerListener.h; sourceTree = "<group>"; };
+		93D1D53823FE9628007D33C0 /* TuyaRNDeviceListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNDeviceListener.m; sourceTree = "<group>"; };
+		93D1D53923FE9628007D33C0 /* TuyaRNHomeListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNHomeListener.h; sourceTree = "<group>"; };
+		93D1D53A23FE9628007D33C0 /* TuyaRNEventEmitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNEventEmitter.m; sourceTree = "<group>"; };
+		93D1D53B23FE9628007D33C0 /* TuyaRNHomeManagerListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNHomeManagerListener.m; sourceTree = "<group>"; };
+		93D1D53C23FE9628007D33C0 /* TuyaRNGroupListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNGroupListener.m; sourceTree = "<group>"; };
+		93D1D53D23FE9628007D33C0 /* TuyaRNUtils+Cache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TuyaRNUtils+Cache.m"; sourceTree = "<group>"; };
+		93D1D53E23FE9628007D33C0 /* TuyaRNUtils+Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TuyaRNUtils+Network.m"; sourceTree = "<group>"; };
+		93D1D53F23FE9628007D33C0 /* TuyaRNUtils+DeviceParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TuyaRNUtils+DeviceParser.m"; sourceTree = "<group>"; };
+		93D1D54023FE9628007D33C0 /* TuyaRNUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNUtils.h; sourceTree = "<group>"; };
+		93D1D54123FE9628007D33C0 /* TuyaRNUtils+Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TuyaRNUtils+Network.h"; sourceTree = "<group>"; };
+		93D1D54223FE9628007D33C0 /* TuyaRNUtils+Cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TuyaRNUtils+Cache.h"; sourceTree = "<group>"; };
+		93D1D54323FE9628007D33C0 /* TuyaRNUtils+DeviceParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TuyaRNUtils+DeviceParser.h"; sourceTree = "<group>"; };
+		93D1D54423FE9628007D33C0 /* TuyaRNUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNUtils.m; sourceTree = "<group>"; };
+		93D1D54623FE9628007D33C0 /* TuyaRNUserModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNUserModule.m; sourceTree = "<group>"; };
+		93D1D54723FE9628007D33C0 /* TuyaRNUserModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNUserModule.h; sourceTree = "<group>"; };
+		93D1D54923FE9628007D33C0 /* TuyaRNFeedBackModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNFeedBackModule.m; sourceTree = "<group>"; };
+		93D1D54A23FE9628007D33C0 /* TuyaRNFeedBackModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNFeedBackModule.h; sourceTree = "<group>"; };
+		93D1D54C23FE9628007D33C0 /* TuyaRNSceneModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNSceneModule.m; sourceTree = "<group>"; };
+		93D1D54D23FE9628007D33C0 /* TuyaRNSceneModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNSceneModule.h; sourceTree = "<group>"; };
+		93D1D54F23FE9628007D33C0 /* TuyaRNGatewayModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaRNGatewayModule.h; sourceTree = "<group>"; };
+		93D1D55023FE9628007D33C0 /* TuyaRNGatewayModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaRNGatewayModule.m; sourceTree = "<group>"; };
+		A9730036257F4EA50011F8FC /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/TPViewsLocalizable.strings; sourceTree = "<group>"; };
+		A9730037257F4EAB0011F8FC /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A973FD60257F42B00011F8FC /* TuyaSmartCamera.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaSmartCamera.m; sourceTree = "<group>"; };
+		A973FD62257F42B00011F8FC /* TuyaAppProgressUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppProgressUtils.m; sourceTree = "<group>"; };
+		A973FD63257F42B00011F8FC /* UIViewController+TuyaAppCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+TuyaAppCategory.m"; sourceTree = "<group>"; };
+		A973FD64257F42B00011F8FC /* TuyaAppPermissionUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppPermissionUtil.h; sourceTree = "<group>"; };
+		A973FD65257F42B00011F8FC /* TuyaAppViewUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppViewUtil.m; sourceTree = "<group>"; };
+		A973FD66257F42B00011F8FC /* TuyaAppUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppUtils.m; sourceTree = "<group>"; };
+		A973FD67257F42B00011F8FC /* TuyaAppTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppTheme.m; sourceTree = "<group>"; };
+		A973FD68257F42B00011F8FC /* TuyaAppViewUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppViewUtil.h; sourceTree = "<group>"; };
+		A973FD69257F42B00011F8FC /* TuyaAppPermissionUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppPermissionUtil.m; sourceTree = "<group>"; };
+		A973FD6A257F42B00011F8FC /* UIViewController+TuyaAppCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+TuyaAppCategory.h"; sourceTree = "<group>"; };
+		A973FD6B257F42B00011F8FC /* TuyaAppProgressUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppProgressUtils.h; sourceTree = "<group>"; };
+		A973FD6C257F42B00011F8FC /* TuyaAppTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppTheme.h; sourceTree = "<group>"; };
+		A973FD6D257F42B00011F8FC /* TuyaAppUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppUtils.h; sourceTree = "<group>"; };
+		A973FD6F257F42B00011F8FC /* TuyaAppCameraTimeLineModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCameraTimeLineModel.m; sourceTree = "<group>"; };
+		A973FD70257F42B00011F8FC /* TuyaSmartCloudTimePieceModel+Timeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TuyaSmartCloudTimePieceModel+Timeline.m"; sourceTree = "<group>"; };
+		A973FD71257F42B00011F8FC /* TuyaAppCameraTimeLineModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCameraTimeLineModel.h; sourceTree = "<group>"; };
+		A973FD72257F42B00011F8FC /* TuyaSmartCloudTimePieceModel+Timeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TuyaSmartCloudTimePieceModel+Timeline.h"; sourceTree = "<group>"; };
+		A973FD73257F42B00011F8FC /* TuyaSmartCameraService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaSmartCameraService.m; sourceTree = "<group>"; };
+		A973FD75257F42B00011F8FC /* TuysAppCameraSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuysAppCameraSettingViewController.m; sourceTree = "<group>"; };
+		A973FD76257F42B00011F8FC /* TuyaAppCameraSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCameraSettingViewController.h; sourceTree = "<group>"; };
+		A973FD77257F42B00011F8FC /* TuyaAppCameraSDCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCameraSDCardViewController.h; sourceTree = "<group>"; };
+		A973FD78257F42B00011F8FC /* TuyaAppCameraMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCameraMessageViewController.m; sourceTree = "<group>"; };
+		A973FD79257F42B00011F8FC /* TuyaAppCameraPlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCameraPlaybackViewController.m; sourceTree = "<group>"; };
+		A973FD7A257F42B00011F8FC /* TuyaAppCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCameraViewController.h; sourceTree = "<group>"; };
+		A973FD7B257F42B00011F8FC /* TuyaAppCameraCloudViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCameraCloudViewController.h; sourceTree = "<group>"; };
+		A973FD7C257F42B00011F8FC /* TuyaAppCameraSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCameraSettingViewController.m; sourceTree = "<group>"; };
+		A973FD7D257F42B00011F8FC /* TuyaAppCameraPlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCameraPlaybackViewController.h; sourceTree = "<group>"; };
+		A973FD7E257F42B00011F8FC /* TuyaAppCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCameraViewController.m; sourceTree = "<group>"; };
+		A973FD7F257F42B00011F8FC /* TuyaAppCameraMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCameraMessageViewController.h; sourceTree = "<group>"; };
+		A973FD80257F42B00011F8FC /* TuyaAppCameraSDCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCameraSDCardViewController.m; sourceTree = "<group>"; };
+		A973FD82257F42B00011F8FC /* TuyaAppBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppBaseViewController.m; sourceTree = "<group>"; };
+		A973FD83257F42B00011F8FC /* TuyaAppBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppBaseViewController.h; sourceTree = "<group>"; };
+		A973FD84257F42B00011F8FC /* TuyaAppCameraCloudViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCameraCloudViewController.m; sourceTree = "<group>"; };
+		A973FD85257F42B00011F8FC /* TuyaSmartCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaSmartCamera.h; sourceTree = "<group>"; };
+		A973FD87257F42B00011F8FC /* TuyaAppBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppBarButtonItem.h; sourceTree = "<group>"; };
+		A973FD88257F42B00011F8FC /* TuyaAppViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppViews.h; sourceTree = "<group>"; };
+		A973FD89257F42B00011F8FC /* TuyaAppCameraRecordListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCameraRecordListView.h; sourceTree = "<group>"; };
+		A973FD8A257F42B00011F8FC /* TuyaAppCameraCalendarCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCameraCalendarCollectionViewCell.m; sourceTree = "<group>"; };
+		A973FD8B257F42B00011F8FC /* TuyaSmartCameraControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaSmartCameraControlView.m; sourceTree = "<group>"; };
+		A973FD8C257F42B00011F8FC /* TuyaAppCameraCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCameraCalendarView.m; sourceTree = "<group>"; };
+		A973FD8D257F42B00011F8FC /* TuyaAppCameraRecordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCameraRecordCell.m; sourceTree = "<group>"; };
+		A973FD8E257F42B00011F8FC /* TuyaAppEmptyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppEmptyView.h; sourceTree = "<group>"; };
+		A973FD8F257F42B00011F8FC /* TuyaAppItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppItemView.h; sourceTree = "<group>"; };
+		A973FD90257F42B00011F8FC /* TuyaAppCloudDayCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCloudDayCollectionViewCell.m; sourceTree = "<group>"; };
+		A973FD91257F42B00011F8FC /* TuyaAppCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCellView.h; sourceTree = "<group>"; };
+		A973FD92257F42B00011F8FC /* UIView+TuyaAppAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+TuyaAppAdditions.h"; sourceTree = "<group>"; };
+		A973FD93257F42B00011F8FC /* TuyaAppTopBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppTopBarView.h; sourceTree = "<group>"; };
+		A973FD94257F42B00011F8FC /* TuyaAppCellViewItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCellViewItem.h; sourceTree = "<group>"; };
+		A973FD95257F42B00011F8FC /* TuyaAppBaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppBaseView.m; sourceTree = "<group>"; };
+		A973FD96257F42B00011F8FC /* TuyaSmartCameraControlButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaSmartCameraControlButton.m; sourceTree = "<group>"; };
+		A973FD97257F42B00011F8FC /* TuyaSmartSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaSmartSwitchCell.m; sourceTree = "<group>"; };
+		A973FD98257F42B00011F8FC /* TuyaAppLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppLoadingView.h; sourceTree = "<group>"; };
+		A973FD99257F42B00011F8FC /* TuyaAppDownloadingProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppDownloadingProgressView.m; sourceTree = "<group>"; };
+		A973FD9A257F42B00011F8FC /* TuyaAppEmptyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppEmptyView.m; sourceTree = "<group>"; };
+		A973FD9B257F42B00011F8FC /* TuyaAppCameraRecordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCameraRecordCell.h; sourceTree = "<group>"; };
+		A973FD9C257F42B00011F8FC /* TuyaAppCameraCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCameraCalendarView.h; sourceTree = "<group>"; };
+		A973FD9D257F42B00011F8FC /* TuyaSmartCameraControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaSmartCameraControlView.h; sourceTree = "<group>"; };
+		A973FD9E257F42B00011F8FC /* TuyaAppCameraRecordListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCameraRecordListView.m; sourceTree = "<group>"; };
+		A973FD9F257F42B00011F8FC /* TuyaAppCameraCalendarCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCameraCalendarCollectionViewCell.h; sourceTree = "<group>"; };
+		A973FDA0257F42B00011F8FC /* TuyaAppBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppBarButtonItem.m; sourceTree = "<group>"; };
+		A973FDA1257F42B00011F8FC /* TYCameraRecordListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYCameraRecordListView.h; sourceTree = "<group>"; };
+		A973FDA2257F42B00011F8FC /* TuyaAppItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppItemView.m; sourceTree = "<group>"; };
+		A973FDA3257F42B00011F8FC /* TuyaAppCellViewItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCellViewItem.m; sourceTree = "<group>"; };
+		A973FDA4257F42B00011F8FC /* TuyaAppBaseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppBaseView.h; sourceTree = "<group>"; };
+		A973FDA5257F42B00011F8FC /* TuyaAppTopBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppTopBarView.m; sourceTree = "<group>"; };
+		A973FDA6257F42B00011F8FC /* TuyaAppViewConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppViewConstants.h; sourceTree = "<group>"; };
+		A973FDA7257F42B00011F8FC /* UIView+TuyaAppAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+TuyaAppAdditions.m"; sourceTree = "<group>"; };
+		A973FDA8257F42B00011F8FC /* TuyaAppCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppCellView.m; sourceTree = "<group>"; };
+		A973FDA9257F42B00011F8FC /* TuyaAppCloudDayCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppCloudDayCollectionViewCell.h; sourceTree = "<group>"; };
+		A973FDAA257F42B00011F8FC /* TuyaAppDownloadingProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaAppDownloadingProgressView.h; sourceTree = "<group>"; };
+		A973FDAB257F42B00011F8FC /* TuyaAppLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TuyaAppLoadingView.m; sourceTree = "<group>"; };
+		A973FDAC257F42B00011F8FC /* TuyaSmartSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaSmartSwitchCell.h; sourceTree = "<group>"; };
+		A973FDAD257F42B00011F8FC /* TuyaSmartCameraControlButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaSmartCameraControlButton.h; sourceTree = "<group>"; };
+		A973FDAF257F42B00011F8FC /* ty_camera_mic_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_mic_icon@3x.png"; sourceTree = "<group>"; };
+		A973FDB0257F42B00011F8FC /* tysmart_selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tysmart_selected@3x.png"; sourceTree = "<group>"; };
+		A973FDB1257F42B00011F8FC /* ty_camera_soundOff_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_soundOff_icon@2x.png"; sourceTree = "<group>"; };
+		A973FDB3257F42B00011F8FC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		A973FDB5257F42B00011F8FC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/TPViewsLocalizable.strings"; sourceTree = "<group>"; };
+		A973FDB6257F42B00011F8FC /* ty_camera_rec_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_rec_icon@2x.png"; sourceTree = "<group>"; };
+		A973FDB7257F42B00011F8FC /* ty_camera_cloud_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_cloud_icon@2x.png"; sourceTree = "<group>"; };
+		A973FDB8257F42B00011F8FC /* ty_mainbt_about_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_about_active@2x.png"; sourceTree = "<group>"; };
+		A973FDB9257F42B00011F8FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		A973FDBA257F42B00011F8FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/TPViewsLocalizable.strings; sourceTree = "<group>"; };
+		A973FDBB257F42B00011F8FC /* ty_camera_tool_download_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_tool_download_normal@2x.png"; sourceTree = "<group>"; };
+		A973FDBC257F42B00011F8FC /* ty_camera_tool_download_normal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_tool_download_normal@3x.png"; sourceTree = "<group>"; };
+		A973FDBD257F42B00011F8FC /* ty_mainbt_about_active@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_about_active@3x.png"; sourceTree = "<group>"; };
+		A973FDBE257F42B00011F8FC /* ty_camera_cloud_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_cloud_icon@3x.png"; sourceTree = "<group>"; };
+		A973FDBF257F42B00011F8FC /* ty_camera_rec_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_rec_icon@3x.png"; sourceTree = "<group>"; };
+		A973FDC0257F42B00011F8FC /* ty_camera_soundOff_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_soundOff_icon@3x.png"; sourceTree = "<group>"; };
+		A973FDC1257F42B00011F8FC /* tysmart_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tysmart_selected@2x.png"; sourceTree = "<group>"; };
+		A973FDC2257F42B00011F8FC /* ty_camera_mic_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_mic_icon@2x.png"; sourceTree = "<group>"; };
+		A973FDC3257F42B00011F8FC /* ty_camera_message@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_message@2x.png"; sourceTree = "<group>"; };
+		A973FDC4257F42B00011F8FC /* ty_mainbt_add_active@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_add_active@3x.png"; sourceTree = "<group>"; };
+		A973FDC5257F42B00011F8FC /* pps_right_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pps_right_arrow@2x.png"; sourceTree = "<group>"; };
+		A973FDC6257F42B00011F8FC /* ty_camera_tool_pause_normal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_tool_pause_normal@3x.png"; sourceTree = "<group>"; };
+		A973FDC7257F42B00011F8FC /* ty_camera_control_hd_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_control_hd_normal@2x.png"; sourceTree = "<group>"; };
+		A973FDC8257F42B00011F8FC /* ty_camera_control_hd_normal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_control_hd_normal@3x.png"; sourceTree = "<group>"; };
+		A973FDC9257F42B00011F8FC /* ty_camera_tool_pause_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_tool_pause_normal@2x.png"; sourceTree = "<group>"; };
+		A973FDCA257F42B00011F8FC /* pps_right_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pps_right_arrow@3x.png"; sourceTree = "<group>"; };
+		A973FDCB257F42B00011F8FC /* ty_mainbt_add_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_add_active@2x.png"; sourceTree = "<group>"; };
+		A973FDCC257F42B00011F8FC /* ty_camera_message@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_message@3x.png"; sourceTree = "<group>"; };
+		A973FDCD257F42B00011F8FC /* ty_mainbt_devicelist_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_devicelist_active@2x.png"; sourceTree = "<group>"; };
+		A973FDCE257F42B00011F8FC /* ty_camera_tool_delete_normal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_tool_delete_normal@3x.png"; sourceTree = "<group>"; };
+		A973FDCF257F42B00011F8FC /* ty_camera_tool_play_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_tool_play_normal@2x.png"; sourceTree = "<group>"; };
+		A973FDD0257F42B00011F8FC /* ty_camera_control_sd_normal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_control_sd_normal@3x.png"; sourceTree = "<group>"; };
+		A973FDD1257F42B00011F8FC /* ty_camera_playback_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_playback_icon@3x.png"; sourceTree = "<group>"; };
+		A973FDD2257F42B00011F8FC /* tp_top_bar_back@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tp_top_bar_back@3x.png"; sourceTree = "<group>"; };
+		A973FDD3257F42B00011F8FC /* ty_mainbt_devicelist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_devicelist@2x.png"; sourceTree = "<group>"; };
+		A973FDD4257F42B00011F8FC /* ty_mainbt_devicelist@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_devicelist@3x.png"; sourceTree = "<group>"; };
+		A973FDD5257F42B00011F8FC /* phoneCodeList.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = phoneCodeList.plist; sourceTree = "<group>"; };
+		A973FDD6257F42B00011F8FC /* tp_top_bar_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tp_top_bar_back@2x.png"; sourceTree = "<group>"; };
+		A973FDD7257F42B00011F8FC /* ty_camera_control_sd_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_control_sd_normal@2x.png"; sourceTree = "<group>"; };
+		A973FDD8257F42B00011F8FC /* ty_camera_playback_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_playback_icon@2x.png"; sourceTree = "<group>"; };
+		A973FDD9257F42B00011F8FC /* ty_camera_tool_play_normal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_tool_play_normal@3x.png"; sourceTree = "<group>"; };
+		A973FDDA257F42B00011F8FC /* ty_camera_tool_delete_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_tool_delete_normal@2x.png"; sourceTree = "<group>"; };
+		A973FDDB257F42B00011F8FC /* ty_mainbt_devicelist_active@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_devicelist_active@3x.png"; sourceTree = "<group>"; };
+		A973FDDC257F42B00011F8FC /* ty_camera_photo_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_photo_icon@3x.png"; sourceTree = "<group>"; };
+		A973FDDD257F42B00011F8FC /* ty_mainbt_add@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_add@3x.png"; sourceTree = "<group>"; };
+		A973FDDE257F42B00011F8FC /* ty_camera_soundOn_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_soundOn_icon@3x.png"; sourceTree = "<group>"; };
+		A973FDDF257F42B00011F8FC /* pps_left_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pps_left_arrow@3x.png"; sourceTree = "<group>"; };
+		A973FDE0257F42B00011F8FC /* ty_mainbt_about@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_about@3x.png"; sourceTree = "<group>"; };
+		A973FDE1257F42B00011F8FC /* ty_mainbt_about@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_about@2x.png"; sourceTree = "<group>"; };
+		A973FDE2257F42B00011F8FC /* pps_left_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pps_left_arrow@2x.png"; sourceTree = "<group>"; };
+		A973FDE3257F42B00011F8FC /* ty_camera_soundOn_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_soundOn_icon@2x.png"; sourceTree = "<group>"; };
+		A973FDE4257F42B00011F8FC /* ty_camera_photo_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_camera_photo_icon@2x.png"; sourceTree = "<group>"; };
+		A973FDE5257F42B00011F8FC /* ty_mainbt_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ty_mainbt_add@2x.png"; sourceTree = "<group>"; };
+		A973FDE6257F42B00011F8FC /* TuyaSmartCameraService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TuyaSmartCameraService.h; sourceTree = "<group>"; };
+		A973FEEA257F48680011F8FC /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PrefixHeader.pch; path = RNTuyaSdk/PrefixHeader.pch; sourceTree = "<group>"; };
+		A9CEB8D42577AEC8009DCE07 /* TuyaCameraModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TuyaCameraModule.h; sourceTree = "<group>"; };
+		A9CEB8D52577AEC8009DCE07 /* TuyaCameraModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TuyaCameraModule.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		58B511D81A9E6C8500147676 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		134814211AA4EA7D00B7C361 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				134814201AA4EA6300B7C361 /* libRNTuyaSdk.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		58B511D21A9E6C8500147676 = {
+			isa = PBXGroup;
+			children = (
+				A973FEEA257F48680011F8FC /* PrefixHeader.pch */,
+				93D1D50F23FE9628007D33C0 /* RNTuyaSdk */,
+				134814211AA4EA7D00B7C361 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		93D1D50F23FE9628007D33C0 /* RNTuyaSdk */ = {
+			isa = PBXGroup;
+			children = (
+				A9CEB8D32577AEBA009DCE07 /* Camera */,
+				93D1D51023FE9628007D33C0 /* Activator */,
+				93D1D51323FE9628007D33C0 /* Home */,
+				93D1D51C23FE9628007D33C0 /* ShareDevice */,
+				93D1D51F23FE9628007D33C0 /* DeviceControl */,
+				93D1D52223FE9628007D33C0 /* Room */,
+				93D1D52523FE9628007D33C0 /* Core */,
+				93D1D52823FE9628007D33C0 /* Group */,
+				93D1D52B23FE9628007D33C0 /* Timer */,
+				93D1D52E23FE9628007D33C0 /* MessageCenter */,
+				93D1D53123FE9628007D33C0 /* Utils */,
+				93D1D54523FE9628007D33C0 /* User */,
+				93D1D54823FE9628007D33C0 /* Feedback */,
+				93D1D54B23FE9628007D33C0 /* Scene */,
+				93D1D54E23FE9628007D33C0 /* GateWay */,
+			);
+			path = RNTuyaSdk;
+			sourceTree = "<group>";
+		};
+		93D1D51023FE9628007D33C0 /* Activator */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D51123FE9628007D33C0 /* TuyaRNActivatorModule.h */,
+				93D1D51223FE9628007D33C0 /* TuyaRNActivatorModule.m */,
+			);
+			path = Activator;
+			sourceTree = "<group>";
+		};
+		93D1D51323FE9628007D33C0 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D51423FE9628007D33C0 /* TuyaRNHomeManagerModule.h */,
+				93D1D51523FE9628007D33C0 /* TuyaRNHomeModule.h */,
+				93D1D51623FE9628007D33C0 /* TuyaRNHomeMemberModule.m */,
+				93D1D51723FE9628007D33C0 /* TuyaRNHomeDataManagerModule.h */,
+				93D1D51823FE9628007D33C0 /* TuyaRNHomeManagerModule.m */,
+				93D1D51923FE9628007D33C0 /* TuyaRNHomeMemberModule.h */,
+				93D1D51A23FE9628007D33C0 /* TuyaRNHomeModule.m */,
+				93D1D51B23FE9628007D33C0 /* TuyaRNHomeDataManagerModule.m */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		93D1D51C23FE9628007D33C0 /* ShareDevice */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D51D23FE9628007D33C0 /* TuyaRNShareModule.h */,
+				93D1D51E23FE9628007D33C0 /* TuyaRNShareModule.m */,
+			);
+			path = ShareDevice;
+			sourceTree = "<group>";
+		};
+		93D1D51F23FE9628007D33C0 /* DeviceControl */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D52023FE9628007D33C0 /* TuyaRNDeviceModule.h */,
+				93D1D52123FE9628007D33C0 /* TuyaRNDeviceModule.m */,
+			);
+			path = DeviceControl;
+			sourceTree = "<group>";
+		};
+		93D1D52223FE9628007D33C0 /* Room */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D52323FE9628007D33C0 /* TuyaRNRoomModule.h */,
+				93D1D52423FE9628007D33C0 /* TuyaRNRoomModule.m */,
+			);
+			path = Room;
+			sourceTree = "<group>";
+		};
+		93D1D52523FE9628007D33C0 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D52623FE9628007D33C0 /* TuyaRNCoreModule.m */,
+				93D1D52723FE9628007D33C0 /* TuyaRNCoreModule.h */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		93D1D52823FE9628007D33C0 /* Group */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D52923FE9628007D33C0 /* TuyaRNGroupModule.m */,
+				93D1D52A23FE9628007D33C0 /* TuyaRNGroupModule.h */,
+			);
+			path = Group;
+			sourceTree = "<group>";
+		};
+		93D1D52B23FE9628007D33C0 /* Timer */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D52C23FE9628007D33C0 /* TuyaRNTimerModule.m */,
+				93D1D52D23FE9628007D33C0 /* TuyaRNTimerModule.h */,
+			);
+			path = Timer;
+			sourceTree = "<group>";
+		};
+		93D1D52E23FE9628007D33C0 /* MessageCenter */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D52F23FE9628007D33C0 /* TuyaRNMessageModule.m */,
+				93D1D53023FE9628007D33C0 /* TuyaRNMessageModule.h */,
+			);
+			path = MessageCenter;
+			sourceTree = "<group>";
+		};
+		93D1D53123FE9628007D33C0 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D53223FE9628007D33C0 /* Listener */,
+				93D1D53D23FE9628007D33C0 /* TuyaRNUtils+Cache.m */,
+				93D1D53E23FE9628007D33C0 /* TuyaRNUtils+Network.m */,
+				93D1D53F23FE9628007D33C0 /* TuyaRNUtils+DeviceParser.m */,
+				93D1D54023FE9628007D33C0 /* TuyaRNUtils.h */,
+				93D1D54123FE9628007D33C0 /* TuyaRNUtils+Network.h */,
+				93D1D54223FE9628007D33C0 /* TuyaRNUtils+Cache.h */,
+				93D1D54323FE9628007D33C0 /* TuyaRNUtils+DeviceParser.h */,
+				93D1D54423FE9628007D33C0 /* TuyaRNUtils.m */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		93D1D53223FE9628007D33C0 /* Listener */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D53323FE9628007D33C0 /* TuyaRNEventEmitter.h */,
+				93D1D53423FE9628007D33C0 /* TuyaRNDeviceListener.h */,
+				93D1D53523FE9628007D33C0 /* TuyaRNHomeListener.m */,
+				93D1D53623FE9628007D33C0 /* TuyaRNGroupListener.h */,
+				93D1D53723FE9628007D33C0 /* TuyaRNHomeManagerListener.h */,
+				93D1D53823FE9628007D33C0 /* TuyaRNDeviceListener.m */,
+				93D1D53923FE9628007D33C0 /* TuyaRNHomeListener.h */,
+				93D1D53A23FE9628007D33C0 /* TuyaRNEventEmitter.m */,
+				93D1D53B23FE9628007D33C0 /* TuyaRNHomeManagerListener.m */,
+				93D1D53C23FE9628007D33C0 /* TuyaRNGroupListener.m */,
+			);
+			path = Listener;
+			sourceTree = "<group>";
+		};
+		93D1D54523FE9628007D33C0 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D54623FE9628007D33C0 /* TuyaRNUserModule.m */,
+				93D1D54723FE9628007D33C0 /* TuyaRNUserModule.h */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
+		93D1D54823FE9628007D33C0 /* Feedback */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D54923FE9628007D33C0 /* TuyaRNFeedBackModule.m */,
+				93D1D54A23FE9628007D33C0 /* TuyaRNFeedBackModule.h */,
+			);
+			path = Feedback;
+			sourceTree = "<group>";
+		};
+		93D1D54B23FE9628007D33C0 /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D54C23FE9628007D33C0 /* TuyaRNSceneModule.m */,
+				93D1D54D23FE9628007D33C0 /* TuyaRNSceneModule.h */,
+			);
+			path = Scene;
+			sourceTree = "<group>";
+		};
+		93D1D54E23FE9628007D33C0 /* GateWay */ = {
+			isa = PBXGroup;
+			children = (
+				93D1D54F23FE9628007D33C0 /* TuyaRNGatewayModule.h */,
+				93D1D55023FE9628007D33C0 /* TuyaRNGatewayModule.m */,
+			);
+			path = GateWay;
+			sourceTree = "<group>";
+		};
+		A973FD5F257F42B00011F8FC /* IPC */ = {
+			isa = PBXGroup;
+			children = (
+				A973FD60257F42B00011F8FC /* TuyaSmartCamera.m */,
+				A973FD61257F42B00011F8FC /* Utils */,
+				A973FD6E257F42B00011F8FC /* Models */,
+				A973FD73257F42B00011F8FC /* TuyaSmartCameraService.m */,
+				A973FD74257F42B00011F8FC /* Controller */,
+				A973FD85257F42B00011F8FC /* TuyaSmartCamera.h */,
+				A973FD86257F42B00011F8FC /* Views */,
+				A973FDAE257F42B00011F8FC /* Assets */,
+				A973FDE6257F42B00011F8FC /* TuyaSmartCameraService.h */,
+			);
+			path = IPC;
+			sourceTree = "<group>";
+		};
+		A973FD61257F42B00011F8FC /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				A973FD62257F42B00011F8FC /* TuyaAppProgressUtils.m */,
+				A973FD63257F42B00011F8FC /* UIViewController+TuyaAppCategory.m */,
+				A973FD64257F42B00011F8FC /* TuyaAppPermissionUtil.h */,
+				A973FD65257F42B00011F8FC /* TuyaAppViewUtil.m */,
+				A973FD66257F42B00011F8FC /* TuyaAppUtils.m */,
+				A973FD67257F42B00011F8FC /* TuyaAppTheme.m */,
+				A973FD68257F42B00011F8FC /* TuyaAppViewUtil.h */,
+				A973FD69257F42B00011F8FC /* TuyaAppPermissionUtil.m */,
+				A973FD6A257F42B00011F8FC /* UIViewController+TuyaAppCategory.h */,
+				A973FD6B257F42B00011F8FC /* TuyaAppProgressUtils.h */,
+				A973FD6C257F42B00011F8FC /* TuyaAppTheme.h */,
+				A973FD6D257F42B00011F8FC /* TuyaAppUtils.h */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		A973FD6E257F42B00011F8FC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A973FD6F257F42B00011F8FC /* TuyaAppCameraTimeLineModel.m */,
+				A973FD70257F42B00011F8FC /* TuyaSmartCloudTimePieceModel+Timeline.m */,
+				A973FD71257F42B00011F8FC /* TuyaAppCameraTimeLineModel.h */,
+				A973FD72257F42B00011F8FC /* TuyaSmartCloudTimePieceModel+Timeline.h */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A973FD74257F42B00011F8FC /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				A973FD75257F42B00011F8FC /* TuysAppCameraSettingViewController.m */,
+				A973FD76257F42B00011F8FC /* TuyaAppCameraSettingViewController.h */,
+				A973FD77257F42B00011F8FC /* TuyaAppCameraSDCardViewController.h */,
+				A973FD78257F42B00011F8FC /* TuyaAppCameraMessageViewController.m */,
+				A973FD79257F42B00011F8FC /* TuyaAppCameraPlaybackViewController.m */,
+				A973FD7A257F42B00011F8FC /* TuyaAppCameraViewController.h */,
+				A973FD7B257F42B00011F8FC /* TuyaAppCameraCloudViewController.h */,
+				A973FD7C257F42B00011F8FC /* TuyaAppCameraSettingViewController.m */,
+				A973FD7D257F42B00011F8FC /* TuyaAppCameraPlaybackViewController.h */,
+				A973FD7E257F42B00011F8FC /* TuyaAppCameraViewController.m */,
+				A973FD7F257F42B00011F8FC /* TuyaAppCameraMessageViewController.h */,
+				A973FD80257F42B00011F8FC /* TuyaAppCameraSDCardViewController.m */,
+				A973FD81257F42B00011F8FC /* Base */,
+				A973FD84257F42B00011F8FC /* TuyaAppCameraCloudViewController.m */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		A973FD81257F42B00011F8FC /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				A973FD82257F42B00011F8FC /* TuyaAppBaseViewController.m */,
+				A973FD83257F42B00011F8FC /* TuyaAppBaseViewController.h */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		A973FD86257F42B00011F8FC /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A973FD87257F42B00011F8FC /* TuyaAppBarButtonItem.h */,
+				A973FD88257F42B00011F8FC /* TuyaAppViews.h */,
+				A973FD89257F42B00011F8FC /* TuyaAppCameraRecordListView.h */,
+				A973FD8A257F42B00011F8FC /* TuyaAppCameraCalendarCollectionViewCell.m */,
+				A973FD8B257F42B00011F8FC /* TuyaSmartCameraControlView.m */,
+				A973FD8C257F42B00011F8FC /* TuyaAppCameraCalendarView.m */,
+				A973FD8D257F42B00011F8FC /* TuyaAppCameraRecordCell.m */,
+				A973FD8E257F42B00011F8FC /* TuyaAppEmptyView.h */,
+				A973FD8F257F42B00011F8FC /* TuyaAppItemView.h */,
+				A973FD90257F42B00011F8FC /* TuyaAppCloudDayCollectionViewCell.m */,
+				A973FD91257F42B00011F8FC /* TuyaAppCellView.h */,
+				A973FD92257F42B00011F8FC /* UIView+TuyaAppAdditions.h */,
+				A973FD93257F42B00011F8FC /* TuyaAppTopBarView.h */,
+				A973FD94257F42B00011F8FC /* TuyaAppCellViewItem.h */,
+				A973FD95257F42B00011F8FC /* TuyaAppBaseView.m */,
+				A973FD96257F42B00011F8FC /* TuyaSmartCameraControlButton.m */,
+				A973FD97257F42B00011F8FC /* TuyaSmartSwitchCell.m */,
+				A973FD98257F42B00011F8FC /* TuyaAppLoadingView.h */,
+				A973FD99257F42B00011F8FC /* TuyaAppDownloadingProgressView.m */,
+				A973FD9A257F42B00011F8FC /* TuyaAppEmptyView.m */,
+				A973FD9B257F42B00011F8FC /* TuyaAppCameraRecordCell.h */,
+				A973FD9C257F42B00011F8FC /* TuyaAppCameraCalendarView.h */,
+				A973FD9D257F42B00011F8FC /* TuyaSmartCameraControlView.h */,
+				A973FD9E257F42B00011F8FC /* TuyaAppCameraRecordListView.m */,
+				A973FD9F257F42B00011F8FC /* TuyaAppCameraCalendarCollectionViewCell.h */,
+				A973FDA0257F42B00011F8FC /* TuyaAppBarButtonItem.m */,
+				A973FDA1257F42B00011F8FC /* TYCameraRecordListView.h */,
+				A973FDA2257F42B00011F8FC /* TuyaAppItemView.m */,
+				A973FDA3257F42B00011F8FC /* TuyaAppCellViewItem.m */,
+				A973FDA4257F42B00011F8FC /* TuyaAppBaseView.h */,
+				A973FDA5257F42B00011F8FC /* TuyaAppTopBarView.m */,
+				A973FDA6257F42B00011F8FC /* TuyaAppViewConstants.h */,
+				A973FDA7257F42B00011F8FC /* UIView+TuyaAppAdditions.m */,
+				A973FDA8257F42B00011F8FC /* TuyaAppCellView.m */,
+				A973FDA9257F42B00011F8FC /* TuyaAppCloudDayCollectionViewCell.h */,
+				A973FDAA257F42B00011F8FC /* TuyaAppDownloadingProgressView.h */,
+				A973FDAB257F42B00011F8FC /* TuyaAppLoadingView.m */,
+				A973FDAC257F42B00011F8FC /* TuyaSmartSwitchCell.h */,
+				A973FDAD257F42B00011F8FC /* TuyaSmartCameraControlButton.h */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A973FDAE257F42B00011F8FC /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				A973FDAF257F42B00011F8FC /* ty_camera_mic_icon@3x.png */,
+				A973FDB0257F42B00011F8FC /* tysmart_selected@3x.png */,
+				A973FDB1257F42B00011F8FC /* ty_camera_soundOff_icon@2x.png */,
+				A973FDB2257F42B00011F8FC /* Localizable.strings */,
+				A973FDB4257F42B00011F8FC /* TPViewsLocalizable.strings */,
+				A973FDB6257F42B00011F8FC /* ty_camera_rec_icon@2x.png */,
+				A973FDB7257F42B00011F8FC /* ty_camera_cloud_icon@2x.png */,
+				A973FDB8257F42B00011F8FC /* ty_mainbt_about_active@2x.png */,
+				A973FDBB257F42B00011F8FC /* ty_camera_tool_download_normal@2x.png */,
+				A973FDBC257F42B00011F8FC /* ty_camera_tool_download_normal@3x.png */,
+				A973FDBD257F42B00011F8FC /* ty_mainbt_about_active@3x.png */,
+				A973FDBE257F42B00011F8FC /* ty_camera_cloud_icon@3x.png */,
+				A973FDBF257F42B00011F8FC /* ty_camera_rec_icon@3x.png */,
+				A973FDC0257F42B00011F8FC /* ty_camera_soundOff_icon@3x.png */,
+				A973FDC1257F42B00011F8FC /* tysmart_selected@2x.png */,
+				A973FDC2257F42B00011F8FC /* ty_camera_mic_icon@2x.png */,
+				A973FDC3257F42B00011F8FC /* ty_camera_message@2x.png */,
+				A973FDC4257F42B00011F8FC /* ty_mainbt_add_active@3x.png */,
+				A973FDC5257F42B00011F8FC /* pps_right_arrow@2x.png */,
+				A973FDC6257F42B00011F8FC /* ty_camera_tool_pause_normal@3x.png */,
+				A973FDC7257F42B00011F8FC /* ty_camera_control_hd_normal@2x.png */,
+				A973FDC8257F42B00011F8FC /* ty_camera_control_hd_normal@3x.png */,
+				A973FDC9257F42B00011F8FC /* ty_camera_tool_pause_normal@2x.png */,
+				A973FDCA257F42B00011F8FC /* pps_right_arrow@3x.png */,
+				A973FDCB257F42B00011F8FC /* ty_mainbt_add_active@2x.png */,
+				A973FDCC257F42B00011F8FC /* ty_camera_message@3x.png */,
+				A973FDCD257F42B00011F8FC /* ty_mainbt_devicelist_active@2x.png */,
+				A973FDCE257F42B00011F8FC /* ty_camera_tool_delete_normal@3x.png */,
+				A973FDCF257F42B00011F8FC /* ty_camera_tool_play_normal@2x.png */,
+				A973FDD0257F42B00011F8FC /* ty_camera_control_sd_normal@3x.png */,
+				A973FDD1257F42B00011F8FC /* ty_camera_playback_icon@3x.png */,
+				A973FDD2257F42B00011F8FC /* tp_top_bar_back@3x.png */,
+				A973FDD3257F42B00011F8FC /* ty_mainbt_devicelist@2x.png */,
+				A973FDD4257F42B00011F8FC /* ty_mainbt_devicelist@3x.png */,
+				A973FDD5257F42B00011F8FC /* phoneCodeList.plist */,
+				A973FDD6257F42B00011F8FC /* tp_top_bar_back@2x.png */,
+				A973FDD7257F42B00011F8FC /* ty_camera_control_sd_normal@2x.png */,
+				A973FDD8257F42B00011F8FC /* ty_camera_playback_icon@2x.png */,
+				A973FDD9257F42B00011F8FC /* ty_camera_tool_play_normal@3x.png */,
+				A973FDDA257F42B00011F8FC /* ty_camera_tool_delete_normal@2x.png */,
+				A973FDDB257F42B00011F8FC /* ty_mainbt_devicelist_active@3x.png */,
+				A973FDDC257F42B00011F8FC /* ty_camera_photo_icon@3x.png */,
+				A973FDDD257F42B00011F8FC /* ty_mainbt_add@3x.png */,
+				A973FDDE257F42B00011F8FC /* ty_camera_soundOn_icon@3x.png */,
+				A973FDDF257F42B00011F8FC /* pps_left_arrow@3x.png */,
+				A973FDE0257F42B00011F8FC /* ty_mainbt_about@3x.png */,
+				A973FDE1257F42B00011F8FC /* ty_mainbt_about@2x.png */,
+				A973FDE2257F42B00011F8FC /* pps_left_arrow@2x.png */,
+				A973FDE3257F42B00011F8FC /* ty_camera_soundOn_icon@2x.png */,
+				A973FDE4257F42B00011F8FC /* ty_camera_photo_icon@2x.png */,
+				A973FDE5257F42B00011F8FC /* ty_mainbt_add@2x.png */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		A9CEB8D32577AEBA009DCE07 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				A973FD5F257F42B00011F8FC /* IPC */,
+				A9CEB8D42577AEC8009DCE07 /* TuyaCameraModule.h */,
+				A9CEB8D52577AEC8009DCE07 /* TuyaCameraModule.m */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		58B511DA1A9E6C8500147676 /* RNTuyaSdk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNTuyaSdk" */;
+			buildPhases = (
+				58B511D71A9E6C8500147676 /* Sources */,
+				58B511D81A9E6C8500147676 /* Frameworks */,
+				58B511D91A9E6C8500147676 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RNTuyaSdk;
+			productName = RCTDataManager;
+			productReference = 134814201AA4EA6300B7C361 /* libRNTuyaSdk.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		58B511D31A9E6C8500147676 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = Facebook;
+				TargetAttributes = {
+					58B511DA1A9E6C8500147676 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNTuyaSdk" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				en,
+				"zh-Hans",
+			);
+			mainGroup = 58B511D21A9E6C8500147676;
+			productRefGroup = 58B511D21A9E6C8500147676;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				58B511DA1A9E6C8500147676 /* RNTuyaSdk */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		58B511D71A9E6C8500147676 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A973FDFC257F42B10011F8FC /* TuyaAppCameraRecordCell.m in Sources */,
+				A973FDEC257F42B00011F8FC /* TuyaAppTheme.m in Sources */,
+				93D1D55E23FE9628007D33C0 /* TuyaRNDeviceListener.m in Sources */,
+				93D1D55723FE9628007D33C0 /* TuyaRNDeviceModule.m in Sources */,
+				93D1D55A23FE9628007D33C0 /* TuyaRNGroupModule.m in Sources */,
+				A973FDF7257F42B10011F8FC /* TuyaAppBaseViewController.m in Sources */,
+				A973FDFE257F42B10011F8FC /* TuyaAppBaseView.m in Sources */,
+				A973FDE8257F42B00011F8FC /* TuyaAppProgressUtils.m in Sources */,
+				A973FE06257F42B10011F8FC /* TuyaAppCellViewItem.m in Sources */,
+				A973FDEF257F42B00011F8FC /* TuyaSmartCloudTimePieceModel+Timeline.m in Sources */,
+				93D1D55223FE9628007D33C0 /* TuyaRNHomeMemberModule.m in Sources */,
+				93D1D56523FE9628007D33C0 /* TuyaRNUtils.m in Sources */,
+				A973FE09257F42B10011F8FC /* TuyaAppCellView.m in Sources */,
+				93D1D56023FE9628007D33C0 /* TuyaRNHomeManagerListener.m in Sources */,
+				A973FDF6257F42B10011F8FC /* TuyaAppCameraSDCardViewController.m in Sources */,
+				A973FDED257F42B00011F8FC /* TuyaAppPermissionUtil.m in Sources */,
+				93D1D56223FE9628007D33C0 /* TuyaRNUtils+Cache.m in Sources */,
+				A973FE07257F42B10011F8FC /* TuyaAppTopBarView.m in Sources */,
+				A973FDF0257F42B10011F8FC /* TuyaSmartCameraService.m in Sources */,
+				A973FE05257F42B10011F8FC /* TuyaAppItemView.m in Sources */,
+				93D1D55823FE9628007D33C0 /* TuyaRNRoomModule.m in Sources */,
+				93D1D55B23FE9628007D33C0 /* TuyaRNTimerModule.m in Sources */,
+				93D1D55D23FE9628007D33C0 /* TuyaRNHomeListener.m in Sources */,
+				93D1D56123FE9628007D33C0 /* TuyaRNGroupListener.m in Sources */,
+				A973FDF3257F42B10011F8FC /* TuyaAppCameraPlaybackViewController.m in Sources */,
+				93D1D55923FE9628007D33C0 /* TuyaRNCoreModule.m in Sources */,
+				A973FDFD257F42B10011F8FC /* TuyaAppCloudDayCollectionViewCell.m in Sources */,
+				A973FE03257F42B10011F8FC /* TuyaAppCameraRecordListView.m in Sources */,
+				A973FE01257F42B10011F8FC /* TuyaAppDownloadingProgressView.m in Sources */,
+				A973FDE7257F42B00011F8FC /* TuyaSmartCamera.m in Sources */,
+				93D1D56423FE9628007D33C0 /* TuyaRNUtils+DeviceParser.m in Sources */,
+				93D1D56623FE9628007D33C0 /* TuyaRNUserModule.m in Sources */,
+				A973FDF2257F42B10011F8FC /* TuyaAppCameraMessageViewController.m in Sources */,
+				93D1D55323FE9628007D33C0 /* TuyaRNHomeManagerModule.m in Sources */,
+				93D1D55123FE9628007D33C0 /* TuyaRNActivatorModule.m in Sources */,
+				93D1D56323FE9628007D33C0 /* TuyaRNUtils+Network.m in Sources */,
+				A973FE0A257F42B10011F8FC /* TuyaAppLoadingView.m in Sources */,
+				A973FDF5257F42B10011F8FC /* TuyaAppCameraViewController.m in Sources */,
+				A973FDFA257F42B10011F8FC /* TuyaSmartCameraControlView.m in Sources */,
+				A973FDFF257F42B10011F8FC /* TuyaSmartCameraControlButton.m in Sources */,
+				A973FDF4257F42B10011F8FC /* TuyaAppCameraSettingViewController.m in Sources */,
+				93D1D55C23FE9628007D33C0 /* TuyaRNMessageModule.m in Sources */,
+				93D1D55523FE9628007D33C0 /* TuyaRNHomeDataManagerModule.m in Sources */,
+				A973FDF9257F42B10011F8FC /* TuyaAppCameraCalendarCollectionViewCell.m in Sources */,
+				93D1D55423FE9628007D33C0 /* TuyaRNHomeModule.m in Sources */,
+				A973FDF8257F42B10011F8FC /* TuyaAppCameraCloudViewController.m in Sources */,
+				A973FDF1257F42B10011F8FC /* TuysAppCameraSettingViewController.m in Sources */,
+				93D1D55623FE9628007D33C0 /* TuyaRNShareModule.m in Sources */,
+				A973FDE9257F42B00011F8FC /* UIViewController+TuyaAppCategory.m in Sources */,
+				A973FE08257F42B10011F8FC /* UIView+TuyaAppAdditions.m in Sources */,
+				A973FDFB257F42B10011F8FC /* TuyaAppCameraCalendarView.m in Sources */,
+				A973FDEE257F42B00011F8FC /* TuyaAppCameraTimeLineModel.m in Sources */,
+				A973FE00257F42B10011F8FC /* TuyaSmartSwitchCell.m in Sources */,
+				93D1D56923FE9628007D33C0 /* TuyaRNGatewayModule.m in Sources */,
+				A973FE02257F42B10011F8FC /* TuyaAppEmptyView.m in Sources */,
+				93D1D55F23FE9628007D33C0 /* TuyaRNEventEmitter.m in Sources */,
+				93D1D56823FE9628007D33C0 /* TuyaRNSceneModule.m in Sources */,
+				A973FDEA257F42B00011F8FC /* TuyaAppViewUtil.m in Sources */,
+				A973FDEB257F42B00011F8FC /* TuyaAppUtils.m in Sources */,
+				A973FE04257F42B10011F8FC /* TuyaAppBarButtonItem.m in Sources */,
+				93D1D56723FE9628007D33C0 /* TuyaRNFeedBackModule.m in Sources */,
+				A9CEB8D62577AEC8009DCE07 /* TuyaCameraModule.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		A973FDB2257F42B00011F8FC /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A973FDB3257F42B00011F8FC /* zh-Hans */,
+				A973FDB9257F42B00011F8FC /* en */,
+				A9730037257F4EAB0011F8FC /* English */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		A973FDB4257F42B00011F8FC /* TPViewsLocalizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A973FDB5257F42B00011F8FC /* zh-Hans */,
+				A973FDBA257F42B00011F8FC /* en */,
+				A9730036257F4EA50011F8FC /* English */,
+			);
+			name = TPViewsLocalizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		58B511ED1A9E6C8500147676 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = RNTuyaSDK/PrefixHeader.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		58B511EE1A9E6C8500147676 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = RNTuyaSDK/PrefixHeader.pch;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		58B511F01A9E6C8500147676 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../../React/**",
+					"$(SRCROOT)/../../react-native/React/**",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = RNTuyaSdk;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		58B511F11A9E6C8500147676 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../../../React/**",
+					"$(SRCROOT)/../../react-native/React/**",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = RNTuyaSdk;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNTuyaSdk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58B511ED1A9E6C8500147676 /* Debug */,
+				58B511EE1A9E6C8500147676 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNTuyaSdk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				58B511F01A9E6C8500147676 /* Debug */,
+				58B511F11A9E6C8500147676 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 58B511D31A9E6C8500147676 /* Project object */;
+}
