@@ -7,7 +7,7 @@
 
 #import "TuyaAppCameraMessageViewController.h"
 #import <TYEncryptImage/TYEncryptImage.h>
-#import <SDWebImage/UIImageView+WebCache.h>
+//#import <SDWebImage/UIImageView+WebCache.h>
 #import <TuyaSmartCameraKit/TuyaSmartCameraKit.h>
 
 @interface TuyaAppCameraMessageViewController ()<UITableViewDelegate, UITableViewDataSource>
@@ -88,7 +88,7 @@
     TuyaSmartCameraMessageModel *messageModel = [self.messageModelList objectAtIndex:indexPath.row];
     NSArray *components = [messageModel.attachPic componentsSeparatedByString:@"@"];
     if (components.count != 2) {
-        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:messageModel.attachPic] placeholderImage:[self placeHolder]];
+//        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:messageModel.attachPic] placeholderImage:[self placeHolder]];
     }else {
         [cell.imageView ty_setAESImageWithPath:components.firstObject encryptKey:components.lastObject placeholderImage:[self placeHolder]];
     }
