@@ -64,7 +64,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
     private static final String TAG = "CameraLivePrevActivity";
     private Toolbar toolbar;
     private TuyaCameraView mVideoView;
-    private ImageView muteImg;
+    //private ImageView muteImg;
+    private TextView muteImg;
     private TextView qualityTv;
     private TextView speakTxt, recordTxt, photoTxt, replayTxt, settingTxt, cloudStorageTxt,messageCenterTxt;
 
@@ -304,12 +305,12 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         cloudStorageTxt = findViewById(R.id.cloud_Txt);
         messageCenterTxt =  findViewById(R.id.message_center_Txt);
 
-        WindowManager windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
+        /*WindowManager windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
         int width = windowManager.getDefaultDisplay().getWidth();
         int height = width * ASPECT_RATIO_WIDTH / ASPECT_RATIO_HEIGHT;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
         // layoutParams.addRule(RelativeLayout.BELOW, R.id.toolbar_view);
-        findViewById(R.id.camera_video_view_Rl).setLayoutParams(layoutParams);
+        findViewById(R.id.camera_video_view_Rl).setLayoutParams(layoutParams);*/
 
         muteImg.setSelected(true);
     }

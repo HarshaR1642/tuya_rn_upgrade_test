@@ -7,14 +7,14 @@
     android:orientation="vertical"
     tools:context=".rnsdk.camera.activity.CameraLivePreviewActivity">
 
-    <!--    <androidx.appcompat.widget.toolbar-->
-    <!--        android:id="@+id/toolbar_view"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="?attr/actionBarSize"-->
-    <!--        android:gravity="center_vertical"-->
-    <!--        app:navigationIcon="@drawable/tysmart_back"-->
-    <!--        app:title="Camera"-->
-    <!--        app:titleTextColor="@color/black" />-->
+<!--    <androidx.appcompat.widget.toolbar-->
+<!--        android:id="@+id/toolbar_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        android:gravity="center_vertical"-->
+<!--        app:navigationIcon="@drawable/tysmart_back"-->
+<!--        app:title="Camera"-->
+<!--        app:titleTextColor="@color/black" />-->
 
     <RelativeLayout
         android:id="@+id/camera_video_view_Rl"
@@ -38,21 +38,23 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:src="@drawable/camera_mute_btn" />-->
-        <!--android:layout_toRightOf="@+id/camera_mute"-->
-        <TextView
+            android:src="@drawable/camera_mute_btn"
+            android:visibility="gone"/>-->
+
+        <!--<TextView
             android:id="@+id/camera_quality"
             android:layout_width="@dimen/wh_60"
             android:layout_height="@dimen/wh_28"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
             android:layout_margin="10dp"
+            android:layout_toRightOf="@+id/camera_mute"
             android:background="@drawable/camera_shape_wirlesswake"
             android:gravity="center"
             android:text="HD"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_12"
-            android:visibility="gone"/>
+            android:visibility="gone"/>-->
 
         <TextView
             android:id="@+id/speak_Txt"
@@ -70,6 +72,27 @@
             android:textSize="@dimen/ts_13"
             android:clickable="true"/>
 
+        <!--<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_below="@+id/camera_video_view"
+            android:background="@color/tuya_control_bg_black">
+            <TextView
+                android:id="@+id/speak_Txt1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/camera_item_control_btn"
+                android:drawableTop="@drawable/camera_icon_mic_selector"
+                android:drawablePadding="@dimen/mg_5"
+                android:gravity="center"
+                android:padding="@dimen/mg_20"
+                android:text="speak"
+                android:textColor="@color/camera_panel_control_color"
+                android:textSize="@dimen/ts_13" />
+        </LinearLayout>-->
+
     </RelativeLayout>
 
     <!--<include
@@ -81,7 +104,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_80"
-
         android:orientation="horizontal"
         android:layout_below="@+id/camera_video_view_Rl"
         android:background="@color/tuya_control_bg">

@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <color name="tuya_control_bg">#373737</color>
+    <color name="tuya_mic_bg_white">#80FFFFFF</color>
+    <color name="tuya_mic_bg_blue">#329ddc</color>
+</resources>
