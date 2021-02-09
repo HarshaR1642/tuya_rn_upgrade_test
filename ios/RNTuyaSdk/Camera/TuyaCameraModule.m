@@ -13,6 +13,7 @@
 #import <TuyaSmartBaseKit/TuyaSmartBaseKit.h>
 #import "TuyaRNUtils+Network.h"
 #import "TuyaAppCameraViewController.h"
+#import "CameraAppViewController.h"
 
 #define kControlTalk        @"talk"
 #define kControlRecord      @"record"
@@ -41,10 +42,17 @@ RCT_EXPORT_METHOD(openLivePreview:(NSDictionary *)params resolver:(RCTPromiseRes
     [[TuyaSmartUser sharedInstance] loginOrRegisterWithCountryCode:countryCode uid:uid password:passwd createHome:false success:^(id result) {
         [TuyaSmartDevice syncDeviceInfoWithDevId:devId homeId:nil success:^{
           NSLog(@"getToken success");
+            
+            // Pushinng to new View Camera UI
             NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
             NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
-            TuyaAppCameraViewController *vc = [[UIStoryboard storyboardWithName:@"Camera" bundle:imageBundle] instantiateViewControllerWithIdentifier:@"TuyaAppCameraViewController"];
+            CameraAppViewController *vc = [[UIStoryboard storyboardWithName:@"Camera" bundle:imageBundle] instantiateViewControllerWithIdentifier:@"CameraAppViewController"];
+            vc.devId = devId;
+            [vc initCamera:devId];
+            
+            // Pushing to old UI for camera app
 //          TuyaAppCameraViewController *vc = [[TuyaAppCameraViewController alloc] initWithDeviceId:devId];
+            
           UIViewController *topVC = [self topViewController];
           [topVC.navigationController pushViewController:vc animated:YES];
         } failure:^(NSError *error) {
