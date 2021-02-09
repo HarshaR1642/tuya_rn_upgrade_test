@@ -12,6 +12,7 @@ import com.tuya.smart.rnsdk.utils.Constant.HOMEID
 import com.tuya.smart.rnsdk.utils.Constant.PASSWORD
 import com.tuya.smart.rnsdk.utils.Constant.SSID
 import com.tuya.smart.rnsdk.utils.Constant.TIME
+import com.tuya.smart.rnsdk.utils.Constant.TOKEN
 
 
 import com.tuya.smart.sdk.api.ITuyaActivator
@@ -56,6 +57,37 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
     }
 
   }
+
+  @ReactMethod
+    fun getTokenForQRCode(params: ReadableMap, promise: Promise) {
+      if (ReactParamsCheck.checkParams(arrayOf(HOMEID), params)) {
+        TuyaHomeSdk.getActivatorInstance().getActivatorToken(params.getDouble(HOMEID).toLong(), object : ITuyaActivatorGetToken {
+          override fun onSuccess(s: String) {
+            promise.resolve(TuyaReactUtils.parseToWritableMap(s))
+          }
+
+          override fun onFailure(s: String, s1: String) {
+            promise.reject(s, s1)
+          }
+        })
+      }
+    }
+
+    @ReactMethod
+    fun initActivatorForQRCode(params: ReadableMap, promise: Promise) {
+      if (ReactParamsCheck.checkParams(arrayOf(SSID, PASSWORD, TIME, TOKEN), params)) {
+        mITuyaActivator = TuyaHomeSdk.getActivatorInstance().newActivator(ActivatorBuilder()
+                .setSsid(params.getString(SSID))
+                .setContext(reactApplicationContext.applicationContext)
+                .setPassword(params.getString(PASSWORD))
+                //.setActivatorModel(ActivatorModelEnum.valueOf(params.getString(TYPE) as String))
+                .setActivatorModel(ActivatorModelEnum.TY_QR)
+                .setTimeOut(params.getInt(TIME).toLong())
+                .setToken(params.getString(TOKEN)).setListener(getITuyaSmartActivatorListener(promise)))
+        mITuyaActivator?.start()
+      }
+
+    }
 
   @ReactMethod
   fun initActivator(params: ReadableMap, promise: Promise) {
