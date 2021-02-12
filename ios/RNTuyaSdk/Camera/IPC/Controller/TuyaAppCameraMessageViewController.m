@@ -49,7 +49,7 @@
     [self.schemeModels enumerateObjectsUsingBlock:^(TuyaSmartCameraMessageSchemeModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [titles addObject:obj.describe];
     }];
-    _segmentedControl = [[UISegmentedControl alloc] initWithItems:titles];
+    _segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Roshan", @"Bisht"]];
     _segmentedControl.selectedSegmentIndex = 0;
     [self.view addSubview:_segmentedControl];
     _segmentedControl.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), self.view.frame.size.width, 44);

@@ -6,10 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TuyaAppBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface CameraAppViewController : UIViewController
+
+@interface CameraAppViewController : TuyaAppBaseViewController
+
 @property (nonatomic, strong) NSString *devId;
 - (void)initCamera:(NSString *)devId;
 

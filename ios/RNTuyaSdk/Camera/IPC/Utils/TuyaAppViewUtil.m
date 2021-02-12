@@ -56,19 +56,19 @@
     return view;
 }
 
++ (UIViewController *)getCameraStoryBoardControllerForID:(NSString *)controllerID {
+    NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
+    NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
+    UIViewController *vc = [[UIStoryboard storyboardWithName:@"Camera" bundle:imageBundle] instantiateViewControllerWithIdentifier:controllerID];
+    return vc;
+}
+
 //This will return the image as a template ignoring the color information
 + (UIImage *)getImageFromBundleWithName: (NSString *)imageName {
     NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
     NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
     
     return [[UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-}
-
-+ (UIImage *)getOriginalImageFromBundleWithName: (NSString *)imageName {
-    NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
-    NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
-    
-    return [UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil];
 }
 
 + (UIImageView *)imageViewWithFrame:(CGRect)frame image:(UIImage *)image {
