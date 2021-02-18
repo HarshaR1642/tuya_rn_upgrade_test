@@ -23,6 +23,17 @@
     return [[UIBarButtonItem alloc] initWithTitle:UIKitLocalizedString(@"Cancel") style:UIBarButtonItemStylePlain target:target action:action];
 }
 
++ (UIBarButtonItem *)backItemImage:(UIImage *)image backItemButton:(id)target action:(SEL)action {
+    UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btnBack setFrame:CGRectMake(0, 0, 27, 27)];
+    [btnBack setImage:[TuyaAppViewUtil getImageFromBundleWithName:@"pps_left_arrow"] forState:UIControlStateNormal];
+    [btnBack addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:btnBack];
+//    UIBarButtonItem *leftBackItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:target action:action];
+    return barButton;
+}
+
+
 // 完成
 + (UIBarButtonItem *)doneItem:(id)target action:(SEL)action {
     return [[UIBarButtonItem alloc] initWithTitle:UIKitLocalizedString(@"Done") style:UIBarButtonItemStyleDone target:target action:action];
@@ -63,6 +74,10 @@
 
 + (TuyaAppBarButtonItem *)centerLogoItem:(id)target action:(SEL)action {
     return [TuyaAppBarButtonItem logoItem:[UIImage imageNamed:@"logo"] terget:target action:action];
+}
+
++ (TuyaAppBarButtonItem *)leftItemImage:(UIImage *)image backItemButton:(id)target action:(SEL)action {
+    return [TuyaAppBarButtonItem backItemImage:image backItemButton:target action:action];
 }
 
 @end

@@ -1,14 +1,16 @@
 //
-//  TuyaAppCameraSettingViewController.m
-//  TuyaSDK
+//  CameraSettingsViewController.m
+//  RNTuyaSdk
 //
-//  Created by Nagaraj Balan on 06/12/20.
+//  Created by Roshan Bisht on 16/02/21.
 //
 
-#import "TuyaAppCameraSettingViewController.h"
-#import "TuyaSmartSwitchCell.h"
+#import "CameraSettingsViewController.h"
 #import "TuyaAppCameraSDCardViewController.h"
 #import "TuyaAppProgressUtils.h"
+#import "CameraSettingsTableViewCell.h"
+#import "TuyaAppTheme.h"
+#import "FCAlertView.h"
 
 #define kTitle  @"title"
 #define kValue  @"value"
@@ -16,73 +18,61 @@
 #define kArrow  @"arrow"
 #define kSwitch @"switch"
 
-@interface TuyaAppCameraSettingViewController ()<TuyaSmartCameraDPObserver, UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, strong) UITableView *tableView;
 
-@property (nonatomic, assign) BOOL indicatorOn;
+@interface CameraSettingsViewController () <TuyaSmartCameraDPObserver, UITableViewDelegate, UITableViewDataSource>
+@property (weak, nonatomic) IBOutlet UITableView                        *settinngsTableView;
+@property (nonatomic, assign) BOOL                                      indicatorOn;
+@property (nonatomic, assign) BOOL                                      flipOn;
+@property (nonatomic, assign) BOOL                                      osdOn;
+@property (nonatomic, assign) BOOL                                      privateOn;
+@property (nonatomic, strong) TuyaSmartCameraNightvision                nightvisionState;
+@property (nonatomic, strong) TuyaSmartCameraPIR                        pirState;
+@property (nonatomic, assign) BOOL                                      motionDetectOn;
+@property (nonatomic, strong) TuyaSmartCameraMotion                     motionSensitivity;
+@property (nonatomic, assign) BOOL                                      decibelDetectOn;
+@property (nonatomic, strong) TuyaSmartCameraDecibel                    decibelSensitivity;
+@property (nonatomic, assign) TuyaSmartCameraSDCardStatus               sdCardStatus;
+@property (nonatomic, assign) BOOL                                      sdRecordOn;
+@property (nonatomic, strong) TuyaSmartCameraRecordMode                 recordMode;
+@property (nonatomic, assign) BOOL                                      batteryLockOn;
+@property (nonatomic, strong) TuyaSmartCameraPowerMode                  powerMode;
+@property (nonatomic, assign) NSInteger                                 electricity;
+@property (nonatomic, strong) NSArray                                   *dataSource;
+@property (nonatomic, strong) TuyaSmartDevice                           *device;
+@property (nonatomic, strong) UIView                                    *headerView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint                 *tableTopConstraiint;
+@property (weak, nonatomic) IBOutlet UIButton                           *removeCameraButton;
 
-@property (nonatomic, assign) BOOL flipOn;
-
-@property (nonatomic, assign) BOOL osdOn;
-
-@property (nonatomic, assign) BOOL privateOn;
-
-@property (nonatomic, strong) TuyaSmartCameraNightvision nightvisionState;
-
-@property (nonatomic, strong) TuyaSmartCameraPIR pirState;
-
-@property (nonatomic, assign) BOOL motionDetectOn;
-
-@property (nonatomic, strong) TuyaSmartCameraMotion motionSensitivity;
-
-@property (nonatomic, assign) BOOL decibelDetectOn;
-
-@property (nonatomic, strong) TuyaSmartCameraDecibel decibelSensitivity;
-
-@property (nonatomic, assign) TuyaSmartCameraSDCardStatus sdCardStatus;
-
-@property (nonatomic, assign) BOOL sdRecordOn;
-
-@property (nonatomic, strong) TuyaSmartCameraRecordMode recordMode;
-
-@property (nonatomic, assign) BOOL batteryLockOn;
-
-@property (nonatomic, strong) TuyaSmartCameraPowerMode powerMode;
-
-@property (nonatomic, assign) NSInteger electricity;
-
-@property (nonatomic, strong) NSArray *dataSource;
-
-@property (nonatomic, strong) TuyaSmartDevice *device;
 
 @end
 
-@implementation TuyaAppCameraSettingViewController
+@implementation CameraSettingsViewController 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"ipc_panel_button_settings", @"");
-    [self.dpManager addObserver:self];
-    [self.tableView registerClass:[TuyaSmartSwitchCell class] forCellReuseIdentifier:@"switchCell"];
-    [self getDeviceInfo];
-    [self setupTableFooter];
+
+    // Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
     self.topBarView.leftItem = self.leftBackItem;
-    
+
+    [self.topBarView setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
+    if (@available(iOS 13, *)) {
+        CGFloat topbarHeight = (self.navigationController.navigationBar.frame.size.height ?: 0.0);
+        _tableTopConstraiint.constant = topbarHeight;
+    }
+    [self.view setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
+
+    [self.dpManager addObserver:self];
+    [self getDeviceInfo];
+    _removeCameraButton.layer.cornerRadius = _removeCameraButton.frame.size.height / 2;
+    _removeCameraButton.clipsToBounds = YES;
 }
 
 - (NSString *)titleForCenterItem {
-    return NSLocalizedString(@"ipc_panel_button_settings", @"");
-}
-
-- (void)setupTableFooter {
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 70)];
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 20, self.view.frame.size.width, 50)];
-    [button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    [button setTitle:NSLocalizedString(@"cancel_connect", @"") forState:UIControlStateNormal];
-    [footerView addSubview:button];
-    self.tableView.tableFooterView = footerView;
-    [button addTarget:self action:@selector(removeAction) forControlEvents:UIControlEventTouchUpInside];
+    return @"Settings";
 }
 
 - (void)removeAction {
@@ -92,6 +82,10 @@
     } failure:^(NSError *error) {
         NSLog(@"&&& remove device %@", error);
     }];
+}
+
+- (IBAction)removeCameraButtonAction:(UIButton *)sender {
+    [self removeAction];
 }
 
 - (void)getDeviceInfo {
@@ -219,6 +213,8 @@
         [section3 addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_record_mode_settings", @""), kValue: text, kAction: @"recordModeAction", kArrow: @"1"}];
     }
     
+    [section3 addObject:@{kTitle: @"Reset WiFi", kValue: @"", kAction: @"resetWifiAction", kArrow: @"1"}];
+    
     if (section3.count > 0) {
         [dataSource addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_settings", @""), kValue: section3.copy}];
     }
@@ -241,8 +237,11 @@
         [dataSource addObject:@{kTitle: NSLocalizedString(@"ipc_electric_title", @""), kValue: section4.copy}];
     }
     self.dataSource = [dataSource copy];
-    [self.tableView reloadData];
+    [self.settinngsTableView reloadData];
 }
+
+
+#pragma mark - Action Methods
 
 - (void)indicatorAction:(UISwitch *)switchButton {
     __weak typeof(self) weakSelf = self;
@@ -404,6 +403,16 @@
     }];
 }
 
+- (void)resetWifiAction {
+    FCAlertView *alert = [[FCAlertView alloc] init];
+    [alert showAlertInView:self
+                 withTitle:@"Reset WiFi"
+              withSubtitle:@"Please follow the reset WiFi instructions shown earlier in the video on set up WiFi screen."
+           withCustomImage:nil
+       withDoneButtonTitle:nil
+                andButtons:nil];
+}
+
 - (void)batteryLockAction:(UISwitch *)switchButton {
     __weak typeof(self) weakSelf = self;
     [self.dpManager setValue:@(switchButton.on) forDP:TuyaSmartCameraWirelessBatteryLockDPName success:^(id result) {
@@ -514,14 +523,39 @@
     }
 }
 
-#pragma mark - table view
+#pragma mark - Accessor method
+- (TuyaSmartDevice *)device {
+    if (!_device) {
+        _device = [TuyaSmartDevice deviceWithDeviceId:self.devId];
+    }
+    return _device;
+}
+
+#pragma mark - Table View Delegate Methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.dataSource.count;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return [[self.dataSource objectAtIndex:section] objectForKey:kTitle];
+//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+//    return [[self.dataSource objectAtIndex:section] objectForKey:kTitle];
+//}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    _headerView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 40)];
+    UIView *paddinngView = [[UIView alloc] initWithFrame: CGRectMake(0, _headerView.frame.origin.y, 15, 40)];
+    [_headerView setBackgroundColor:[UIColor whiteColor]];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, _headerView.frame.origin.y, _headerView.frame.size.width, _headerView.frame.size.height)];
+    UIFont *font = [UIFont fontWithName:@"Quicksand-Medium" size:16.0];
+    NSDictionary *attribs = @{ NSForegroundColorAttributeName: [UIColor colorWithRed:63.0/255.0 green:77.0/255.0 blue:89.0/255.0 alpha:1.0],
+                               NSFontAttributeName: font
+                            };
+    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:[[self.dataSource objectAtIndex:section] objectForKey:kTitle] attributes:attribs];
+    [headerLabel setAttributedText: attributedText];
+    [_headerView addSubview:paddinngView];
+    [_headerView addSubview:headerLabel];
+    
+    return _headerView;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -533,28 +567,24 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 50;
+    return 60;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *data = [[[self.dataSource objectAtIndex:indexPath.section] valueForKey:kValue] objectAtIndex:indexPath.row];
     if ([data objectForKey:kSwitch]) {
-        TuyaSmartSwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"switchCell"];
+        CameraSettingsTableViewCell *cell = (CameraSettingsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"SettingSwitchCell" forIndexPath:indexPath];
         BOOL value = [[data objectForKey:kValue] boolValue];
         SEL action = NSSelectorFromString([data objectForKey:kAction]);
-        [cell setValueChangedTarget:self selector:action value:value];
-        cell.textLabel.text = [data objectForKey:kTitle];
+        cell.settingSwitch.on = value;
+        cell.settingsLabel.text = [data objectForKey:kTitle];
+        [cell.settingSwitch addTarget:self action:action forControlEvents:UIControlEventValueChanged];
+        
         return cell;
-    }else {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"defaultCell"];
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"defaultCell"];
-        }
-        cell.textLabel.text = [data objectForKey:kTitle];
-        cell.detailTextLabel.text = [data objectForKey:kValue];
-        if ([data objectForKey:kArrow]) {
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }
+    } else {
+        CameraSettingsTableViewCell *cell = (CameraSettingsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"SettingArrowCell" forIndexPath:indexPath];
+        cell.settingArrowLabel.text = [data objectForKey:kTitle];
+        [cell.settingArrowButton setTitle:[data objectForKey:kValue] forState:UIControlStateNormal];
         return cell;
     }
 }
@@ -570,21 +600,5 @@
     }
 }
 
-- (TuyaSmartDevice *)device {
-    if (!_device) {
-        _device = [TuyaSmartDevice deviceWithDeviceId:self.devId];
-    }
-    return _device;
-}
-
-- (UITableView *)tableView {
-    if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, APP_TOP_BAR_HEIGHT, APP_SCREEN_WIDTH, APP_SCREEN_HEIGHT - APP_TOP_BAR_HEIGHT) style:UITableViewStylePlain];
-        _tableView.delegate = self;
-        _tableView.dataSource = self;
-        [self.view addSubview:_tableView];
-    }
-    return _tableView;
-}
 
 @end

@@ -10,6 +10,7 @@
 //#import <SDWebImage/UIImageView+WebCache.h>
 #import <TuyaSmartCameraKit/TuyaSmartCameraKit.h>
 #import "CameraMessageTableViewCell.h"
+#import "TuyaAppTheme.h"
 
 @interface CameraMessageViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -18,6 +19,8 @@
 @property (nonatomic, strong) TuyaSmartCameraMessage                            *cameraMessage;
 @property (nonatomic, strong) NSArray<TuyaSmartCameraMessageSchemeModel *>      *schemeModels;
 @property (nonatomic, strong) NSArray<TuyaSmartCameraMessageModel *>            *messageModelList;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *messageTableViewTopConstraint;
+
 
 @end
 
@@ -27,6 +30,32 @@
     [super viewDidLoad];
     [self getMessageScehemes];
     // Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self updateMessageViewConstrants];
+}
+
+- (void)updateMessageViewConstrants {
+    if (@available(iOS 13, *)) {
+        CGFloat topbarHeight = (self.navigationController.navigationBar.frame.size.height ?: 0.0);
+        _messageTableViewTopConstraint.constant = topbarHeight;
+    }
+    [self.view setBackgroundColor: [TuyaAppTheme theme].navbar_bg_color];
+    [_messageTableView setBackgroundColor:[UIColor clearColor]];
+    [self.topBarView setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
+    self.topBarView.leftItem = self.leftBackItem;
+    [_messageContentView setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
+//    var top = self.navigationController?.navigationBar.frame.height ?? 0.0
+//            if #available(iOS 13.0, *) {
+//                top = UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame.height + self.navigationController?.navigationBar.frame.height
+//            } else {
+//                top = UIApplication.shared.statusBarFrame.height + self.navigationController?.navigationBar.frame.height
+//            }
+}
+
+- (NSString *)titleForCenterItem {
+    return @"Messages";
 }
 
 - (void)getMessageScehemes {

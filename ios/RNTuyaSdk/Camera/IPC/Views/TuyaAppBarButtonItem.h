@@ -27,6 +27,8 @@
 // 图片
 + (TuyaAppBarButtonItem *)logoItem:(UIImage *)image terget:(id)target action:(SEL)action;
 
++ (TuyaAppBarButtonItem *)leftItemImage:(UIImage *)image backItemButton:(id)target action:(SEL)action;
+
 
 // deprecated
 // --------------------------------

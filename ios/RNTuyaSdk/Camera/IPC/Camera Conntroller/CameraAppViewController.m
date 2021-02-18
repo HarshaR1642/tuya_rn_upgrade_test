@@ -18,6 +18,8 @@
 #import "TuyaAppCameraSDCardViewController.h"
 #import "TuyaAppViewUtil.h"
 #import "CameraMessageViewController.h"
+#import "CameraPlayBackController.h"
+#import "CameraSettingsViewController.h"
 
 
 #define kControlTalk        @"talk"
@@ -74,7 +76,13 @@
     [self.stateLabel setHidden:YES];
     [self.retryButton setHidden: YES];
     [self retryAction];
+    self.addLeftBarBackButtonEnabled = YES;
     _superContentView.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0];
+    
+    [[self.navigationController navigationBar] setTintColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
+    [[self.navigationController navigationBar] setBarTintColor:[UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:1.0]];
+    UIFont *font = [UIFont fontWithName:@"Quicksand-Medium" size:16.0];
+    [self.navigationController.navigationBar setTitleTextAttributes: @{NSForegroundColorAttributeName:[UIColor whiteColor], NSFontAttributeName: font}];
 }
 
 - (void)viewDidLoad {
@@ -84,11 +92,9 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
-    
    
     // Do any additional setup after loading the view.
 }
-
 
 - (void)showLoadingWithTitle:(NSString *)title {
     self.indicatorView.hidden = NO;
@@ -118,10 +124,15 @@
 }
 
 - (void) settingAction {
-    TuyaAppCameraSettingViewController *settingVC = [TuyaAppCameraSettingViewController new];
+    CameraSettingsViewController *settingVC = (CameraSettingsViewController *)[TuyaAppViewUtil getCameraStoryBoardControllerForID:@"CameraSettingsViewController"];
     settingVC.devId = self.devId;
     settingVC.dpManager = self.camera.dpManager;
     [self.navigationController pushViewController:settingVC animated:YES];
+    
+//    TuyaAppCameraSettingViewController *settingVC = [TuyaAppCameraSettingViewController new];
+//    settingVC.devId = self.devId;
+//    settingVC.dpManager = self.camera.dpManager;
+//    [self.navigationController pushViewController:settingVC animated:YES];
 }
 
 #pragma mark - View Themes Setting
@@ -154,9 +165,14 @@
 #pragma mark - Camera UI control methods
 
 - (IBAction)playbackButtonAction:(UIButton *)sender {
-    TuyaAppCameraPlaybackViewController *vc = [TuyaAppCameraPlaybackViewController new];
-    vc.camera = self.camera;
-    [self.navigationController pushViewController:vc animated:YES];
+//    TuyaAppCameraPlaybackViewController *vc = [TuyaAppCameraPlaybackViewController new];
+//    vc.camera = self.camera;
+//    [self.navigationController pushViewController:vc animated:YES];
+    
+    
+    CameraPlayBackController *messageVC = (CameraPlayBackController *)[TuyaAppViewUtil getCameraStoryBoardControllerForID:@"CameraPlayBackController"];
+    messageVC.camera = self.camera;
+    [self.navigationController pushViewController:messageVC animated:YES];
 }
 
 - (IBAction)messageButtonAction:(UIButton *)sender {
@@ -222,9 +238,9 @@
     [self checkPhotoPermision:^(BOOL result) {
         if (result) {
             [self.camera snapShoot:^{
-                [self showAlertWithMessage:NSLocalizedString(@"ipc_multi_view_photo_saved", @"") complete:nil];
+                [self showAlertWithMessage:@"A Screenshot has been saved to your photos gallery." complete:nil];
             } failure:^(NSError *error) {
-                [self showAlertWithMessage:NSLocalizedString(@"fail", @"") complete:nil];
+                [self showAlertWithMessage:@"Failed to save" complete:nil];
             }];
         }
     }];
@@ -235,14 +251,14 @@
         if (result) {
             if (self.camera.isRecording) {
                 [self.camera stopRecord:^{
-                    [TuyaAppProgressUtils showSuccess:NSLocalizedString(@"ipc_multi_view_video_saved", @"") toView:self.view];
+                    [TuyaAppProgressUtils showSuccess:@"Video has been saved to your photos gallery." toView:self.view];
                 } failure:^(NSError *error) {
-                    [TuyaAppProgressUtils showError:NSLocalizedString(@"record failed", @"")];
+                    [TuyaAppProgressUtils showError:@"Failed to save"];
                 }];
             }else {
                 [self.camera startRecord:^{
                 } failure:^(NSError *error) {
-                    [TuyaAppProgressUtils showError:NSLocalizedString(@"record failed", @"")];
+                    [TuyaAppProgressUtils showError:@"Failed to save"];
                 }];
             }
         }

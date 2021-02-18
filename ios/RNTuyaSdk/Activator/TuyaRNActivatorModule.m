@@ -196,7 +196,6 @@ RCT_EXPORT_METHOD(onDestory:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromis
   
 }
 
-
 #pragma mark -
 #pragma mark - delegate
 /// 配网状态更新的回调，wifi单品，zigbee网关，zigbee子设备

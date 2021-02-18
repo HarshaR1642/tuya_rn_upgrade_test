@@ -68,7 +68,7 @@
     NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
     NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
     
-    return [[UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    return [[UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
 + (UIImageView *)imageViewWithFrame:(CGRect)frame image:(UIImage *)image {

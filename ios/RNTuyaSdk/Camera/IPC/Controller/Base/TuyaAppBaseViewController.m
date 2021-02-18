@@ -103,7 +103,7 @@
     } else {
         
         if (num > 1) {
-            self.topBarView.leftItem = self.leftBackItem;
+//            self.topBarView.leftItem = self.leftBackItem;
         }
     }
     
@@ -189,7 +189,7 @@
 
 - (TuyaAppBarButtonItem *)leftBackItem {
     if (!_leftBackItem) {
-        _leftBackItem = [TuyaAppBarButtonItem backItem:self action:@selector(backButtonTap)];
+        _leftBackItem = [TuyaAppBarButtonItem  leftItemImage:[TuyaAppViewUtil getImageFromBundleWithName:@"pps_left_arrow"] backItemButton:self action:@selector(backButtonTap)];
     }
     return _leftBackItem;
 }
@@ -290,6 +290,38 @@
 
 - (BOOL)shouldAutorotate {
     return NO;
+}
+
+- (void)setAddLeftBarBackButtonEnabled:(BOOL)addLeftBarBackButtonEnabled {
+    //This is for add back button and it should be called from viewWillAppear
+    if (addLeftBarBackButtonEnabled) {
+        UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btnBack setFrame:CGRectMake(0, 0, 25, 25)];
+        [btnBack setImage:[TuyaAppViewUtil getImageFromBundleWithName:@"pps_left_arrow"] forState:UIControlStateNormal];
+        [btnBack addTarget:self action:@selector(actionLeftBarButton:) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *barButton =[[UIBarButtonItem alloc] initWithCustomView:btnBack];
+        self.navigationItem.leftBarButtonItem = barButton;
+    } else {
+        [self.navigationItem setHidesBackButton:YES];
+    }
+}
+
+- (void)actionLeftBarButton: (id)obj {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)setRightBarButtonWithImage:(NSString *) image {
+    //This is for add back button and it should be called from viewWillAppear
+        UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
+        [btnBack setFrame:CGRectMake(0, 0, 20, 20)];
+        [btnBack setImage:[TuyaAppViewUtil getImageFromBundleWithName:image] forState:UIControlStateNormal];
+        [btnBack addTarget:self action:@selector(actionRightBarButton:) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *barButton =[[UIBarButtonItem alloc] initWithCustomView:btnBack];
+        self.navigationItem.rightBarButtonItem = barButton;
+}
+
+- (void)actionRightBarButton: (id)obj {
+    
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
