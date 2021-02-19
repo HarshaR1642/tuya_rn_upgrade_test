@@ -11,6 +11,8 @@
 #import "CameraSettingsTableViewCell.h"
 #import "TuyaAppTheme.h"
 #import "FCAlertView.h"
+#import "KeylessListener.h"
+#import "TuyaRNDeviceListener.h"
 
 #define kTitle  @"title"
 #define kValue  @"value"
@@ -77,11 +79,19 @@
 
 - (void)removeAction {
     __weak typeof(self) weakSelf = self;
-    [self.device remove:^{
-        [weakSelf.navigationController popToRootViewControllerAnimated:YES];
-    } failure:^(NSError *error) {
-        NSLog(@"&&& remove device %@", error);
-    }];
+//    [self.device remove:^{
+//        [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+//    } failure:^(NSError *error) {
+//        NSLog(@"&&& remove device %@", error);
+//    }];
+    
+    TuyaRNDeviceListener *dev =  [TuyaRNDeviceListener shareInstance];
+    [dev removeCameraDevice];
+    
+//    KeylessListener *listner = [KeylessListener alloc];
+//    [listner sendCameraRemoveCommand:@"" callback:^(BOOL success, NSString *errorMessage) {
+//
+//    }];
 }
 
 - (IBAction)removeCameraButtonAction:(UIButton *)sender {

@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (void)registerDevice:(TuyaSmartDevice *)device type:(TuyaRNDeviceListenType)type;
 
+- (void)removeCameraDevice;;
+
 /*
  * 移除设备监听
  */

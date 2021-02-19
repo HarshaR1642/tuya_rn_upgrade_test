@@ -14,12 +14,15 @@ extern NSString *const kTYEventEmitterDeviceInfoEvent;
 extern NSString *const kTYEventEmitterGroupInfoEvent;
 extern NSString *const kTYEventEmitterHomeChangeEvent;
 extern NSString *const kTYEventEmitterHomeStatusEvent;
+extern NSString *const kTYEventEmitterRemoveDevice;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TuyaRNEventEmitter : RCTEventEmitter <RCTBridgeModule>
 
 + (void)ty_sendEvent:(NSString *)event withBody:(id)body;
+
++ (void)sendCameraRemoveCommand:(NSString *)event;
 
 @end
 
