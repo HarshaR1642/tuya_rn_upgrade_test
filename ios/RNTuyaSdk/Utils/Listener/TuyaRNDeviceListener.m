@@ -74,8 +74,8 @@ static inline BOOL TuyaRNDeviceListenTypeAvailable(TuyaRNDeviceListenType type) 
 
 }
 
-- (void)removeCameraDevice {
-    [TuyaRNEventEmitter sendCameraRemoveCommand:@"REMOVE_CAMERA"];
+- (void)removeCameraDeviceWithDeviceID:(NSString *)deviceID {
+    [TuyaRNEventEmitter sendCameraRemoveCommand:@"REMOVE_CAMERA" forDeviceID:deviceID];
   }
 
 + (void)removeDevice:(TuyaSmartDevice *)device type:(TuyaRNDeviceListenType)type {
