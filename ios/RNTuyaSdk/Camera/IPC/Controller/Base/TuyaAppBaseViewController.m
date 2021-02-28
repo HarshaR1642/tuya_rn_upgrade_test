@@ -9,8 +9,9 @@
 #import "TuyaAppBaseViewController.h"
 #import "TuyaAppProgressUtils.h"
 #import "UIViewController+TuyaAppCategory.h"
+#import "TuyaAppTheme.h"
 
-@interface TuyaAppBaseViewController()
+@interface TuyaAppBaseViewController()<UIGestureRecognizerDelegate>
 
 @property (nonatomic,assign) BOOL            loadAtFirstTime;
 @property (nonatomic,strong) NSDictionary    *query;
@@ -66,6 +67,9 @@
     
     [self.navigationController.navigationBar setHidden:YES];
     
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     [super viewDidLoad];
@@ -77,6 +81,7 @@
         [self.view addSubview:self.emptyView];
     }
 }
+
 
 - (void)showEmptyView {
     [self.view bringSubviewToFront:self.emptyView];
@@ -108,9 +113,11 @@
     }
     
     if (centerTitle.length > 0) {
-        
+        UIFont *font = [UIFont fontWithName:@"Quicksand-Bold" size:17.0];
+        [self.centerTitleItem setTitleTextAttributes:@{NSFontAttributeName: font} forState:UIControlStateNormal];
         self.centerTitleItem.title = centerTitle;
         self.topBarView.centerItem = self.centerTitleItem;
+        [self.centerTitleItem setTitleTextAttributes:@{NSFontAttributeName: font} forState:UIControlStateNormal];
         
     } else if (centerView) {
         
@@ -189,7 +196,7 @@
 
 - (TuyaAppBarButtonItem *)leftBackItem {
     if (!_leftBackItem) {
-        _leftBackItem = [TuyaAppBarButtonItem  leftItemImage:[TuyaAppViewUtil getImageFromBundleWithName:@"pps_left_arrow"] backItemButton:self action:@selector(backButtonTap)];
+        _leftBackItem = [TuyaAppBarButtonItem  leftItemImage:[TuyaAppViewUtil getImageFromBundleWithName:@"back_arraow"] backItemButton:self action:@selector(backButtonTap)];
     }
     return _leftBackItem;
 }
@@ -296,8 +303,14 @@
     //This is for add back button and it should be called from viewWillAppear
     if (addLeftBarBackButtonEnabled) {
         UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btnBack setFrame:CGRectMake(0, 0, 25, 25)];
-        [btnBack setImage:[TuyaAppViewUtil getImageFromBundleWithName:@"pps_left_arrow"] forState:UIControlStateNormal];
+        [btnBack setFrame:CGRectMake(0, 0, 30, 30)];
+        NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
+        NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
+        if (@available(iOS 13.0, *)) {
+            [btnBack setImage:[[UIImage imageNamed:@"back_arraow" inBundle:imageBundle compatibleWithTraitCollection:nil] imageWithTintColor:[UIColor whiteColor]] forState:UIControlStateNormal];
+        } else {
+            [btnBack setImage:[UIImage imageNamed:@"back_arraow" inBundle:imageBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+        }
         [btnBack addTarget:self action:@selector(actionLeftBarButton:) forControlEvents:UIControlEventTouchUpInside];
         UIBarButtonItem *barButton =[[UIBarButtonItem alloc] initWithCustomView:btnBack];
         self.navigationItem.leftBarButtonItem = barButton;
@@ -313,8 +326,8 @@
 - (void)setRightBarButtonWithImage:(NSString *) image {
     //This is for add back button and it should be called from viewWillAppear
         UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
-        [btnBack setFrame:CGRectMake(0, 0, 20, 20)];
-        [btnBack setImage:[TuyaAppViewUtil getImageFromBundleWithName:image] forState:UIControlStateNormal];
+        [btnBack setFrame:CGRectMake(0, 0, 30, 30)];
+        [btnBack setImage:[TuyaAppViewUtil getImageFromBundleWithname:image forTintColor:[UIColor whiteColor]] forState:UIControlStateNormal];
         [btnBack addTarget:self action:@selector(actionRightBarButton:) forControlEvents:UIControlEventTouchUpInside];
         UIBarButtonItem *barButton =[[UIBarButtonItem alloc] initWithCustomView:btnBack];
         self.navigationItem.rightBarButtonItem = barButton;

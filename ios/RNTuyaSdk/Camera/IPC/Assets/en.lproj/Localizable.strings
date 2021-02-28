@@ -813,7 +813,7 @@
 "pps_day_tue" = "Tue.";
 "pps_day_wed" = "Wed.";
 "pps_flashback" = "Playback";
-"pps_no_sdcard" = "No storage device detected";
+"pps_no_sdcard" = "No storage";
 "title_device_offline" = "Offline";
 "ty_network_error" = "Network error, please try it again";
 

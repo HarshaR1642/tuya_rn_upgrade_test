@@ -11,15 +11,19 @@
 #import <TuyaSmartCameraKit/TuyaSmartCameraKit.h>
 #import "CameraMessageTableViewCell.h"
 #import "TuyaAppTheme.h"
+#import "ImagePopUpViewController.h"
+#import "MBProgressHUD.h"
 
-@interface CameraMessageViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface CameraMessageViewController () <UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView                                *messageTableView;
 @property (weak, nonatomic) IBOutlet UIView                                     *messageContentView;
 @property (nonatomic, strong) TuyaSmartCameraMessage                            *cameraMessage;
 @property (nonatomic, strong) NSArray<TuyaSmartCameraMessageSchemeModel *>      *schemeModels;
 @property (nonatomic, strong) NSArray<TuyaSmartCameraMessageModel *>            *messageModelList;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *messageTableViewTopConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint                         *messageTableViewTopConstraint;
+@property (strong, nonatomic) UIRefreshControl                                  *refreshControl;
+@property (weak, nonatomic) IBOutlet UILabel                                    *noDataLabel;
 
 
 @end
@@ -28,8 +32,25 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [self getMessageScehemes];
+    
+    _refreshControl = [[UIRefreshControl alloc]init];
+    [_refreshControl setTintColor:[TuyaAppTheme theme].button_color];
+    self.noDataLabel.textColor = [TuyaAppTheme theme].font_color;
+    [self.noDataLabel setHidden:YES];
+    [_refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
+    if (@available(iOS 10.0, *)) {
+        self.messageTableView.refreshControl = _refreshControl;
+    } else {
+        [self.messageTableView addSubview:_refreshControl];
+    }
     // Do any additional setup after loading the view.
+}
+
+- (void)refreshTable {
+    [_refreshControl endRefreshing];
+    [self getMessageScehemes];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -43,15 +64,11 @@
     }
     [self.view setBackgroundColor: [TuyaAppTheme theme].navbar_bg_color];
     [_messageTableView setBackgroundColor:[UIColor clearColor]];
+    
     [self.topBarView setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
     self.topBarView.leftItem = self.leftBackItem;
+    
     [_messageContentView setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
-//    var top = self.navigationController?.navigationBar.frame.height ?? 0.0
-//            if #available(iOS 13.0, *) {
-//                top = UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame.height + self.navigationController?.navigationBar.frame.height
-//            } else {
-//                top = UIApplication.shared.statusBarFrame.height + self.navigationController?.navigationBar.frame.height
-//            }
 }
 
 - (NSString *)titleForCenterItem {
@@ -91,6 +108,12 @@
     NSDate *date = [formatter dateFromString:@"2019-09-17"];
     [self.cameraMessage messagesWithMessageCodes:schemeModel.msgCodes Offset:0 limit:20 startTime:[date timeIntervalSince1970] endTime:[[NSDate new] timeIntervalSince1970] success:^(NSArray<TuyaSmartCameraMessageModel *> *result) {
         self.messageModelList = result;
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        if (result.count > 0) {
+            [self.noDataLabel setHidden:YES];
+        } else {
+            [self.noDataLabel setHidden:NO];
+        }
         [self.messageTableView reloadData];
     } failure:^(NSError *error) {
         NSLog(@"error: %@", error);
@@ -107,10 +130,27 @@
     
     [messageCell.messageUserImageView ty_setAESImageWithPath:messageModel.attachPic encryptKey:@"" placeholderImage:[self placeHolder]];
 
-    [messageCell.messageTitleLabel setText:messageModel.msgTitle];
+    [messageCell.messageTitleLabel setHidden:YES];
     [messageCell.messageDateLabel setText:messageModel.dateTime];
     [messageCell.messageLabel setText:messageModel.msgContent];
+    [messageCell.messageLabel setTextColor:[TuyaAppTheme theme].button_color];
+    
+    messageCell.messageUserImageView.userInteractionEnabled = YES;
+    messageCell.messageUserImageView.tag = indexPath.row;
+    UITapGestureRecognizer *tapGesture1 = [[UITapGestureRecognizer alloc] initWithTarget:self  action:@selector(tapGesture:)];
+    tapGesture1.numberOfTapsRequired = 1;
+    [tapGesture1 setDelegate:self];
+    [messageCell.messageUserImageView addGestureRecognizer:tapGesture1];
     return messageCell;
+}
+
+- (void)tapGesture:(UITapGestureRecognizer*)sender {
+    UIImageView *view = (UIImageView *)sender.view;
+    TuyaSmartCameraMessageModel *messageModel = [self.messageModelList objectAtIndex:view.tag];
+    
+    ImagePopUpViewController *popUpVc = (ImagePopUpViewController *)[TuyaAppViewUtil getCameraStoryBoardControllerForID:@"ImagePopUpViewController"];
+    popUpVc.imageUrl = messageModel.attachPic;
+    [self.navigationController presentViewController:popUpVc animated:YES completion:nil];
 }
 
 - (NSInteger)tableView:(nonnull UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

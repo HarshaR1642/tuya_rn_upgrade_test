@@ -47,6 +47,7 @@
 @property (nonatomic, strong) NSString                                  *chimeSettings;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint                 *tableTopConstraiint;
 @property (weak, nonatomic) IBOutlet UIButton                           *removeCameraButton;
+@property (strong, nonatomic) UIRefreshControl                          *refreshControl;
 
 
 @end
@@ -56,6 +57,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    _refreshControl = [[UIRefreshControl alloc]init];
+    [_refreshControl setTintColor:[TuyaAppTheme theme].button_color];
+    [_refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
+    if (@available(iOS 10.0, *)) {
+        self.settinngsTableView.refreshControl = _refreshControl;
+    } else {
+        [self.settinngsTableView addSubview:_refreshControl];
+    }
+}
+
+-(void)refreshTable {
+    [_refreshControl endRefreshing];
+    [self getDeviceInfo];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -643,6 +657,7 @@
         SEL action = NSSelectorFromString([data objectForKey:kAction]);
         cell.settingSwitch.on = value;
         cell.settingsLabel.text = [data objectForKey:kTitle];
+        cell.settingSwitch.onTintColor = [TuyaAppTheme theme].button_color;
         [cell.settingSwitch addTarget:self action:action forControlEvents:UIControlEventValueChanged];
         
         return cell;

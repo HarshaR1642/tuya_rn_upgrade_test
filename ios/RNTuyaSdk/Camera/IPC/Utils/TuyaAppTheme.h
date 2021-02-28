@@ -88,6 +88,12 @@
 @property (nonatomic, strong) UIColor *home_index_bg_end_color;
 
 
+@property (nonatomic, strong) UIColor *view_bg_color;
+@property (nonatomic, strong) UIColor *button_color;
+@property (nonatomic, strong) UIColor *cell_selected_color;
+@property (nonatomic, strong) UIColor *font_color;
+
+
 
 - (UIStatusBarStyle)preferredStatusBarStyle;
 

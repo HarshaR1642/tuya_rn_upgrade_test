@@ -53,6 +53,8 @@ UITableViewDelegate>
 @property (nonatomic, strong) TuyaAppCameraCalendarView                    *calendarView;
 @property (nonatomic, strong) NSArray<TuyaAppCameraRecordModel *>          *dataSource;
 @property (nonatomic, strong) NSIndexPath                                  *selectedIndexPath;
+@property (weak, nonatomic) IBOutlet UIView                                *bottomTabControlView;
+@property (weak, nonatomic) IBOutlet UILabel *noDataAvialbleLabel;
 
 @end
 
@@ -77,12 +79,16 @@ UITableViewDelegate>
     [self.stateLabel setHidden:YES];
     [self.retryButton setHidden: YES];
     [self retryAction];
-    self.addLeftBarBackButtonEnabled = YES;
     self.title = self.camera.device.deviceModel.name;
     [self.playbackTableView setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
     _playbackContentView.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0];
     [self.view setBackgroundColor:[UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0]];
+    [self.bottomTabControlView setBackgroundColor:[UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0]];
+    self.addLeftBarBackButtonEnabled = YES;
+    [self setRightBarButtonWithImage:@"keyless_filter"];
+    self.noDataAvialbleLabel.textColor = [TuyaAppTheme theme].font_color;
 }
+
 
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -93,19 +99,17 @@ UITableViewDelegate>
 
 
 - (void)setCameraViewTheme {
-    
-    [self setRightBarButtonWithImage:@"keyless_filter"];
-    [_recordButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_record"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateNormal];
-    [_recordButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_record_on"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateSelected];
+    [_recordButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_record"] forState: UIControlStateNormal];
+    [_recordButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_record_on"] forState: UIControlStateSelected];
 
-    [_takePhotoButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_photo"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateNormal];
+    [_takePhotoButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_photo"] forState: UIControlStateNormal];
     
-    [_muteButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_sound_off"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateNormal];
+    [_muteButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_sound_off"] forState: UIControlStateNormal];
     
-    [_muteButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_sound_on"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateSelected];
+    [_muteButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_sound_on"] forState: UIControlStateSelected];
     
-    [_pauseButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_pause"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateNormal];
-    [_pauseButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_pause"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateSelected];
+    [_pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_pause"] forState: UIControlStateNormal];
+    [_pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_pause"] forState: UIControlStateSelected];
 }
 
 - (void)didEnterBackground {
@@ -133,7 +137,7 @@ UITableViewDelegate>
     TuyaSmartPlaybackDate *playbackDate = [TuyaSmartPlaybackDate new];
     __weak typeof(self) weakSelf = self;
     [self.camera playbackDaysInYear:playbackDate.year month:playbackDate.month complete:^(TYNumberArray *result) {
-        weakSelf.playbackDays = result.mutableCopy;
+        weakSelf.playbackDays = [[result.mutableCopy reverseObjectEnumerator] allObjects].mutableCopy;
         [weakSelf.calendarView reloadData];
     }];
 }
@@ -279,7 +283,9 @@ UITableViewDelegate>
             weakSelf.dataSource = weakSelf.timeLineModels;
             [weakSelf.playbackTableView reloadData];
             [weakSelf.timeLineView setCurrentTime:0 animated:YES];
+            [weakSelf.noDataAvialbleLabel setHidden:YES];
         }else {
+            [weakSelf.noDataAvialbleLabel setHidden:NO];
             [weakSelf stopLoadingWithText:NSLocalizedString(@"ipc_playback_no_records_today", @"")];
         }
     }];
@@ -343,7 +349,7 @@ UITableViewDelegate>
     [self showLoadingWithTitle:@""];
     [self.camera playbackDaysInYear:year month:month complete:^(TYNumberArray *result) {
         [self stopLoadingWithText:@""];
-        self.playbackDays = [result mutableCopy];
+        self.playbackDays = [[result.mutableCopy reverseObjectEnumerator] allObjects].mutableCopy;
         [calendarView reloadData];
     }];
 }
@@ -418,13 +424,15 @@ UITableViewDelegate>
     
     [cell setBackgroundColor:[UIColor clearColor]];
     [cell.playbackTitleLabel setText:[self getStringByDate: timeslice.startDate]];
+    [cell.playbackTitleLabel setTextColor:[TuyaAppTheme theme].button_color];
     [cell.playbackMessageImageView setImage:[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_play"]];
+    [cell.playbackMessageImageView setTintColor:[TuyaAppTheme theme].button_color];
     [cell.playbackMessageLabel setText:[self duration:timeslice.startDate endDate:timeslice.stopDate]];
     
-    if (indexPath == _selectedIndexPath) {
-        [cell.playbackMessageView setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
-    }
     [cell.playbackMessageView setBackgroundColor:[UIColor whiteColor]];
+    if (indexPath == _selectedIndexPath) {
+        [cell.playbackMessageView setBackgroundColor:[TuyaAppTheme theme].cell_selected_color];
+    }
     cell.playbackMessageView.layer.cornerRadius = 5.0;
     cell.playbackMessageView.clipsToBounds = true;
     
@@ -444,13 +452,13 @@ UITableViewDelegate>
     if (_selectedIndexPath) {
         [tableView deselectRowAtIndexPath:_selectedIndexPath animated:YES];
     }
-//    [tableView reloadRowsAtIndexPaths:@[_selectedIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     _selectedIndexPath = indexPath;
     TuyaAppCameraTimeLineModel *timeslice = (TuyaAppCameraTimeLineModel *)[self.dataSource objectAtIndex:indexPath.row];
     if (timeslice) {
         TuyaAppCameraTimeLineModel *model = (TuyaAppCameraTimeLineModel*)timeslice;
         [self playbackWithTime:model.startTime timeLineModel:model];
     }
+    [tableView reloadData];
     
 }
 - (NSString *)duration:(NSDate *)startDate endDate:(NSDate *)endDate

@@ -7,6 +7,7 @@
 
 #import "TuyaAppViewUtil.h"
 #import <objc/runtime.h>
+#import "TuyaAppTheme.h"
 
 @implementation TuyaAppViewUtil
 
@@ -63,12 +64,34 @@
     return vc;
 }
 
+
+
++ (UIImage *)getImageFromBundleWithname: (NSString *)imageName forTintColor: (UIColor *)color {
+    NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
+    NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
+    if (@available(iOS 13.0, *)) {
+        return [[UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil] imageWithTintColor:color];
+    } else {
+        return [[UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    }
+}
+
++ (UIImage *)getOriginalImageFromBundleWithName: (NSString *)imageName {
+    NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
+    NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
+    return [[UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+}
+
 //This will return the image as a template ignoring the color information
 + (UIImage *)getImageFromBundleWithName: (NSString *)imageName {
     NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
     NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
     
-    return [[UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    if (@available(iOS 13.0, *)) {
+        return [[UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil] imageWithTintColor:[TuyaAppTheme theme].button_color];
+    } else {
+        return [[UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    }
 }
 
 + (UIImageView *)imageViewWithFrame:(CGRect)frame image:(UIImage *)image {

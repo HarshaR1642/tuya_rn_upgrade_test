@@ -20,13 +20,18 @@
 
 // 取消
 + (UIBarButtonItem *)cancelItem:(id)target action:(SEL)action {
-    return [[UIBarButtonItem alloc] initWithTitle:UIKitLocalizedString(@"Cancel") style:UIBarButtonItemStylePlain target:target action:action];
+    UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btnBack setFrame:CGRectMake(0, 0, 30, 30)];
+    [btnBack setImage:[TuyaAppViewUtil getImageFromBundleWithName:@"back_arraow"] forState:UIControlStateNormal];
+    [btnBack addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:btnBack];
+    return barButton;
 }
 
 + (UIBarButtonItem *)backItemImage:(UIImage *)image backItemButton:(id)target action:(SEL)action {
     UIButton *btnBack = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btnBack setFrame:CGRectMake(0, 0, 27, 27)];
-    [btnBack setImage:[TuyaAppViewUtil getImageFromBundleWithName:@"pps_left_arrow"] forState:UIControlStateNormal];
+    [btnBack setFrame:CGRectMake(0, 0, 30, 30)];
+    [btnBack setImage:[TuyaAppViewUtil getImageFromBundleWithName:@"back_arraow"] forState:UIControlStateNormal];
     [btnBack addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:btnBack];
 //    UIBarButtonItem *leftBackItem = [[UIBarButtonItem alloc] initWithImage:image style:UIBarButtonItemStylePlain target:target action:action];

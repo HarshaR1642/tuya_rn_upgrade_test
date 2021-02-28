@@ -34,7 +34,7 @@
 @property  (strong, nonatomic) IBOutlet TuyaSmartCameraControlView *controlView;
 @property (nonatomic, strong) TuyaSmartCamera *camera;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
-@property (weak, nonatomic) IBOutlet UIView *superContentView;
+@property (weak, nonatomic) IBOutlet UIView   *superContentView;
 @property (weak, nonatomic) IBOutlet UIButton *talkButton;
 @property (weak, nonatomic) IBOutlet UIButton *muteButton;
 @property (weak, nonatomic) IBOutlet UIButton *retryButton;
@@ -45,6 +45,7 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicatorView;
 @property (weak, nonatomic) IBOutlet UILabel *stateLabel;
 @property (nonatomic, strong) UIBarButtonItem *rightSettingButton;
+@property (weak, nonatomic) IBOutlet UIView *bottomControlView;
 
 @end
 
@@ -76,13 +77,14 @@
     [self.stateLabel setHidden:YES];
     [self.retryButton setHidden: YES];
     [self retryAction];
-    self.addLeftBarBackButtonEnabled = YES;
     _superContentView.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0];
-    
-    [[self.navigationController navigationBar] setTintColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
-    [[self.navigationController navigationBar] setBarTintColor:[UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:1.0]];
-    UIFont *font = [UIFont fontWithName:@"Quicksand-Medium" size:16.0];
-    [self.navigationController.navigationBar setTitleTextAttributes: @{NSForegroundColorAttributeName:[UIColor whiteColor], NSFontAttributeName: font}];
+    _bottomControlView.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0];
+    self.addLeftBarBackButtonEnabled = YES;
+    [self.retryButton addTarget:self action:@selector(retryConnect) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)retryConnect {
+    [self retryAction];
 }
 
 - (void)viewDidLoad {
@@ -111,7 +113,7 @@
 
 - (UIBarButtonItem *)rightSettingButton {
     if (!_rightSettingButton) {
-        _rightSettingButton = [[UIBarButtonItem alloc] initWithImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_Setting"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] style:UIBarButtonItemStylePlain target:self action:@selector(settingAction)];
+        _rightSettingButton = [[UIBarButtonItem alloc] initWithImage:[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_Setting"] style:UIBarButtonItemStylePlain target:self action:@selector(settingAction)];
     }
     return _rightSettingButton;
 }
@@ -138,28 +140,27 @@
 #pragma mark - View Themes Setting
 
 - (void)setCameraViewTheme {
-
-    [_talkButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_speak_off"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateNormal];
+    [_talkButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_speak_off"] forState: UIControlStateNormal];
     
-    [_talkButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_speak_on"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateSelected];
-    
-    
-    [_recordButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_record"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateNormal];
-    
-    [_recordButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_record_on"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateSelected];
+    [_talkButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_speak_on"] forState: UIControlStateSelected];
     
     
-    [_takePhotoButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_photo"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateNormal];
+    [_recordButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_record"] forState: UIControlStateNormal];
+    
+    [_recordButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_record_on"] forState: UIControlStateSelected];
     
     
-    [_muteButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_sound_on"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateNormal];
-    
-    [_muteButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_sound_off"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateSelected];
+    [_takePhotoButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_photo"] forState: UIControlStateNormal];
     
     
-    [_messageButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_message"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateNormal];
+    [_muteButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_sound_on"] forState: UIControlStateNormal];
     
-    [_playBackButton setImage:[[TuyaAppViewUtil getImageFromBundleWithName:@"keyless_play_list"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState: UIControlStateNormal];
+    [_muteButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_sound_off"] forState: UIControlStateSelected];
+    
+    
+    [_messageButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_message"] forState: UIControlStateNormal];
+    
+    [_playBackButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_play_list"] forState: UIControlStateNormal];
 }
 
 #pragma mark - Camera UI control methods
@@ -355,9 +356,10 @@
 }
 
 - (void)retryAction {
-//    [self.controlView disableAllControl];
     if (!self.camera.device.deviceModel.isOnline) {
         self.stateLabel.hidden = NO;
+        [self makeButtonEnable:NO];
+        self.retryButton.hidden = NO;
         self.stateLabel.text = NSLocalizedString(@"title_device_offline", @"");
         return;
     }
@@ -374,6 +376,7 @@
     }];
     [self showLoadingWithTitle:NSLocalizedString(@"loading", @"")];
     self.retryButton.hidden = YES;
+    [self makeButtonEnable:YES];
 }
 
 - (void)connectCamera:(void(^)(BOOL success))complete {
@@ -395,8 +398,16 @@
 
 #pragma mark - TuyaSmartCameraObserver
 - (void)cameraDidDisconnected:(TuyaSmartCamera *)camera {
-    [self.controlView disableAllControl];
+//    [self.controlView disableAllControl];
+    [self makeButtonEnable:NO];
     self.retryButton.hidden = NO;
+}
+
+- (void)makeButtonEnable: (BOOL)boolValue {
+    self.talkButton.enabled = boolValue;
+    self.muteButton.enabled = boolValue;
+    self.takePhotoButton.enabled = boolValue;
+    self.recordButton.enabled = boolValue;
 }
 
 - (void)camera:(TuyaSmartCamera *)camera didReceiveMuteState:(BOOL)isMuted {
