@@ -106,7 +106,18 @@
 }
 
 - (IBAction)removeCameraButtonAction:(UIButton *)sender {
-    [self removeAction];
+    FCAlertView *alert = [[FCAlertView alloc] init];
+    [alert showAlertInView:self
+                 withTitle:@"Remove Device"
+              withSubtitle:@"After the device is disconnected, all the device related settings and data will be deleted."
+           withCustomImage:nil
+       withDoneButtonTitle:nil
+                andButtons:nil];
+    
+    [alert addButton:@"Cancel" withActionBlock:nil];
+    [alert doneActionBlock:^{
+        [self removeAction];
+    }];
 }
 
 - (NSString *)returnChimeTypeForValue:(NSInteger)chimeValue {

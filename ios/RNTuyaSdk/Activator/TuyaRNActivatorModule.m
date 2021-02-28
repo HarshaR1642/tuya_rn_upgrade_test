@@ -175,12 +175,19 @@ RCT_EXPORT_METHOD(stopNewGwSubDevActivatorConfig:(NSDictionary *)params resolver
 /**
  获取wifi信息
  */
-RCT_EXPORT_METHOD(getCurrentWifi:(NSDictionary *)params success:(RCTResponseSenderBlock)succ failure:(RCTResponseErrorBlock)fail) {
+RCT_EXPORT_METHOD(getCurrentWifi:(NSDictionary *)params resolver :(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
   NSString *ssid = [TuyaSmartActivator currentWifiSSID];
+    if (activatorInstance == nil) {
+      activatorInstance = [TuyaRNActivatorModule new];
+      RCTLogInfo(@"new activator instance");
+    }
+    
+    [TuyaSmartActivator sharedInstance].delegate = activatorInstance;
+    activatorInstance.promiseResolveBlock = resolver;
+    activatorInstance.promiseRejectBlock = rejecter;
   if ([ssid isKindOfClass:[NSString class]] && ssid.length > 0) {
-    succ(@[ssid]);
+      resolver(ssid);
   } else {
-    fail(nil);
   }
 }
 

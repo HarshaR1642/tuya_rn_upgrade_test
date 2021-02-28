@@ -62,10 +62,6 @@ export function stopConfig() {
   return tuya.stopConfig();
 }
 
-export function getCurrentWifi(
-  success: (ssid: string) => void,
-  error: () => void
-) {
-  // We need the Allow While Using App location permission to use this.
-  return tuya.getCurrentWifi({}, success, error);
+export function getCurrentWifi() {
+  return tuya.getCurrentWifi({});
 }

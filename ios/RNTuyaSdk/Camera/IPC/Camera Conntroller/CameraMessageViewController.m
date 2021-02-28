@@ -62,13 +62,13 @@
         CGFloat topbarHeight = (self.navigationController.navigationBar.frame.size.height ?: 0.0);
         _messageTableViewTopConstraint.constant = topbarHeight;
     }
-    [self.view setBackgroundColor: [TuyaAppTheme theme].navbar_bg_color];
+    [self.view setBackgroundColor: [TuyaAppTheme theme].view_bg_color];
     [_messageTableView setBackgroundColor:[UIColor clearColor]];
     
-    [self.topBarView setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
+    [self.topBarView setBackgroundColor:[TuyaAppTheme theme].view_bg_color];
     self.topBarView.leftItem = self.leftBackItem;
     
-    [_messageContentView setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
+    [_messageContentView setBackgroundColor:[TuyaAppTheme theme].view_bg_color];
 }
 
 - (NSString *)titleForCenterItem {
