@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tuya_page_bg"
+    android:orientation="vertical"
+    tools:context="com.tuya.smart.rnsdk.camera.activity.SettingActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_view"
+        style="@style/HeaderBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center_vertical"
+        app:navigationIcon="@drawable/ic_action_arrow_backward"
+        app:title="Settings"
+        app:titleTextColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tv_show_query"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_show_publish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:visibility="gone"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_resetore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DpResetore.ID"
+                android:textColor="@color/black"
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tuya_header_bg_white"
+                android:paddingHorizontal="@dimen/dp_20"
+                android:paddingVertical="@dimen/dp_10"
+                android:text="BASIC SETTINGS"
+                android:textStyle="bold"
+                android:textColor="@color/tuya_txt_gunmetal"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Flip Screen"
+                    android:textColor="@color/tuya_txt_gunmetal"/>
+
+                <ToggleButton
+                    android:id="@+id/toggle_FlipScreen"
+                    android:layout_width="@dimen/dp_51"
+                    android:layout_height="@dimen/dp_31"
+                    android:gravity="center"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@null"
+                    android:button="@drawable/check" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="@dimen/dp_15"
+                android:background="@color/tuya_list_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Time Watermark"
+                    android:textColor="@color/tuya_txt_gunmetal"/>
+
+                <ToggleButton
+                    android:id="@+id/toggle_OSD"
+                    android:layout_width="@dimen/dp_51"
+                    android:layout_height="@dimen/dp_31"
+                    android:gravity="center"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@null"
+                    android:button="@drawable/check" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="@dimen/dp_15"
+                android:background="@color/tuya_list_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="IR Night Vision"
+                    android:textColor="@color/tuya_txt_gunmetal"/>
+                <TextView
+                    android:id="@+id/txt_NightVision"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_30"
+                    android:gravity="end|center_vertical"
+                    android:paddingHorizontal="@dimen/dp_5"
+                    tools:text="Auto"
+                    android:textColor="@color/tuya_txt_gunmetal"
+                    android:clickable="true"
+                    android:focusable="true" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_1"
+                    android:src="@drawable/ic_arrow_blue_right"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="@dimen/dp_15"
+                android:background="@color/tuya_list_divider"
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tuya_header_bg_white"
+                android:paddingHorizontal="@dimen/dp_20"
+                android:paddingVertical="@dimen/dp_10"
+                android:text="BELL SETTINGS"
+                android:textStyle="bold"
+                android:textColor="@color/tuya_txt_gunmetal"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Chime Type"
+                    android:textColor="@color/tuya_txt_gunmetal"/>
+
+                <TextView
+                    android:id="@+id/txt_ChimeType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_30"
+                    android:gravity="end|center_vertical"
+                    android:paddingHorizontal="@dimen/dp_5"
+                    tools:text="Auto"
+                    android:textColor="@color/tuya_txt_gunmetal"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_1"
+                    android:src="@drawable/ic_arrow_blue_right"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tuya_header_bg_white"
+                android:paddingHorizontal="@dimen/dp_20"
+                android:paddingVertical="@dimen/dp_10"
+                android:text="MOTION DETECTION"
+                android:textStyle="bold"
+                android:textColor="@color/tuya_txt_gunmetal"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Motion Detection"
+                    android:textColor="@color/tuya_txt_gunmetal"/>
+
+                <ToggleButton
+                    android:id="@+id/toggle_MotionDetection"
+                    android:layout_width="@dimen/dp_51"
+                    android:layout_height="@dimen/dp_31"
+                    android:gravity="center"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@null"
+                    android:button="@drawable/check" />
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tuya_header_bg_white"
+                android:paddingHorizontal="@dimen/dp_20"
+                android:paddingVertical="@dimen/dp_10"
+                android:text="STORAGE SETTINGS"
+                android:textStyle="bold"
+                android:textColor="@color/tuya_txt_gunmetal"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Storage Settings"
+                    android:textColor="@color/tuya_txt_gunmetal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_30"
+                    android:gravity="end|center_vertical"
+                    android:paddingHorizontal="@dimen/dp_5"
+                    android:text="Auto"
+                    android:textColor="@color/tuya_txt_gunmetal"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_1"
+                    android:src="@drawable/ic_arrow_blue_right"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="@dimen/dp_15"
+                android:background="@color/tuya_list_divider"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Local Recording"
+                    android:textColor="@color/tuya_txt_gunmetal"/>
+
+                <ToggleButton
+                    android:id="@+id/toggle_LocalRecording"
+                    android:layout_width="@dimen/dp_51"
+                    android:layout_height="@dimen/dp_31"
+                    android:gravity="center"
+                    android:textOn=""
+                    android:textOff=""
+                    android:background="@null"
+                    android:button="@drawable/check" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="@dimen/dp_15"
+                android:background="@color/tuya_list_divider"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Recording Mode"
+                    android:textColor="@color/tuya_txt_gunmetal"/>
+
+                <TextView
+                    android:id="@+id/txt_RecordType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_30"
+                    android:gravity="end|center_vertical"
+                    android:paddingHorizontal="@dimen/dp_5"
+                    android:text="Auto"
+                    android:textColor="@color/tuya_txt_gunmetal"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_1"
+                    android:src="@drawable/ic_arrow_blue_right"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="@dimen/dp_15"
+                android:background="@color/tuya_list_divider"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_30"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="Reset Wifi"
+                    android:textColor="@color/tuya_txt_gunmetal"/>\
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dp_30"
+                    android:gravity="end|center_vertical"
+                    android:paddingHorizontal="@dimen/dp_5"
+                    android:text="Auto"
+                    android:textColor="@color/tuya_txt_gunmetal"
+                    android:visibility="gone"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_1"
+                    android:src="@drawable/ic_arrow_blue_right"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="@dimen/dp_15"
+                android:background="@color/tuya_list_divider"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/speak_Txt"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_40"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginVertical="@dimen/dp_20"
+                android:background="@drawable/tuya_btn_selector"
+                android:gravity="center"
+                android:paddingVertical="@dimen/mg_10"
+                android:paddingHorizontal="@dimen/mg_25"
+                android:textAllCaps="false"
+                android:text="Remove Camera"
+                android:textColor="@color/tuya_button_txt_white"
+                android:textSize="@dimen/ts_13"/>
+            <!--<Button
+                android:id="@+id/btn_sdstatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpSDStatus.ID"/>
+
+            <Button
+                android:id="@+id/btn_storage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpSDStorge.ID"/>
+
+            <Button
+                android:id="@+id/btn_sd_format"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpSDFormat.ID"/>
+
+            <Button
+                android:id="@+id/btn_sd_format_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpSDFormatStatus.ID"/>
+
+            <Button
+                android:id="@+id/btn_record_model"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpSDRecordModel.ID"/>
+
+            <Button
+                android:id="@+id/btn_record_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpSDRecordSwitch.ID"/>
+
+            <Button
+                android:id="@+id/btn_basic_flip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpBasicFlip.ID"/>
+
+            <Button
+                android:id="@+id/btn_motion_sensitivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpMotionSensitivity.ID"/>
+
+            <Button
+                android:id="@+id/btn_wireless_batterylock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpWirelessBatterylock.ID"/>
+
+            <Button
+                android:id="@+id/btn_wireless_electricity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpWirelessElectricity.ID"/>
+
+            <Button
+                android:id="@+id/btn_wireless_lowpower"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpWirelessLowpower.ID"/>
+            <Button
+                android:id="@+id/btn_wireless_powermode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="DpWirelessPowermode.ID"/>
+
+            <Button
+                android:id="@+id/btn_wireless_wakeup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="WAKE.ID"/>-->
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

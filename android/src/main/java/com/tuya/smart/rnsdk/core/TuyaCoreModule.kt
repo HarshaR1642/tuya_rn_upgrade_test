@@ -36,14 +36,14 @@ class TuyaCoreModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
 
         //@JvmStatic
         fun registerFcmDevice(s: String) {
-          TuyaHomeSdk.getPushInstance().registerDevice(s, "FCM",object: IResultCallback {
-            override fun onError(code:String, error:String) {
-              Log.d("TAG-FCM", "Error-" + error)
-            }
-            override fun onSuccess() {
-              Log.d("TAG-FCM", "Success")
-            }
-          })
+            TuyaHomeSdk.getPushInstance().registerDevice(s, "FCM",object: IResultCallback {
+                override fun onError(code:String, error:String) {
+                    Log.d("TAG-FCM", "Error-" + error)
+                }
+                override fun onSuccess() {
+                    Log.d("TAG-FCM", "Success")
+                }
+            })
         }
 
     }

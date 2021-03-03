@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tuya_page_bg"
+    tools:context="com.tuya.smart.rnsdk.camera.activity.AlarmDetectionActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_view"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center_vertical"
+        style="@style/HeaderBar"
+        app:navigationIcon="@drawable/ic_action_arrow_backward"
+        app:title="Message Center"
+        app:titleTextColor="@color/black" />
+
+
+    <LinearLayout
+        android:id="@+id/query_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_view"
+        android:orientation="horizontal"
+        android:padding="@dimen/mg_10"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Input Query Date:"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/date_input_edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="2019/11/12"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/query_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/query_ll"
+        android:layout_marginLeft="@dimen/mg_10"
+        android:layout_marginRight="@dimen/mg_10"
+        android:text="query"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/query_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/query_btn"
+        android:layout_marginLeft="@dimen/mg_10"
+        android:layout_marginRight="@dimen/mg_10" />
+
+</RelativeLayout>

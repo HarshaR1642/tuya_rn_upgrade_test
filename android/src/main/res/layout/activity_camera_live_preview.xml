@@ -5,16 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".rnsdk.camera.activity.CameraLivePreviewActivity">
+    android:background="@color/tuya_page_bg_black"
+    tools:context="com.tuya.smart.rnsdk.camera.activity.CameraLivePreviewActivity">
 
-    <!--    <androidx.appcompat.widget.toolbar-->
-    <!--        android:id="@+id/toolbar_view"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="?attr/actionBarSize"-->
-    <!--        android:gravity="center_vertical"-->
-    <!--        app:navigationIcon="@drawable/tysmart_back"-->
-    <!--        app:title="Camera"-->
-    <!--        app:titleTextColor="@color/black" />-->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_view"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center_vertical"
+        style="@style/HeaderBar"
+        app:navigationIcon="@drawable/ic_action_arrow_backward"
+        app:title="Playback"
+        app:titleTextColor="@color/black"
+        />
 
     <RelativeLayout
         android:id="@+id/camera_video_view_Rl"
@@ -47,12 +50,12 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:background="@drawable/camera_shape_wirlesswake"
+            android:background="@drawable/camera_quality_button"
             android:gravity="center"
             android:text="HD"
             android:textColor="@color/white"
             android:textSize="@dimen/ts_12"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
         <TextView
             android:id="@+id/speak_Txt"
