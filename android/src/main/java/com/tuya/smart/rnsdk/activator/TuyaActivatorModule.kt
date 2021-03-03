@@ -63,7 +63,6 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
           //promise.resolve(TuyaReactUtils.parseToWritableMap(s))
           promise.resolve(s)
         }
-
         override fun onFailure(s: String, s1: String) {
           promise.reject(s, s1)
         }
@@ -86,6 +85,21 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
       mITuyaCameraActivator?.start()
     }
 
+  }
+
+  @ReactMethod
+  fun registerForPushNotification(params: ReadableMap) {
+      Log.d("elango-registerForPushNotification", params.toString() + "-----" + params.getString("token"))
+      if (ReactParamsCheck.checkParams(arrayOf("token"), params)) {
+          TuyaHomeSdk.getPushInstance().registerDevice(params.getString("token"), "FCM", object : IResultCallback {
+            override fun onError(code: String, error: String) {
+              Log.d("TAG-FCM", "Error-" + error)
+            }
+            override fun onSuccess() {
+              Log.d("TAG-FCM", "Success")
+            }
+          })
+      }
   }
 
   @ReactMethod

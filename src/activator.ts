@@ -34,6 +34,10 @@ export type InitGwActivatorParams = {
   time: number
 };
 
+export type RegisterForPushNotificationParams = {
+  token: any
+};
+
 export function initActivator(
     params: InitActivatorParams
 ): Promise<DeviceDetailResponse> {
@@ -50,6 +54,12 @@ export function initActivatorForQRCode(
     params: InitActivatorQRCodeParams
 ): Promise<DeviceDetailResponse> {
   return tuya.initActivatorForQRCode(params);
+}
+
+export function registerForPushNotification (
+    params: RegisterForPushNotificationParams
+) {
+  return tuya.registerForPushNotification(params);
 }
 
 export function newGwActivator(
