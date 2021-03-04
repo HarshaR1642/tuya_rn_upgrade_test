@@ -137,7 +137,7 @@ UITableViewDelegate>
     TuyaSmartPlaybackDate *playbackDate = [TuyaSmartPlaybackDate new];
     __weak typeof(self) weakSelf = self;
     [self.camera playbackDaysInYear:playbackDate.year month:playbackDate.month complete:^(TYNumberArray *result) {
-        weakSelf.playbackDays = [[result.mutableCopy reverseObjectEnumerator] allObjects].mutableCopy;
+        weakSelf.playbackDays = result.mutableCopy;
         [weakSelf.calendarView reloadData];
     }];
 }
@@ -280,7 +280,7 @@ UITableViewDelegate>
         if (result.count > 0) {
             weakSelf.timeLineModels = [NSArray yy_modelArrayWithClass:[TuyaAppCameraTimeLineModel class] json:result];
             weakSelf.timeLineView.sourceModels = weakSelf.timeLineModels;
-            weakSelf.dataSource = weakSelf.timeLineModels;
+            weakSelf.dataSource = [[weakSelf.timeLineModels reverseObjectEnumerator] allObjects].mutableCopy;;
             [weakSelf.playbackTableView reloadData];
             [weakSelf.timeLineView setCurrentTime:0 animated:YES];
             [weakSelf.noDataAvialbleLabel setHidden:YES];
@@ -349,7 +349,7 @@ UITableViewDelegate>
     [self showLoadingWithTitle:@""];
     [self.camera playbackDaysInYear:year month:month complete:^(TYNumberArray *result) {
         [self stopLoadingWithText:@""];
-        self.playbackDays = [[result.mutableCopy reverseObjectEnumerator] allObjects].mutableCopy;
+        self.playbackDays = result.mutableCopy;
         [calendarView reloadData];
     }];
 }

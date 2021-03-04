@@ -92,18 +92,41 @@
     return @"Settings";
 }
 
-- (void)removeAction {
+- (void)removeDeviceFromAsset {
     __weak typeof(self) weakSelf = self;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     KeylessListener *listner = [KeylessListener allocWithZone:nil];
-    [listner sendCameraRemoveCommandForDeviceID:self.device.deviceModel.devId callback:^(BOOL success, NSString * _Nonnull errorMessage) {
+    [listner sendCameraRemoveCommandForDeviceID:weakSelf.device.deviceModel.devId callback:^(BOOL success, NSString * _Nonnull errorMessage) {
         [MBProgressHUD hideHUDForView:weakSelf.view animated:YES];
         if (success && [errorMessage isEqualToString:@"REMOVE_CAMERA_SUCCESS"]) {
             [weakSelf.navigationController popToRootViewControllerAnimated:YES];
         } else {
+            FCAlertView *alert = [[FCAlertView alloc] init];
+            [alert showAlertInView:weakSelf
+                         withTitle:@"Error"
+                      withSubtitle:@"Error in deleting the camera from asset"
+                   withCustomImage:nil
+               withDoneButtonTitle:@"OK"
+                        andButtons:nil];
         }
     }];
 }
+
+- (void)removeAction {
+    /*
+     
+     First Format the SD card and On success Call the Listener to call the remove device API from Asset
+     
+     **/
+    [self removeDeviceFromAsset];
+//    __weak typeof(self) weakSelf = self;
+//    [self.dpManager setValue:@(YES) forDP:TuyaSmartCameraSDCardFormatDPName success:^(id result) {
+//        [weakSelf removeDeviceFromAsset];
+//    } failure:^(NSError *error) {
+//        [weakSelf removeDeviceFromAsset];
+//    }];
+}
+
 
 - (IBAction)removeCameraButtonAction:(UIButton *)sender {
     FCAlertView *alert = [[FCAlertView alloc] init];
@@ -111,7 +134,7 @@
                  withTitle:@"Remove Device"
               withSubtitle:@"After the device is disconnected, all the device related settings and data will be deleted."
            withCustomImage:nil
-       withDoneButtonTitle:nil
+       withDoneButtonTitle:@"Remove"
                 andButtons:nil];
     
     [alert addButton:@"Cancel" withActionBlock:nil];
@@ -264,11 +287,10 @@
     
     if ([self.dpManager isSupportDP:TuyaSmartCameraSDCardRecordDPName]) {
         [section3 addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_record_switch", @""), kValue: @(self.sdRecordOn), kAction: @"sdRecordAction:", kSwitch: @"1"}];
-    }
-    
-    if ([self.dpManager isSupportDP:TuyaSmartCameraRecordModeDPName]) {
-        NSString *text = [self recordModeText:self.recordMode];
-        [section3 addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_record_mode_settings", @""), kValue: text, kAction: @"recordModeAction", kArrow: @"1"}];
+        if (self.sdRecordOn && [self.dpManager isSupportDP:TuyaSmartCameraRecordModeDPName]) {
+                NSString *text = [self recordModeText:self.recordMode];
+                [section3 addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_record_mode_settings", @""), kValue: text, kAction: @"recordModeAction", kArrow: @"1"}];
+        }
     }
     
     [section3 addObject:@{kTitle: @"Reset WiFi", kValue: @"", kAction: @"resetWifiAction", kArrow: @"1"}];
@@ -471,6 +493,7 @@
     __weak typeof(self) weakSelf = self;
     [self.dpManager setValue:@(switchButton.on) forDP:TuyaSmartCameraSDCardRecordDPName success:^(id result) {
         weakSelf.sdRecordOn = switchButton.on;
+        [weakSelf reloadData];
     } failure:^(NSError *error) {
         [weakSelf reloadData];
     }];

@@ -279,6 +279,7 @@ RCT_EXPORT_METHOD(logout:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRe
   
   [[TuyaSmartUser sharedInstance] loginOut:^{
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"OPTIONS_ARRAY"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"TUYA_DEVICE_TOKEN"];
     [TuyaRNUtils resolverWithHandler:resolver];
   } failure:^(NSError *error) {
     [TuyaRNUtils rejecterWithError:error handler:rejecter];

@@ -788,7 +788,7 @@
 "ipc_sdcard_record_mode_ctns" = "Non-Stop";
 "ipc_sdcard_record_mode_event" = "Event Recording";
 "ipc_sdcard_record_mode_settings" = "Recording Mode";
-"ipc_sdcard_record_switch" = "Local Recording";
+"ipc_sdcard_record_switch" = "SD Card Recording";
 "ipc_sdcard_settings" = "Storage Settings";
 "ipc_settings_ok" = "Done";
 "ipc_settings_page_basic_function_txt" = "Basic Settings";

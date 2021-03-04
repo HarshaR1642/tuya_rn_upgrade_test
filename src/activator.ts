@@ -34,6 +34,10 @@ export type InitGwActivatorParams = {
   time: number
 };
 
+export type RegisterForPushNotificationParams = {
+  token: any
+};
+
 export function initActivator(
   params: InitActivatorParams
 ): Promise<DeviceDetailResponse> {
@@ -64,4 +68,10 @@ export function stopConfig() {
 
 export function getCurrentWifi() {
   return tuya.getCurrentWifi({});
+}
+
+export function registerForPushNotification (
+  params: RegisterForPushNotificationParams
+) {
+  return tuya.registerForPushNotification(params);
 }

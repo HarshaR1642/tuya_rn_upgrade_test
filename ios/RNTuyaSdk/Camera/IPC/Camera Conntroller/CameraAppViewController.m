@@ -92,6 +92,20 @@
     [self setCameraViewTheme];
     self.title = self.camera.device.deviceModel.name;
     
+    /**
+     
+     Setting the Camera Chime  DP Value to Mechanical Default
+     
+     */
+    if (self.camera.dpManager) {
+        NSInteger number  = [[self.camera.dpManager valueForDP:@"165"] tysdk_toInt];
+        if ([self.camera.dpManager isSupportDP:@"165"] && number == 0) { // Chime Settings
+            [self.camera.dpManager setValue:@"1" forDP:@"165" success:^(id result) {
+            } failure:^(NSError *error) {
+            }];
+        }
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
    

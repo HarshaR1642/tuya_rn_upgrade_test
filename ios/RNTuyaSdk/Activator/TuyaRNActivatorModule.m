@@ -120,6 +120,14 @@ RCT_EXPORT_METHOD(stopConfig:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromi
   [[TuyaSmartActivator sharedInstance] stopConfigWiFi];
 }
 
+RCT_EXPORT_METHOD(registerForPushNotification:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
+    if (params[@"token"]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [TuyaSmartSDK sharedInstance].deviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"TUYA_DEVICE_TOKEN"];
+        });
+    }
+}
+
 
 //ZigBee子设备配网需要ZigBee网关设备云在线的情况下才能发起,且子设备处于配网状态。
 
@@ -194,7 +202,6 @@ RCT_EXPORT_METHOD(getCurrentWifi:(NSDictionary *)params resolver :(RCTPromiseRes
 
 //判断网络
 RCT_EXPORT_METHOD(openNetworkSettings:(NSDictionary *)params resolver :(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
-  
    [TuyaRNUtils openNetworkSettings];
   
 }
