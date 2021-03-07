@@ -63,7 +63,7 @@
 
 - (void)viewDidLoad {
     
-    self.view.backgroundColor = HEXCOLOR(0xE8E9EF);
+//    self.view.backgroundColor = HEXCOLOR(0xE8E9EF);
     
     [self.navigationController.navigationBar setHidden:YES];
     
@@ -174,12 +174,11 @@
 - (TuyaAppTopBarView *)topBarView {
     if (!_topBarView) {
         _topBarView = [TuyaAppTopBarView new];
-        //        _topBarView.bottomLineHidden = YES;
-        
-        //        _topBarView.layer.shadowColor = HEXCOLORA(0x000000, 0.1).CGColor;
-        //        _topBarView.layer.shadowOffset = CGSizeMake(0,1);
-        //        _topBarView.layer.shadowOpacity = 1;
-        //        _topBarView.layer.shadowRadius = 1;
+        _topBarView.bottomLineHidden = YES;
+        _topBarView.layer.shadowColor = [UIColor clearColor].CGColor;
+        _topBarView.layer.shadowOffset = CGSizeMake(0,1);
+        _topBarView.layer.shadowOpacity = 1;
+        _topBarView.layer.shadowRadius = 1;
         
         
     }

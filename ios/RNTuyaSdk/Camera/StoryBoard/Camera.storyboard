@@ -48,37 +48,44 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="5Lp-3t-2T7">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BFY-0X-hGX">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BFY-0X-hGX">
                                                         <rect key="frame" x="0.0" y="0.0" width="75" height="70"/>
                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="keyless_sound_off.png"/>
+                                                        <state key="selected" image="keyless_sound_on.png"/>
                                                         <connections>
                                                             <action selector="soundButtonAction:" destination="gVj-Vv-cwe" eventType="touchUpInside" id="daD-Ui-yW6"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mmF-ff-Uur">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mmF-ff-Uur">
                                                         <rect key="frame" x="85" y="0.0" width="74.5" height="70"/>
                                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="keyless_photo.png"/>
                                                         <connections>
                                                             <action selector="takePhotoAction:" destination="gVj-Vv-cwe" eventType="touchUpInside" id="dDi-11-Nf0"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e8Q-H3-LVY">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e8Q-H3-LVY">
                                                         <rect key="frame" x="169.5" y="0.0" width="75" height="70"/>
                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="keyless_record.png"/>
+                                                        <state key="selected" image="keyless_record_on.png"/>
                                                         <connections>
                                                             <action selector="recordVideoAction:" destination="gVj-Vv-cwe" eventType="touchUpInside" id="1jl-Vu-buy"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k7g-ZL-igK">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k7g-ZL-igK">
                                                         <rect key="frame" x="254.5" y="0.0" width="74.5" height="70"/>
                                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="keyless_play_list.png"/>
                                                         <connections>
                                                             <action selector="playbackButtonAction:" destination="gVj-Vv-cwe" eventType="touchUpInside" id="lBu-gb-NI9"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85Z-xL-ugL">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="85Z-xL-ugL">
                                                         <rect key="frame" x="339" y="0.0" width="75" height="70"/>
                                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="keyless_message.png"/>
                                                         <connections>
                                                             <action selector="messageButtonAction:" destination="gVj-Vv-cwe" eventType="touchUpInside" id="J99-kr-aMY"/>
                                                         </connections>
@@ -102,6 +109,8 @@
                                             <constraint firstAttribute="height" constant="60" id="WUG-2c-Tiu"/>
                                         </constraints>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" image="keyless_speak_off.png"/>
+                                        <state key="selected" image="keyless_speak_on.png"/>
                                         <connections>
                                             <action selector="talkButtonAction:" destination="gVj-Vv-cwe" eventType="touchUpInside" id="pYp-Sr-Y1A"/>
                                         </connections>
@@ -427,7 +436,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1xg-dh-T68">
-                                                    <rect key="frame" x="15" y="10" width="39.5" height="103"/>
+                                                    <rect key="frame" x="15" y="10" width="42" height="103"/>
                                                     <fontDescription key="fontDescription" name="Quicksand-Medium" family="Quicksand Medium" pointSize="16"/>
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -440,7 +449,7 @@
                                                     </constraints>
                                                 </view>
                                                 <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SeX-hD-JR7">
-                                                    <rect key="frame" x="64.5" y="10" width="329.5" height="103"/>
+                                                    <rect key="frame" x="67" y="10" width="327" height="103"/>
                                                     <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="30" maxY="0.0"/>
                                                     <state key="normal" title="Button">
                                                         <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -612,30 +621,36 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="RwL-4e-3wp">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
                                                 <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fty-QP-Bcu" userLabel="muteButton">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fty-QP-Bcu" userLabel="muteButton">
                                                         <rect key="frame" x="0.0" y="0.0" width="96" height="70"/>
                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="keyless_sound_off.png"/>
+                                                        <state key="selected" image="keyless_sound_on.png"/>
                                                         <connections>
                                                             <action selector="soundButtonAction:" destination="W13-n1-vCg" eventType="touchUpInside" id="5vC-hS-VPl"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7AF-Wq-Mit" userLabel="VideoButton">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7AF-Wq-Mit" userLabel="VideoButton">
                                                         <rect key="frame" x="106" y="0.0" width="96" height="70"/>
                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="keyless_record.png"/>
+                                                        <state key="selected" image="keyless_record_on.png"/>
                                                         <connections>
                                                             <action selector="recodButtonAction:" destination="W13-n1-vCg" eventType="touchUpInside" id="PvC-lX-01u"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eFJ-De-evi" userLabel="pauseButton">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eFJ-De-evi" userLabel="pauseButton">
                                                         <rect key="frame" x="212" y="0.0" width="96" height="70"/>
                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="keyless_pause.png"/>
                                                         <connections>
                                                             <action selector="pauseButtonAction:" destination="W13-n1-vCg" eventType="touchUpInside" id="vOf-2E-opg"/>
                                                         </connections>
                                                     </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6qJ-In-II3" userLabel="cameraButton">
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6qJ-In-II3" userLabel="cameraButton">
                                                         <rect key="frame" x="318" y="0.0" width="96" height="70"/>
                                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <state key="normal" image="keyless_photo.png"/>
                                                         <connections>
                                                             <action selector="photoButtonAction:" destination="W13-n1-vCg" eventType="touchUpInside" id="9n9-hD-w7Q"/>
                                                         </connections>
@@ -806,6 +821,16 @@
         </scene>
     </scenes>
     <resources>
+        <image name="keyless_message.png" width="23" height="23"/>
+        <image name="keyless_pause.png" width="45" height="45"/>
+        <image name="keyless_photo.png" width="24.5" height="20"/>
+        <image name="keyless_play_list.png" width="22.5" height="23"/>
+        <image name="keyless_record.png" width="27" height="17.5"/>
+        <image name="keyless_record_on.png" width="46" height="46"/>
+        <image name="keyless_sound_off.png" width="25.5" height="21.5"/>
+        <image name="keyless_sound_on.png" width="46" height="46"/>
+        <image name="keyless_speak_off.png" width="240" height="90"/>
+        <image name="keyless_speak_on.png" width="169" height="69"/>
         <image name="pps_right_arrow.png" width="8" height="15"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

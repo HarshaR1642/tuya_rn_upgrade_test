@@ -29,7 +29,7 @@
 #define kControlCloud       @"Cloud"
 #define kControlMessage     @"message"
 
-@interface CameraAppViewController ()<TuyaSmartCameraObserver, TuyaSmartCameraDPObserver> {}
+@interface CameraAppViewController ()<TuyaSmartCameraObserver, TuyaSmartCameraDPObserver>
 
 @property  (strong, nonatomic) IBOutlet TuyaSmartCameraControlView *controlView;
 @property (nonatomic, strong) TuyaSmartCamera *camera;
@@ -51,10 +51,13 @@
 
 @implementation CameraAppViewController
 
+
 - (void)initCamera:(NSString *)devId {
     if (self) {
-        _camera = [[TuyaSmartCamera alloc] initWithDeviceId:devId];
-        [_camera.dpManager addObserver:self];
+        if (_camera == nil) {
+            _camera = [[TuyaSmartCamera alloc] initWithDeviceId:devId];
+            [_camera.dpManager addObserver:self];
+        }
     }
 }
 
@@ -70,6 +73,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self setCameraViewTheme];
     [self.camera addObserver:self];
     self.navigationController.navigationBarHidden = NO;
     self.navigationItem.rightBarButtonItem = self.rightSettingButton;
@@ -89,9 +93,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setCameraViewTheme];
     self.title = self.camera.device.deviceModel.name;
-    
     /**
      
      Setting the Camera Chime  DP Value to Mechanical Default
