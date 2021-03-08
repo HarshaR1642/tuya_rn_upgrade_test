@@ -147,10 +147,13 @@
     settingVC.dpManager = self.camera.dpManager;
     [self.navigationController pushViewController:settingVC animated:YES];
     
-//    TuyaAppCameraSettingViewController *settingVC = [TuyaAppCameraSettingViewController new];
-//    settingVC.devId = self.devId;
-//    settingVC.dpManager = self.camera.dpManager;
-//    [self.navigationController pushViewController:settingVC animated:YES];
+//    NSNumber *number = [NSNumber numberWithInt:UIDeviceOrientationFaceUp];
+//    NSNumber *StatusBarOrientation = [NSNumber numberWithInt:UIInterfaceOrientationMaskLandscapeLeft];
+//    [UIViewController attemptRotationToDeviceOrientation];
+//    [[UIDevice currentDevice] setValue:number forKey:@"orientation"];
+//    [[UIApplication sharedApplication] performSelector:@selector(setStatusBarOrientation:) withObject:StatusBarOrientation];
+//    [UIViewController attemptRotationToDeviceOrientation];
+//    [self.camera.videoView layoutIfNeeded];
 }
 
 #pragma mark - View Themes Setting
