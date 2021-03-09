@@ -7,6 +7,7 @@
 
 #import "TuyaAppCameraCalendarView.h"
 #import "TuyaAppCameraCalendarCollectionViewCell.h"
+#import "TuyaAppViewUtil.h"
 
 #define CellIdentifier  @"CalendarCell"
 
@@ -217,7 +218,8 @@
 - (UIButton *)prevButton {
     if (!_prevButton) {
         _prevButton = [[UIButton alloc] init];
-        [_prevButton setImage:[UIImage imageNamed:@"pps_left_arrow"] forState:UIControlStateNormal];
+        [_prevButton setBackgroundColor:[UIColor redColor]];
+        [_prevButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"pps_left_arrow"] forState:UIControlStateNormal];
         [_prevButton addTarget:self action:@selector(prevAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _prevButton;
@@ -226,7 +228,7 @@
 - (UIButton *)nextButton {
     if (!_nextButton) {
         _nextButton = [[UIButton alloc] init];
-        [_nextButton setImage:[UIImage imageNamed:@"pps_right_arrow"] forState:UIControlStateNormal];
+        [_nextButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"pps_right_arrow"] forState:UIControlStateNormal];
         [_nextButton addTarget:self action:@selector(nextAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _nextButton;
