@@ -20,6 +20,7 @@
 #import "CameraMessageViewController.h"
 #import "CameraPlayBackController.h"
 #import "CameraSettingsViewController.h"
+#import "TuyaAppTheme.h"
 
 
 #define kControlTalk        @"talk"
@@ -46,6 +47,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *stateLabel;
 @property (nonatomic, strong) UIBarButtonItem *rightSettingButton;
 @property (weak, nonatomic) IBOutlet UIView *bottomControlView;
+@property (nonatomic, assign) BOOL isLandscapeEnabled;
 
 @end
 
@@ -68,6 +70,7 @@
     [self.camera stopPreview];
     [self.camera removeObserver:self];
     [self.camera.dpManager removeObserver:self];
+    [self makeViewPotrait];
     self.navigationController.navigationBarHidden = YES;
 }
 
@@ -85,6 +88,8 @@
     _bottomControlView.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0];
     self.addLeftBarBackButtonEnabled = YES;
     [self.retryButton addTarget:self action:@selector(retryConnect) forControlEvents:UIControlEventTouchUpInside];
+    [self.topBarView setHidden:YES];
+    self.isLandscapeEnabled = NO;
 }
 
 - (void)retryConnect {
@@ -134,26 +139,35 @@
     return _rightSettingButton;
 }
 
-- (void)rotateDevice {
-    CGAffineTransform transform = self.controlView.transform;
-    transform = CGAffineTransformConcat(CGAffineTransformScale(transform,  100, 100),
-                                        CGAffineTransformRotate(transform, 90));
-    [self.controlView setTransform:transform];
+- (void)makeViewPotrait {
+    NSNumber *number = [NSNumber numberWithInt: UIDeviceOrientationPortrait];
+    NSNumber *StatusBarOrientation = [NSNumber numberWithInt:UIInterfaceOrientationMaskPortrait];
+    [UIViewController attemptRotationToDeviceOrientation];
+    [[UIDevice currentDevice] setValue:number forKey:@"orientation"];
+    [[UIApplication sharedApplication] performSelector:@selector(setStatusBarOrientation:) withObject:StatusBarOrientation];
+    [UIViewController attemptRotationToDeviceOrientation];
+}
+
+- (IBAction)changeVideoModeAction:(UIButton *)sender {
+    _isLandscapeEnabled = !_isLandscapeEnabled;
+    
+    self.view.accessibilityLabel = _isLandscapeEnabled ? @"CameraAppViewController" : @"";
+    NSNumber *number = [NSNumber numberWithInt:_isLandscapeEnabled ? UIDeviceOrientationLandscapeLeft : UIDeviceOrientationPortrait];
+    NSNumber *StatusBarOrientation = [NSNumber numberWithInt:_isLandscapeEnabled ? UIInterfaceOrientationMaskLandscapeLeft : UIInterfaceOrientationMaskPortrait];
+    [UIViewController attemptRotationToDeviceOrientation];
+    [[UIDevice currentDevice] setValue:number forKey:@"orientation"];
+    [[UIApplication sharedApplication] performSelector:@selector(setStatusBarOrientation:) withObject:StatusBarOrientation];
+    [UIViewController attemptRotationToDeviceOrientation];
+    [self startPreview];
+    [self.camera.videoView layoutIfNeeded];
 }
 
 - (void) settingAction {
+    [self makeViewPotrait];
     CameraSettingsViewController *settingVC = (CameraSettingsViewController *)[TuyaAppViewUtil getCameraStoryBoardControllerForID:@"CameraSettingsViewController"];
     settingVC.devId = self.devId;
     settingVC.dpManager = self.camera.dpManager;
     [self.navigationController pushViewController:settingVC animated:YES];
-    
-//    NSNumber *number = [NSNumber numberWithInt:UIDeviceOrientationFaceUp];
-//    NSNumber *StatusBarOrientation = [NSNumber numberWithInt:UIInterfaceOrientationMaskLandscapeLeft];
-//    [UIViewController attemptRotationToDeviceOrientation];
-//    [[UIDevice currentDevice] setValue:number forKey:@"orientation"];
-//    [[UIApplication sharedApplication] performSelector:@selector(setStatusBarOrientation:) withObject:StatusBarOrientation];
-//    [UIViewController attemptRotationToDeviceOrientation];
-//    [self.camera.videoView layoutIfNeeded];
 }
 
 #pragma mark - View Themes Setting
@@ -188,8 +202,7 @@
 //    TuyaAppCameraPlaybackViewController *vc = [TuyaAppCameraPlaybackViewController new];
 //    vc.camera = self.camera;
 //    [self.navigationController pushViewController:vc animated:YES];
-    
-    
+    [self makeViewPotrait];
     CameraPlayBackController *messageVC = (CameraPlayBackController *)[TuyaAppViewUtil getCameraStoryBoardControllerForID:@"CameraPlayBackController"];
     messageVC.camera = self.camera;
     [self.navigationController pushViewController:messageVC animated:YES];
@@ -200,6 +213,7 @@
 //    vc.devId = self.devId;
 //    [self.navigationController pushViewController:vc animated:YES];
 
+    [self makeViewPotrait];
     CameraMessageViewController *messageVC = (CameraMessageViewController *)[TuyaAppViewUtil getCameraStoryBoardControllerForID:@"CameraMessageViewController"];
     messageVC.devId = self.devId;
     [self.navigationController pushViewController:messageVC animated:YES];
