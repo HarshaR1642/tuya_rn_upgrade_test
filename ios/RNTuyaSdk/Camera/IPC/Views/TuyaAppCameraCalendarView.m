@@ -218,7 +218,6 @@
 - (UIButton *)prevButton {
     if (!_prevButton) {
         _prevButton = [[UIButton alloc] init];
-        [_prevButton setBackgroundColor:[UIColor redColor]];
         [_prevButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"pps_left_arrow"] forState:UIControlStateNormal];
         [_prevButton addTarget:self action:@selector(prevAction) forControlEvents:UIControlEventTouchUpInside];
     }
