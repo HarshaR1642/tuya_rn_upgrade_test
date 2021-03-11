@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
   s.dependency 'TYEncryptImage'
   s.dependency 'DACircularProgress'
   s.dependency 'MBProgressHUD', '~> 0.9.2'
+  s.dependency 'SDWebImage'
 
 
 end

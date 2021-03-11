@@ -49,13 +49,13 @@ RCT_EXPORT_METHOD(openLivePreview:(NSDictionary *)params resolver:(RCTPromiseRes
             vc.devId = devId;
             [vc initCamera:devId];
             UIViewController *topVC = [self topViewController];
-            
+
             [[topVC.navigationController navigationBar] setTintColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
             [[topVC.navigationController navigationBar] setBarTintColor:[UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:1.0]];
             UIFont *font = [UIFont fontWithName:@"Quicksand-Bold" size:17.0];
             [topVC.navigationController.navigationBar setTitleTextAttributes: @{NSForegroundColorAttributeName:[UIColor whiteColor], NSFontAttributeName: font}];
             
-#pragma mark- Pushing to new Camera UI
+#pragma mark- Pushing to old Camera UI
 //            TuyaAppCameraViewController *vc = [[TuyaAppCameraViewController alloc] initWithDeviceId:devId];
 //            UIViewController *topVC = [self topViewController];
             

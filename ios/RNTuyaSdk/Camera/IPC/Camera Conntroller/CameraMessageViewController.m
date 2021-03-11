@@ -7,7 +7,7 @@
 
 #import "CameraMessageViewController.h"
 #import <TYEncryptImage/TYEncryptImage.h>
-//#import <SDWebImage/UIImageView+WebCache.h>
+#import <SDWebImage/UIImageView+WebCache.h>
 #import <TuyaSmartCameraKit/TuyaSmartCameraKit.h>
 #import "CameraMessageTableViewCell.h"
 #import "TuyaAppTheme.h"
@@ -106,7 +106,7 @@
     NSDateFormatter *formatter = [NSDateFormatter new];
     formatter.dateFormat = @"yyyy-MM-dd";
     NSDate *date = [formatter dateFromString:@"2019-09-17"];
-    [self.cameraMessage messagesWithMessageCodes:schemeModel.msgCodes Offset:0 limit:20 startTime:[date timeIntervalSince1970] endTime:[[NSDate new] timeIntervalSince1970] success:^(NSArray<TuyaSmartCameraMessageModel *> *result) {
+    [self.cameraMessage messagesWithMessageCodes:schemeModel.msgCodes Offset:0 limit:20000 startTime:[date timeIntervalSince1970] endTime:[[NSDate new] timeIntervalSince1970] success:^(NSArray<TuyaSmartCameraMessageModel *> *result) {
         self.messageModelList = result;
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         if (result.count > 0) {
@@ -128,7 +128,12 @@
     
     TuyaSmartCameraMessageModel *messageModel = [self.messageModelList objectAtIndex:indexPath.row];
     
-    [messageCell.messageUserImageView ty_setAESImageWithPath:messageModel.attachPic encryptKey:@"" placeholderImage:[self placeHolder]];
+    [messageCell.messageUserImageView sd_setImageWithURL:[NSURL URLWithString:messageModel.attachPic]
+                 placeholderImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"image_placeholder"]];
+    
+//    [messageCell.messageUserImageView ty_setAESImageWithPath:messageModel.attachPic encryptKey:@"" placeholderImage:[self placeHolder]];
+    
+//    [self downloadImageWithURL:messageModel.attachPic onImage:messageCell.messageUserImageView];
 
     [messageCell.messageTitleLabel setHidden:YES];
     [messageCell.messageDateLabel setText:messageModel.dateTime];
@@ -163,4 +168,19 @@
 
 }
 
+//- (void)downloadImageWithURL: (NSString *)url onImage: (UIImageView *)imageView {
+//    NSURL *stringUrl = [NSURL URLWithString:url];
+//    dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
+//        @try {
+//            NSData *data = [NSData dataWithContentsOfURL:stringUrl];
+//            UIImage *image = [UIImage imageWithData:data];
+//            dispatch_async(dispatch_get_main_queue(), ^(void){
+//                imageView.image = image;
+//            });
+//        } @catch (NSException *exception) {
+//            NSLog(@"%@", exception.reason);
+//        }
+//
+//    });
+//}
 @end

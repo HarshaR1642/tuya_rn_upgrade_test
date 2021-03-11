@@ -166,7 +166,8 @@
                                             <constraint firstAttribute="width" constant="25" id="pjt-Ek-71P"/>
                                             <constraint firstAttribute="height" constant="25" id="z2a-Es-LAC"/>
                                         </constraints>
-                                        <state key="normal" image="expand.png"/>
+                                        <state key="normal" image="fullscreen.png"/>
+                                        <state key="selected" image="exit_fullscreen.png"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="0pj-Ox-Npl"/>
@@ -231,10 +232,10 @@
                                         <exclude reference="Rz9-QA-EXJ"/>
                                         <exclude reference="mhd-ZY-qLI"/>
                                         <exclude reference="qjD-SC-f1W"/>
-                                        <exclude reference="aEp-g3-pKf"/>
                                         <exclude reference="3xS-fG-fJG"/>
                                         <exclude reference="Zgs-JG-U7l"/>
                                         <exclude reference="mJo-2U-BkP"/>
+                                        <exclude reference="aEp-g3-pKf"/>
                                         <exclude reference="KNk-hB-bTg"/>
                                         <exclude reference="W9H-0H-aHO"/>
                                         <exclude reference="nBv-SH-iI1"/>
@@ -260,8 +261,8 @@
                                 <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="constraints">
                                         <exclude reference="AfC-Wp-vlv"/>
-                                        <include reference="aEp-g3-pKf"/>
                                         <include reference="mJo-2U-BkP"/>
+                                        <include reference="aEp-g3-pKf"/>
                                         <include reference="W9H-0H-aHO"/>
                                         <include reference="oLK-Y3-N1T"/>
                                     </mask>
@@ -288,6 +289,7 @@
                         <outlet property="playBackButton" destination="k7g-ZL-igK" id="y7n-sq-Ywu"/>
                         <outlet property="recordButton" destination="e8Q-H3-LVY" id="SEe-U6-udK"/>
                         <outlet property="retryButton" destination="Xal-1R-hNY" id="cyR-Bn-4af"/>
+                        <outlet property="roateButtton" destination="VHr-Xk-z3D" id="CS5-AK-Fa3"/>
                         <outlet property="stateLabel" destination="eXy-O6-VyJ" id="DAF-UJ-aRj"/>
                         <outlet property="superContentView" destination="VxQ-1r-EeE" id="7gK-JM-Nfh"/>
                         <outlet property="takePhotoButton" destination="mmF-ff-Uur" id="bJ6-8r-MBt"/>
@@ -907,7 +909,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="expand.png" width="128" height="128"/>
+        <image name="exit_fullscreen.png" width="42" height="42"/>
+        <image name="fullscreen.png" width="42" height="42"/>
         <image name="keyless_message.png" width="23" height="23"/>
         <image name="keyless_pause.png" width="45" height="45"/>
         <image name="keyless_photo.png" width="24.5" height="20"/>

@@ -29,4 +29,6 @@
 
 + (void)show:(NSString *)text icon:(NSString *)icon view:(UIView *)view delay:(float)delay block:(MBProgressHUDCompletionBlock)block;
 
++ (void)showAlertForView:(UIViewController *)vc withMessage:(NSString *)message withTitle: (NSString *)title;
+
 @end

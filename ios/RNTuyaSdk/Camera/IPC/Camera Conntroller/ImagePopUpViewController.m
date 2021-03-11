@@ -7,6 +7,7 @@
 
 #import "ImagePopUpViewController.h"
 #import "TuyaAppTheme.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @interface ImagePopUpViewController ()<UIScrollViewDelegate>
 
@@ -19,7 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.imageView ty_setAESImageWithPath:_imageUrl encryptKey:@"" placeholderImage:[self placeHolder]];
+    [self.imageView sd_setImageWithURL:[NSURL URLWithString:_imageUrl] placeholderImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"image_placeholder"]];
     self.scrollView.minimumZoomScale=1.0;
     self.scrollView.maximumZoomScale=4.0;
     self.scrollView.delegate = self;

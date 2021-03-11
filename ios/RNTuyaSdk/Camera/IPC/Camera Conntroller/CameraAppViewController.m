@@ -33,21 +33,22 @@
 @interface CameraAppViewController ()<TuyaSmartCameraObserver, TuyaSmartCameraDPObserver>
 
 @property  (strong, nonatomic) IBOutlet TuyaSmartCameraControlView *controlView;
-@property (nonatomic, strong) TuyaSmartCamera *camera;
-@property (strong, nonatomic) IBOutlet UIView *contentView;
-@property (weak, nonatomic) IBOutlet UIView   *superContentView;
-@property (weak, nonatomic) IBOutlet UIButton *talkButton;
-@property (weak, nonatomic) IBOutlet UIButton *muteButton;
-@property (weak, nonatomic) IBOutlet UIButton *retryButton;
-@property (weak, nonatomic) IBOutlet UIButton *takePhotoButton;
-@property (weak, nonatomic) IBOutlet UIButton *recordButton;
-@property (weak, nonatomic) IBOutlet UIButton *playBackButton;
-@property (weak, nonatomic) IBOutlet UIButton *messageButton;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicatorView;
-@property (weak, nonatomic) IBOutlet UILabel *stateLabel;
-@property (nonatomic, strong) UIBarButtonItem *rightSettingButton;
-@property (weak, nonatomic) IBOutlet UIView *bottomControlView;
-@property (nonatomic, assign) BOOL isLandscapeEnabled;
+@property (nonatomic, strong) TuyaSmartCamera                   *camera;
+@property (strong, nonatomic) IBOutlet UIView                   *contentView;
+@property (weak, nonatomic) IBOutlet UIView                     *superContentView;
+@property (weak, nonatomic) IBOutlet UIButton                   *talkButton;
+@property (weak, nonatomic) IBOutlet UIButton                   *muteButton;
+@property (weak, nonatomic) IBOutlet UIButton                   *retryButton;
+@property (weak, nonatomic) IBOutlet UIButton                   *takePhotoButton;
+@property (weak, nonatomic) IBOutlet UIButton                   *recordButton;
+@property (weak, nonatomic) IBOutlet UIButton                   *playBackButton;
+@property (weak, nonatomic) IBOutlet UIButton                   *messageButton;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView    *indicatorView;
+@property (weak, nonatomic) IBOutlet UILabel                    *stateLabel;
+@property (nonatomic, strong) UIBarButtonItem                   *rightSettingButton;
+@property (weak, nonatomic) IBOutlet UIView                     *bottomControlView;
+@property (nonatomic, assign) BOOL                              isLandscapeEnabled;
+@property (weak, nonatomic) IBOutlet UIButton                   *roateButtton;
 
 @end
 
@@ -72,6 +73,10 @@
     [self.camera.dpManager removeObserver:self];
     [self makeViewPotrait];
     self.navigationController.navigationBarHidden = YES;
+}
+
+- (void)actionLeftBarButton: (id)obj {
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -139,7 +144,39 @@
     return _rightSettingButton;
 }
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+
+        if (size.width > size.height) {
+            
+        } else {
+            
+        }
+        
+        self.view.accessibilityLabel = _isLandscapeEnabled ? @"CameraAppViewController" : @"";
+        NSNumber *number = [NSNumber numberWithInt:_isLandscapeEnabled ? UIDeviceOrientationLandscapeLeft : UIDeviceOrientationPortrait];
+        NSNumber *StatusBarOrientation = [NSNumber numberWithInt:_isLandscapeEnabled ? UIInterfaceOrientationMaskLandscapeLeft : UIInterfaceOrientationMaskPortrait];
+        [UIViewController attemptRotationToDeviceOrientation];
+        [[UIDevice currentDevice] setValue:number forKey:@"orientation"];
+        [[UIApplication sharedApplication] performSelector:@selector(setStatusBarOrientation:) withObject:StatusBarOrientation];
+        [UIViewController attemptRotationToDeviceOrientation];
+        [self startPreview];
+        [self.camera.videoView layoutIfNeeded];
+        // Stuff you used to do in willRotateToInterfaceOrientation would go here.
+        // If you don't need anything special, you can set this block to nil.
+
+    } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+
+        // Stuff you used to do in didRotateFromInterfaceOrientation would go here.
+        // If not needed, set to nil.
+
+    }];
+}
+
 - (void)makeViewPotrait {
+    [_roateButtton setSelected:NO];
     NSNumber *number = [NSNumber numberWithInt: UIDeviceOrientationPortrait];
     NSNumber *StatusBarOrientation = [NSNumber numberWithInt:UIInterfaceOrientationMaskPortrait];
     [UIViewController attemptRotationToDeviceOrientation];
@@ -150,7 +187,7 @@
 
 - (IBAction)changeVideoModeAction:(UIButton *)sender {
     _isLandscapeEnabled = !_isLandscapeEnabled;
-    
+    [sender setSelected:!sender.isSelected];
     self.view.accessibilityLabel = _isLandscapeEnabled ? @"CameraAppViewController" : @"";
     NSNumber *number = [NSNumber numberWithInt:_isLandscapeEnabled ? UIDeviceOrientationLandscapeLeft : UIDeviceOrientationPortrait];
     NSNumber *StatusBarOrientation = [NSNumber numberWithInt:_isLandscapeEnabled ? UIInterfaceOrientationMaskLandscapeLeft : UIInterfaceOrientationMaskPortrait];
@@ -225,7 +262,7 @@
     [self.camera enableMute:!self.camera.isMuted success:^{
         NSLog(@"enable mute success");
     } failure:^(NSError *error) {
-        [self showAlertWithMessage:NSLocalizedString(@"enable mute failed", @"") complete:nil];
+        [TuyaAppProgressUtils showAlertForView:self withMessage:@"enable mute failed" withTitle:@""];
     }];
 }
 
@@ -272,9 +309,9 @@
     [self checkPhotoPermision:^(BOOL result) {
         if (result) {
             [self.camera snapShoot:^{
-                [self showAlertWithMessage:@"A Screenshot has been saved to your photos gallery." complete:nil];
+                [TuyaAppProgressUtils showAlertForView:self withMessage:@"A Screenshot has been saved to your photos gallery." withTitle:@"Success"];
             } failure:^(NSError *error) {
-                [self showAlertWithMessage:@"Failed to save" complete:nil];
+                [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to save" withTitle:@"Failed"];
             }];
         }
     }];
@@ -285,14 +322,14 @@
         if (result) {
             if (self.camera.isRecording) {
                 [self.camera stopRecord:^{
-                    [TuyaAppProgressUtils showSuccess:@"Video has been saved to your photos gallery." toView:self.view];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:@"Video has been saved to your photos gallery." withTitle:@"Success"];
                 } failure:^(NSError *error) {
-                    [TuyaAppProgressUtils showError:@"Failed to save"];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to save" withTitle:@"Error"];
                 }];
             }else {
                 [self.camera startRecord:^{
                 } failure:^(NSError *error) {
-                    [TuyaAppProgressUtils showError:@"Failed to save"];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to save" withTitle:@"Error"];
                 }];
             }
         }
@@ -334,7 +371,7 @@
                 //[self showAlertWithMessage:NSLocalizedString(@"enable mute failed", @"") complete:nil];
             }];
         } failure:^(NSError *error) {
-            [TuyaAppProgressUtils showError:NSLocalizedString(@"ipc_errmsg_mic_failed", @"")];
+            [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"ipc_errmsg_mic_failed", @"") withTitle:@""];
         }];
     }
 }
@@ -363,8 +400,10 @@
 #pragma mark - Application entering background/foreground methods
 - (void)didEnterBackground {
     [self.camera stopPreview];
-    // disconnect p2p channel when enter background
-    [self.camera disConnect];
+    /*
+     disconnect p2p channel when enter background
+     [self.camera disConnect];
+     */
 }
 
 - (void)willEnterForeground {

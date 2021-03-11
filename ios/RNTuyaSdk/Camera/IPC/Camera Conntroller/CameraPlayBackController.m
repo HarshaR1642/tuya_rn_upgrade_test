@@ -23,38 +23,35 @@
 TuyaSmartCameraObserver,
 TYCameraCalendarViewDelegate,
 TYCameraCalendarViewDataSource,
-TuyaTimelineViewDelegate,
 UITableViewDataSource,
 UITableViewDelegate>
 
-@property  (strong, nonatomic) IBOutlet UIView      *controlView;
-@property (weak, nonatomic) IBOutlet UIView         *superContentView;
-@property (weak, nonatomic) IBOutlet UIView         *playbackContentView;
+@property  (strong, nonatomic) IBOutlet UIView                             *controlView;
+@property (weak, nonatomic) IBOutlet UIView                                *superContentView;
+@property (weak, nonatomic) IBOutlet UIView                                *playbackContentView;
 
 
-@property (weak, nonatomic) IBOutlet UIButton       *takePhotoButton;
-@property (weak, nonatomic) IBOutlet UIButton       *recordButton;
-@property (weak, nonatomic) IBOutlet UIButton       *pauseButton;
-@property (weak, nonatomic) IBOutlet UIButton       *muteButton;
+@property (weak, nonatomic) IBOutlet UIButton                              *takePhotoButton;
+@property (weak, nonatomic) IBOutlet UIButton                              *recordButton;
+@property (weak, nonatomic) IBOutlet UIButton                              *pauseButton;
+@property (weak, nonatomic) IBOutlet UIButton                              *muteButton;
+                    
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView               *indicatorView;
+@property (weak, nonatomic) IBOutlet UILabel                               *stateLabel;
+@property (weak, nonatomic) IBOutlet UIButton                              *retryButton;
+@property (weak, nonatomic) IBOutlet UITableView                           *playbackTableView;
 
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView     *indicatorView;
-@property (weak, nonatomic) IBOutlet UILabel                     *stateLabel;
-@property (weak, nonatomic) IBOutlet UIButton                    *retryButton;
-@property (weak, nonatomic) IBOutlet UITableView                 *playbackTableView;
-
-@property (nonatomic, strong) TuyaSmartPlaybackDate             *currentDate;
-@property (nonatomic, strong) TuyaTimelineView                  *timeLineView;
-@property (nonatomic, strong) TuyaAppCameraRecordListView       *timeLineListView;
+@property (nonatomic, strong) TuyaSmartPlaybackDate                        *currentDate;
+@property (nonatomic, strong) TuyaAppCameraRecordListView                  *timeLineListView;
 
 @property (nonatomic, strong) NSArray                                      *timeLineModels;
 @property (nonatomic, assign) NSInteger                                    playTime;
-@property (nonatomic, strong) TYCameraTimeLabel                            *timeLineLabel;
 @property (nonatomic, strong) NSMutableArray<NSNumber *>                   *playbackDays;
 @property (nonatomic, strong) TuyaAppCameraCalendarView                    *calendarView;
 @property (nonatomic, strong) NSArray<TuyaAppCameraRecordModel *>          *dataSource;
 @property (nonatomic, strong) NSIndexPath                                  *selectedIndexPath;
 @property (weak, nonatomic) IBOutlet UIView                                *bottomTabControlView;
-@property (weak, nonatomic) IBOutlet UILabel *noDataAvialbleLabel;
+@property (weak, nonatomic) IBOutlet UILabel                               *noDataAvialbleLabel;
 
 @end
 
@@ -109,7 +106,7 @@ UITableViewDelegate>
     [_muteButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_sound_on"] forState: UIControlStateSelected];
     
     [_pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_pause"] forState: UIControlStateNormal];
-    [_pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_pause"] forState: UIControlStateSelected];
+    [_pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_play_playback"] forState: UIControlStateSelected];
 }
 
 - (void)didEnterBackground {
@@ -168,15 +165,18 @@ UITableViewDelegate>
         if (result) {
             if (self.camera.isRecording) {
                 [self.camera stopRecord:^{
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:@"Video has been saved to your photos gallery." withTitle:@"Success"];
                     [self.recordButton setSelected:NO];
                 } failure:^(NSError *error) {
-                    [TuyaAppProgressUtils showError:NSLocalizedString(@"record failed", @"")];
+                    [self.recordButton setSelected:NO];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"record failed", @"") withTitle:@""];
                 }];
             }else {
                 [self.camera startRecord:^{
                     [self.recordButton setSelected:YES];
                 } failure:^(NSError *error) {
-                    [TuyaAppProgressUtils showError:NSLocalizedString(@"record failed", @"")];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"record failed", @"") withTitle:@""];
+                    [self.recordButton setSelected:YES];
                 }];
             }
         }
@@ -189,15 +189,19 @@ UITableViewDelegate>
             [self enableAllControl:YES];
             [self stopLoadingWithText:nil];
             [self.pauseButton setSelected:YES];
+            [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_pause"] forState: UIControlStateSelected];
         } failure:^(NSError *error) {
+            [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_play_playback"] forState: UIControlStateNormal];
             [self showAlertWithMessage:NSLocalizedString(@"fail", @"") complete:nil];
         }];
     }else if (self.camera.isPlaybacking) {
         [self.camera pausePlayback:^{
             [self.pauseButton setSelected:NO];
             self.recordButton.enabled = NO;
+            [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_play_playback"] forState: UIControlStateNormal];
         } failure:^(NSError *error) {
             [self showAlertWithMessage:NSLocalizedString(@"fail", @"") complete:nil];
+            [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_pause"] forState: UIControlStateSelected];
         }];
     }
 }
@@ -279,10 +283,14 @@ UITableViewDelegate>
     [self.camera requestTimeSliceWithPlaybackDate:playbackDate complete:^(TYDictArray *result) {
         if (result.count > 0) {
             weakSelf.timeLineModels = [NSArray yy_modelArrayWithClass:[TuyaAppCameraTimeLineModel class] json:result];
-            weakSelf.timeLineView.sourceModels = weakSelf.timeLineModels;
-            weakSelf.dataSource = [[weakSelf.timeLineModels reverseObjectEnumerator] allObjects].mutableCopy;;
+            weakSelf.dataSource = [[weakSelf.timeLineModels reverseObjectEnumerator] allObjects].mutableCopy;
+            TuyaAppCameraTimeLineModel *timeslice = (TuyaAppCameraTimeLineModel *)[weakSelf.dataSource objectAtIndex:0];
+            if (timeslice) {
+                TuyaAppCameraTimeLineModel *model = (TuyaAppCameraTimeLineModel*)timeslice;
+                [self playbackWithTime:model.startTime timeLineModel:model];
+                weakSelf.selectedIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            }
             [weakSelf.playbackTableView reloadData];
-            [weakSelf.timeLineView setCurrentTime:0 animated:YES];
             [weakSelf.noDataAvialbleLabel setHidden:YES];
         }else {
             [weakSelf.noDataAvialbleLabel setHidden:NO];
@@ -298,39 +306,8 @@ UITableViewDelegate>
         [self enableAllControl:YES];
         [self stopLoadingWithText:@""];
     } failure:^(NSError *error) {
-        [TuyaAppProgressUtils showError:NSLocalizedString(@"ipc_errmsg_record_play_failed", @"")];
+        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"ipc_errmsg_record_play_failed", @"") withTitle:@"Failed"];
     }];
-}
-
-
-#pragma mark - TuyaTimelineViewDelegate
-
-- (void)timelineViewWillBeginDragging:(TuyaTimelineView *)timeLineView {
-    
-}
-
-- (void)timelineViewDidEndDragging:(TuyaTimelineView *)timeLineView willDecelerate:(BOOL)decelerate {
-    
-}
-
-- (void)timelineViewDidScroll:(TuyaTimelineView *)timeLineView time:(NSTimeInterval)timeInterval isDragging:(BOOL)isDragging {
-    self.timeLineLabel.hidden = NO;
-    self.timeLineLabel.timeStr = [NSDate tysdk_timeStringWithTimeInterval:timeInterval timeZone:[NSTimeZone localTimeZone]];
-}
-
-- (void)timelineView:(TuyaTimelineView *)timeLineView didEndScrollingAtTime:(NSTimeInterval)timeInterval inSource:(id<TuyaTimelineViewSource>)source {
-    self.timeLineLabel.hidden = YES;
-    if (source) {
-        [self playbackWithTime:timeInterval timeLineModel:source];
-    }
-}
-
-- (NSString *)_durationTimeStampWithStart:(NSDate *)start end:(NSDate *)end {
-    NSInteger duration = [end timeIntervalSinceDate:start];
-    int h =(int)(duration / 60 / 60);
-    int m = (duration / 60) % 60;
-    int s = duration % 60;
-    return [NSString stringWithFormat:@"%@：%02d:%02d:%02d", NSLocalizedString(@"Duration", @""), h, m, s];
 }
 
 #pragma mark - TYCameraCalendarViewDataSource
@@ -370,15 +347,6 @@ UITableViewDelegate>
     [_muteButton setSelected:!isMuted];
 }
 
-- (void)camera:(TuyaSmartCamera *)camera didReceiveVideoFrame:(CMSampleBufferRef)sampleBuffer frameInfo:(TuyaSmartVideoFrameInfo)frameInfo {
-    if (self.playTime != frameInfo.nTimeStamp) {
-        self.playTime = frameInfo.nTimeStamp;
-        if (!self.timeLineView.isDecelerating && !self.timeLineView.isDragging) {
-            [self.timeLineView setCurrentTime:self.playTime];
-        }
-    }
-}
-
 
 #pragma mark - Accessor
 
@@ -389,26 +357,6 @@ UITableViewDelegate>
         _calendarView.delegate = self;
     }
     return _calendarView;
-}
-
-
-- (TuyaTimelineView *)timeLineView {
-    if (!_timeLineView) {
-        _timeLineView = [[TuyaTimelineView alloc] initWithFrame:CGRectMake(0, self.controlView.bottom, [UIScreen mainScreen].bounds.size.width, 150)];
-        _timeLineView.timeHeaderHeight = 24;
-        _timeLineView.showShortMark = YES;
-        _timeLineView.spacePerUnit = 90;
-        _timeLineView.timeTextTop = 6;
-        _timeLineView.delegate = self;
-        _timeLineView.backgroundColor = HEXCOLOR(0xf5f5f5);
-        _timeLineView.backgroundGradientColors = @[];
-        _timeLineView.contentGradientColors = @[(__bridge id)HEXCOLORA(0x4f67ee, 0.62).CGColor, (__bridge id)HEXCOLORA(0x4d67ff, 0.09).CGColor];
-        _timeLineView.contentGradientLocations = @[@(0.0), @(1.0)];
-        _timeLineView.timeStringAttributes = @{NSFontAttributeName : [UIFont systemFontOfSize:9], NSForegroundColorAttributeName : HEXCOLOR(0x999999)};
-        _timeLineView.tickMarkColor = HEXCOLORA(0x000000, 0.1);
-        _timeLineView.timeZone = [NSTimeZone localTimeZone];
-    }
-    return _timeLineView;
 }
 
 
@@ -473,19 +421,6 @@ UITableViewDelegate>
     [formatter setDateFormat:@"HH:mm a"];
     NSString *stringFromDate = [formatter stringFromDate:date];
     return stringFromDate;
-}
-
-
-
-- (TYCameraTimeLabel *)timeLineLabel {
-    if (!_timeLineLabel) {
-        _timeLineLabel = [[TYCameraTimeLabel alloc] initWithFrame:CGRectMake((self.timeLineView.width - 74) / 2, self.timeLineView.top, 74, 22)];
-        _timeLineLabel.position = 2;
-        _timeLineLabel.hidden = YES;
-        _timeLineLabel.ty_backgroundColor = [UIColor blackColor];
-        _timeLineLabel.textColor = [UIColor whiteColor];
-    }
-    return _timeLineLabel;
 }
 
 

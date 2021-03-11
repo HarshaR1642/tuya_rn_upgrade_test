@@ -67,6 +67,7 @@
     }
 }
 
+
 -(void)refreshTable {
     [_refreshControl endRefreshing];
     [self getDeviceInfo];
@@ -118,13 +119,13 @@
      First Format the SD card and On success Call the Listener to call the remove device API from Asset
      
      **/
-    [self removeDeviceFromAsset];
-//    __weak typeof(self) weakSelf = self;
-//    [self.dpManager setValue:@(YES) forDP:TuyaSmartCameraSDCardFormatDPName success:^(id result) {
-//        [weakSelf removeDeviceFromAsset];
-//    } failure:^(NSError *error) {
-//        [weakSelf removeDeviceFromAsset];
-//    }];
+//    [self removeDeviceFromAsset];
+    __weak typeof(self) weakSelf = self;
+    [self.dpManager setValue:@(YES) forDP:TuyaSmartCameraSDCardFormatDPName success:^(id result) {
+        [weakSelf removeDeviceFromAsset];
+    } failure:^(NSError *error) {
+        [weakSelf removeDeviceFromAsset];
+    }];
 }
 
 
@@ -518,12 +519,17 @@
 
 - (void)resetWifiAction {
     FCAlertView *alert = [[FCAlertView alloc] init];
+    __weak typeof(self) weakSelf = self;
     [alert showAlertInView:self
                  withTitle:@"Reset WiFi"
-              withSubtitle:@"Please follow the reset WiFi instructions shown earlier in the video on set up WiFi screen."
+              withSubtitle:@"Please go to Manage tab then Add Camera and follow the reset instruction video shown on Add Camera Screen and add your camera again."
            withCustomImage:nil
-       withDoneButtonTitle:nil
+       withDoneButtonTitle:@"Reset WiFi"
                 andButtons:nil];
+    [alert addButton:@"Cancel" withActionBlock:nil];
+    [alert doneActionBlock:^{
+        [weakSelf.navigationController popToRootViewControllerAnimated:YES];
+    }];
 }
 
 - (void)batteryLockAction:(UISwitch *)switchButton {
