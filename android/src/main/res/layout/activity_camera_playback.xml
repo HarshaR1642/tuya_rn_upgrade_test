@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/tuya_page_bg"
+    tools:context="com.tuya.smart.rnsdk.camera.activity.CameraPlaybackActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_view"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:gravity="center_vertical"
-        app:navigationIcon="@drawable/tysmart_back"
+        style="@style/HeaderBar"
+        app:navigationIcon="@drawable/ic_action_arrow_backward"
         app:title="Playback"
-        app:titleTextColor="@color/black" />
+        app:titleTextColor="@color/black"
+        />
 
     <RelativeLayout
         android:id="@+id/camera_video_view_Rl"
@@ -26,7 +30,7 @@
             android:layout_height="match_parent"
             />
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/camera_mute"
             android:layout_width="@dimen/wh_28"
             android:layout_height="@dimen/wh_28"
@@ -34,7 +38,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:src="@drawable/camera_mute_btn" />
+            android:src="@drawable/camera_mute_btn" />-->
 
     </RelativeLayout>
 
@@ -44,7 +48,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/camera_video_view_Rl"
         android:orientation="horizontal"
-        android:padding="@dimen/mg_10">
+        android:padding="@dimen/mg_10"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,24 +78,84 @@
         android:layout_marginRight="@dimen/mg_10"
         android:text="query"
         android:textColor="@color/white"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/query_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/query_btn"
+        android:layout_above="@+id/layout_bottom"
         android:layout_marginLeft="@dimen/mg_10"
         android:layout_marginRight="@dimen/mg_10" />
 
     <LinearLayout
+        android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dp_80"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:padding="@dimen/mg_10">
+        android:background="@color/tuya_control_bg"
+        android:gravity="center_vertical">
 
-        <Button
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/camera_mute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/mg_10"
+                android:src="@drawable/ic_sound_off"
+                android:background="@drawable/tuya_bottom_btn_bg_trans"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/record_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/mg_10"
+                android:src="@drawable/ic_record"
+                android:background="@drawable/tuya_bottom_btn_bg_trans"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/pause_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/mg_14"
+                android:src="@drawable/ic_play"
+                android:background="@drawable/tuya_bottom_btn_selector"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/photo_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/mg_10"
+                android:src="@drawable/ic_camera"
+                android:background="@drawable/tuya_bottom_btn_selector"/>
+        </LinearLayout>
+
+        <!--<Button
             android:id="@+id/start_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -120,6 +185,6 @@
             android:layout_height="wrap_content"
             android:text="stop"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="15sp" />-->
     </LinearLayout>
 </RelativeLayout>

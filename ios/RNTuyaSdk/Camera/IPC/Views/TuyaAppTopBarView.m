@@ -6,6 +6,7 @@
 //
 
 #import "TuyaAppTopBarView.h"
+#import "TuyaAppTheme.h"
 
 @interface TuyaAppTopBarView()
 
@@ -28,7 +29,7 @@
 }
 
 - (void)setTopBarBackgroundColor:(NSArray *)color {
-    self.backgroundColor = [self colorFromRgbaArray:color];
+    self.backgroundColor = [TuyaAppTheme theme].navbar_bg_color;
 }
 
 - (void)setTopBarTextColor:(NSArray *)color {

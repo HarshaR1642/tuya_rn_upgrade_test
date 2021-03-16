@@ -1,21 +1,32 @@
 package com.tuya.smart.rnsdk.camera.activity;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.tuya.smart.android.camera.api.ITuyaHomeCamera;
 import com.tuya.smart.android.camera.api.bean.CameraPushDataBean;
@@ -54,6 +65,7 @@ import com.tuyasmart.stencil.utils.PreferencesUtil;
 
 import java.io.File;
 import java.nio.ByteBuffer;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,9 +76,10 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
     private static final String TAG = "CameraLivePrevActivity";
     private Toolbar toolbar;
     private TuyaCameraView mVideoView;
-    private ImageView muteImg;
+    private ImageView muteImg, record_btn, photo_btn, reply_btn, message_btn;
     private TextView qualityTv;
-    private TextView speakTxt, recordTxt, photoTxt, replayTxt, settingTxt, cloudStorageTxt,messageCenterTxt;
+    private TextView speakTxt, settingTxt, cloudStorageTxt;
+    private ProgressDialog progressDialog;
 
     private ICameraP2P mCameraP2P;
     private static final int ASPECT_RATIO_WIDTH = 9;
@@ -124,10 +137,10 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                     handlesnapshot(msg);
                     break;
                 case Constants.MSG_VIDEO_RECORD_BEGIN:
-                    ToastUtil.shortToast(CameraLivePreviewActivity.this, "record start success");
+                    //ToastUtil.shortToast(CameraLivePreviewActivity.this, "record start success");
                     break;
                 case Constants.MSG_VIDEO_RECORD_FAIL:
-                    ToastUtil.shortToast(CameraLivePreviewActivity.this, "record start fail");
+                    //ToastUtil.shortToast(CameraLivePreviewActivity.this, "record start fail");
                     break;
                 case Constants.MSG_VIDEO_RECORD_OVER:
                     handleVideoRecordOver(msg);
@@ -145,7 +158,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
 
     private void handleStopTalk(Message msg) {
         if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "stop talk success" + msg.obj);
+            speakTxt.setSelected(false);
+            //ToastUtil.shortToast(CameraLivePreviewActivity.this, "stop talk success" + msg.obj);
         } else {
             ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
         }
@@ -153,7 +167,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
 
     private void handleStartTalk(Message msg) {
         if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "start talk success" + msg.obj);
+            speakTxt.setSelected(true);
+            //ToastUtil.shortToast(CameraLivePreviewActivity.this, "start talk success" + msg.obj);
         } else {
             ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
         }
@@ -161,7 +176,17 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
 
     private void handleVideoRecordOver(Message msg) {
         if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "record success " + msg.obj);
+            //ToastUtil.shortToast(CameraLivePreviewActivity.this, "record success " + msg.obj);
+            AlertDialog.Builder builder = new AlertDialog.Builder(CameraLivePreviewActivity.this);
+            builder.setTitle("Success");
+            builder.setMessage("Video has been saved to your photos gallery.");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
         } else {
             ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
         }
@@ -169,7 +194,17 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
 
     private void handlesnapshot(Message msg) {
         if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "snapshot success " + msg.obj);
+            //ToastUtil.shortToast(CameraLivePreviewActivity.this, "snapshot success " + msg.obj);
+            AlertDialog.Builder builder = new AlertDialog.Builder(CameraLivePreviewActivity.this);
+            builder.setTitle("Success");
+            builder.setMessage("A screenshot has been saved to your photos gallery.");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
         } else {
             ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
         }
@@ -181,8 +216,23 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         } else {
             ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
         }
-    }
 
+        if(previewMute == ICameraP2P.MUTE) {
+            muteImg.setBackground(ContextCompat.getDrawable(CameraLivePreviewActivity.this, R.drawable.tuya_bottom_btn_bg_trans));
+            setImageViewSrc(muteImg, R.drawable.ic_sound_off);
+        } else {
+            muteImg.setBackground(ContextCompat.getDrawable(CameraLivePreviewActivity.this, R.drawable.tuya_bottom_btn_bg_blue));
+            setImageViewSrc(muteImg, R.drawable.ic_sound_on);
+        }
+    }
+    private void setImageViewSrc(ImageView imgView, int res){
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            imgView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), res, getApplicationContext().getTheme()));
+        } else {
+            imgView.setImageDrawable(getResources().getDrawable(res));
+        }*/
+        imgView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), res, getApplicationContext().getTheme()));
+    }
 
     private void handleClarity(Message msg) {
         if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
@@ -222,7 +272,9 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         String countryCode = getIntent().getStringExtra(INTENT_COUNTRY_CODE);
         String uid = getIntent().getStringExtra(INTENT_UID);
         String passwd = getIntent().getStringExtra(INTENT_PASSWD);
+        long homeId = getIntent().getLongExtra(INTENT_HOME_ID, -1);
         initView();
+        Log.d(TAG, "elango-camera live - "+ countryCode+", "+uid+", "+passwd+", "+homeId);
         TuyaHomeSdk.getUserInstance().loginWithUid(countryCode, uid, passwd, mLoginCallback);
         afterLogin();
 
@@ -284,51 +336,63 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
     };
 
     private void initView() {
-        //toolbar = findViewById(R.id.toolbar_view);
-//        setSupportActionBar(toolbar);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onBackPressed();
-//            }
-//        });
+        toolbar = findViewById(R.id.toolbar_view);
+        //toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         mVideoView = findViewById(R.id.camera_video_view);
         muteImg = findViewById(R.id.camera_mute);
         qualityTv = findViewById(R.id.camera_quality);
         speakTxt = findViewById(R.id.speak_Txt);
-        recordTxt = findViewById(R.id.record_Txt);
-        photoTxt = findViewById(R.id.photo_Txt);
-        replayTxt = findViewById(R.id.replay_Txt);
+        record_btn = findViewById(R.id.record_btn);
+        photo_btn = findViewById(R.id.photo_btn);
+        reply_btn = findViewById(R.id.reply_btn);
         settingTxt = findViewById(R.id.setting_Txt);
         settingTxt.setOnClickListener(this);
         cloudStorageTxt = findViewById(R.id.cloud_Txt);
-        messageCenterTxt =  findViewById(R.id.message_center_Txt);
+        message_btn =  findViewById(R.id.message_btn);
 
-        WindowManager windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
+        /*WindowManager windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
         int width = windowManager.getDefaultDisplay().getWidth();
         int height = width * ASPECT_RATIO_WIDTH / ASPECT_RATIO_HEIGHT;
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width, height);
         // layoutParams.addRule(RelativeLayout.BELOW, R.id.toolbar_view);
-        findViewById(R.id.camera_video_view_Rl).setLayoutParams(layoutParams);
+        findViewById(R.id.camera_video_view_Rl).setLayoutParams(layoutParams);*/
 
         muteImg.setSelected(true);
     }
 
     private void initData() {
         try {
-
             devId = getIntent().getStringExtra(INTENT_DEVID);
             mCameraDevice =  TuyaHomeSdk.getDataInstance().getDeviceBean(devId);
-            localKey = mCameraDevice.getLocalKey();
-            Map<String, Object> map = mCameraDevice.getSkills();
-            int p2pType = -1;
+            Map<String, Object> map = null;
+            try {
+                toolbar.setTitle(mCameraDevice.getName());
+                localKey = mCameraDevice.getLocalKey();
+                map = mCameraDevice.getSkills();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            int p2pType = 4;
             if (map == null || map.size() == 0) {
-                p2pType = -1;
+                p2pType = 4;
             } else {
                 p2pType = (Integer) (map.get("p2pType"));
+                Log.d(TAG, "elango-camera live - initData - p2pType : " + p2pType);
             }
 
-
+            /*int p2pType = -1;
+            ITuyaIPCCore cameraInstance = TuyaIPCSdk.getCameraInstance();
+            if (cameraInstance != null) {
+                p2pType = cameraInstance.getP2PType(devId);
+            }*/
             // 拿到的是p2pType ，需要转化成 sdkProvider
             int intentP2pType = p2pType;
             mIsRunSoft = getIntent().getBooleanExtra("isRunsoft", true);
@@ -347,22 +411,103 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             }
         } catch (Exception ex){
             Log.d("INFO ", "exception"+ex);
+            Log.d(TAG, "elango-camera live - initData - catch Exception : " + ex.getMessage() + ", " + ex.getMessage());
+            ex.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_camera, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.menu_settings) {
+            //Toast.makeText(this, "Action clicked", Toast.LENGTH_LONG).show();
+            Intent intent1 = new Intent(CameraLivePreviewActivity.this, SettingActivity.class);
+            intent1.putExtra("devId", devId);
+            startActivityForResult(intent1, REQUEST_EXIT);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private ILoginCallback mLoginCallback = new ILoginCallback() {
         @Override
         public void onSuccess(User user) {
+            Log.d(TAG, "elango-camera live - onSuccess : " + user);
             mHandler.sendEmptyMessage(MSG_LOGIN_SUCCESS);
-            getDataFromServer();
+            //getDataFromServer();
+            getHomeData();
+            showProgressDialog();
         }
 
         @Override
         public void onError(String s, String s1) {
+            Log.d(TAG, "elango-camera live - onError : " + s + ", " + s1);
             Message msg = MessageUtil.getCallFailMessage(MSG_LOGIN_FAILURE, s, s1);
             mHandler.sendMessage(msg);
         }
     };
+
+    public void getHomeData() {
+        HOME_ID = getIntent().getLongExtra(INTENT_HOME_ID, -1);
+        Log.d(TAG, "elango-camera live - HomeId : " + HOME_ID);
+        //HOME_ID = 1897422;
+        PreferencesUtil.set("homeId", HOME_ID);
+        TuyaHomeSdk.newHomeInstance(HOME_ID).getHomeDetail(new ITuyaHomeResultCallback() {
+            @Override
+            public void onSuccess(HomeBean bean) {
+                Log.d(TAG, "elango-camera live - getHomeData onSuccess - HomeBean : " + bean);
+                initData();
+            }
+
+            @Override
+            public void onError(String errorCode, String errorMsg) {
+                Log.d(TAG, "elango-camera live - getHomeData onError : " + errorCode + ", " + errorMsg);
+                //mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_CONNECT, Constants.ARG1_OPERATE_FAIL, errorMsg));
+                ToastUtil.shortToast(CameraLivePreviewActivity.this, errorMsg);
+            }
+        });
+        TuyaHomeSdk.newHomeInstance(HOME_ID).registerHomeStatusListener(new ITuyaHomeStatusListener() {
+            @Override
+            public void onDeviceAdded(String devId) {
+
+            }
+
+            @Override
+            public void onDeviceRemoved(String devId) {
+
+            }
+
+            @Override
+            public void onGroupAdded(long groupId) {
+
+            }
+
+            @Override
+            public void onGroupRemoved(long groupId) {
+
+            }
+
+            @Override
+            public void onMeshAdded(String meshId) {
+                L.d(TAG, "onMeshAdded: " + meshId);
+            }
+
+
+        });
+    }
 
     public void getDataFromServer() {
         TuyaHomeSdk.getHomeManagerInstance().queryHomeList(new ITuyaGetHomeListCallback() {
@@ -372,6 +517,61 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                     // mView.gotoCreateHome();
                     return;
                 }
+
+                //final long homeId = homeBeans.get(0).getHomeId();
+                /*outerloop:
+                for(HomeBean home : homeBeans) {
+                    long homeId = home.getHomeId();
+                    HOME_ID = homeId;
+                    PreferencesUtil.set("homeId", HOME_ID);
+                    TuyaHomeSdk.newHomeInstance(homeId).getHomeDetail(new ITuyaHomeResultCallback() {
+                        @Override
+                        public void onSuccess(HomeBean bean) {
+                            //initData();
+                            List<DeviceBean> t = bean.getDeviceList();
+                            for(DeviceBean d : t){
+                                if(d.getDevId().equalsIgnoreCase(devId)) {
+                                    initData();
+                                    break outerloop;
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void onError(String errorCode, String errorMsg) {
+
+                        }
+                    });
+                    TuyaHomeSdk.newHomeInstance(homeId).registerHomeStatusListener(new ITuyaHomeStatusListener() {
+                        @Override
+                        public void onDeviceAdded(String devId) {
+
+                        }
+
+                        @Override
+                        public void onDeviceRemoved(String devId) {
+
+                        }
+
+                        @Override
+                        public void onGroupAdded(long groupId) {
+
+                        }
+
+                        @Override
+                        public void onGroupRemoved(long groupId) {
+
+                        }
+
+                        @Override
+                        public void onMeshAdded(String meshId) {
+                            L.d(TAG, "onMeshAdded: " + meshId);
+                        }
+
+
+                    });
+                }*/
 
                 final long homeId = homeBeans.get(0).getHomeId();
 
@@ -441,18 +641,33 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         ToastUtil.shortToast(CameraLivePreviewActivity.this, "device is not support!");
     }
 
+    private void showProgressDialog() {
+        progressDialog = new ProgressDialog(CameraLivePreviewActivity.this);
+        progressDialog.setMessage("Loading..");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
     private void initCameraView(ConfigCameraBean bean) {
         mCameraP2P.createDevice(new OperationDelegateCallBack() {
             @Override
             public void onSuccess(int sessionId, int requestId, String data) {
-
+                Log.d(TAG, "elango-camera live - initCameraView - onSuccess : " + sessionId + ", " + requestId + ", " + data);
                 Log.d(TAG, "init camera view onsuccess");
                 mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_CREATE_DEVICE, Constants.ARG1_OPERATE_SUCCESS));
             }
 
             @Override
             public void onFailure(int sessionId, int requestId, int errCode) {
+                Log.d(TAG, "elango-camera live - requestCameraInfo - onFailure : " + sessionId + ", " + requestId + ", " + errCode);
                 mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_CREATE_DEVICE, Constants.ARG1_OPERATE_FAIL));
+                hideProgressDialog();
             }
         },bean);
     }
@@ -463,13 +678,16 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         mCameraP2P.connect(new OperationDelegateCallBack() {
             @Override
             public void onSuccess(int sessionId, int requestId, String data) {
-
+                Log.d(TAG, "elango-camera live - connect - onSuccess : " + sessionId + ", " + requestId + ", " + data);
                 mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_CONNECT, Constants.ARG1_OPERATE_SUCCESS));
+                hideProgressDialog();
             }
 
             @Override
             public void onFailure(int sessionId, int requestId, int errCode) {
+                Log.d(TAG, "elango-camera live - connect - onFailure : " + sessionId + ", " + requestId + ", " + errCode);
                 mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_CONNECT, Constants.ARG1_OPERATE_FAIL, errCode));
+                hideProgressDialog();
             }
         });
     }
@@ -480,7 +698,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             @Override
             public void onSuccess(int sessionId, int requestId, String data) {
                 Log.d(TAG, "start preview onSuccess");
-
+                Log.d(TAG, "elango-camera live - startPreview - onSuccess : " + sessionId + ", " + requestId + ", " + data);
                 // mVideoView.onResume();
                 isPlay = true;
                 if (null != mCameraP2P){
@@ -493,7 +711,9 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             @Override
             public void onFailure(int sessionId, int requestId, int errCode) {
                 Log.d(TAG, "start preview onFailure, errCode: " + errCode);
+                Log.d(TAG, "elango-camera live - startPreview - onFailure : " + sessionId + ", " + requestId + ", " + errCode);
                 isPlay = false;
+                hideProgressDialog();
             }
         });
     }
@@ -507,12 +727,14 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             mSmartCameraP2P.requestCameraInfo(devId, new ICameraConfig() {
                 @Override
                 public void onFailure(BusinessResponse var1, ConfigCameraBean var2, String var3) {
+                    Log.d(TAG, "elango-camera live - requestCameraInfo - onFailure : " + var1 + ", " + var2 + ", " + var3);
                     ToastUtil.shortToast(CameraLivePreviewActivity.this, "get cameraInfo failed");
+                    hideProgressDialog();
                 }
 
                 @Override
                 public void onSuccess(BusinessResponse var1, ConfigCameraBean var2, String var3) {
-
+                    Log.d(TAG, "elango-camera live - requestCameraInfo - onSuccess : " + var1 + ", " + var2 + ", " + var3);
                     p2pWd = var2.getPassword();
                     p2pId = var2.getP2pId();
                     initCameraView(var2);
@@ -520,6 +742,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             });
         } catch (Exception ex) {
             Log.d(TAG, "error "+ex.getMessage());
+            Log.d(TAG, "elango-camera live - getApi - catch Exception : " + ex.getMessage() + ", " + ex.getMessage());
         }
     }
 
@@ -529,12 +752,12 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         muteImg.setOnClickListener(this);
         qualityTv.setOnClickListener(this);
         speakTxt.setOnClickListener(this);
-        recordTxt.setOnClickListener(this);
-        photoTxt.setOnClickListener(this);
-        replayTxt.setOnClickListener(this);
+        record_btn.setOnClickListener(this);
+        photo_btn.setOnClickListener(this);
+        reply_btn.setOnClickListener(this);
 
         cloudStorageTxt.setOnClickListener(this);
-        messageCenterTxt.setOnClickListener(this);
+        message_btn.setOnClickListener(this);
     }
 
     @Override
@@ -546,22 +769,22 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             setVideoClarity();
         } else if (id == R.id.speak_Txt) {
             speakClick();
-        } else if (id == R.id.record_Txt) {
+        } else if (id == R.id.record_btn) {
             recordClick();
-        } else if (id == R.id.photo_Txt) {
+        } else if (id == R.id.photo_btn) {
             snapShotClick();
-        } else if (id == R.id.replay_Txt) {
-//            Intent intent = new Intent(CameraLivePreviewActivity.this, CameraPlaybackActivity.class);
-//            intent.putExtra("isRunsoft", mIsRunSoft);
-//            intent.putExtra("p2pId", p2pId);
-//            intent.putExtra("p2pWd", p2pWd);
-//            intent.putExtra("localKey", localKey);
-//            intent.putExtra("p2pType", sdkProvider);
-//            startActivity(intent);
+        } else if (id == R.id.reply_btn) {
+            Intent intent = new Intent(CameraLivePreviewActivity.this, CameraPlaybackActivity.class);
+            intent.putExtra("isRunsoft", mIsRunSoft);
+            intent.putExtra("p2pId", p2pId);
+            intent.putExtra("p2pWd", p2pWd);
+            intent.putExtra("localKey", localKey);
+            intent.putExtra("p2pType", sdkProvider);
+            startActivity(intent);
         } else if (id == R.id.setting_Txt) {
-//            Intent intent1 = new Intent(CameraLivePreviewActivity.this, SettingActivity.class);
-//            intent1.putExtra("devId", devId);
-//            startActivity(intent1);
+            Intent intent1 = new Intent(CameraLivePreviewActivity.this, SettingActivity.class);
+            intent1.putExtra("devId", devId);
+            startActivity(intent1);
         } else if (id == R.id.cloud_Txt) {
 //            if (sdkProvider == SDK_PROVIDER_V1) {
 //                showNotSupportToast();
@@ -572,9 +795,11 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
 //            intent2.putExtra(INTENT_SDK_POROVIDER, sdkProvider);
 //            intent2.putExtra(INTENT_HOME_ID, HOME_ID);
 //            startActivity(intent2);
-        } else if (id == R.id.message_center_Txt) {//                Intent intent3 = new Intent(CameraLivePreviewActivity.this, AlarmDetectionActivity.class);
-//                intent3.putExtra(CommonDeviceDebugPresenter.INTENT_DEVID, devId);
-//                startActivity(intent3);
+        } else if (id == R.id.message_btn) {
+            Intent intent3 = new Intent(CameraLivePreviewActivity.this, AlarmDetectionActivity.class);
+            //intent3.putExtra(CommonDeviceDebugPresenter.INTENT_DEVID, devId);
+            intent3.putExtra("intent_devId", devId);
+            startActivity(intent3);
         }
     }
 
@@ -594,11 +819,14 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                         isRecording = true;
                         mHandler.sendEmptyMessage(Constants.MSG_VIDEO_RECORD_BEGIN);
 
+                        Log.d(TAG, "elango-camera live - startRecordLocalMp4 - onSuccess : " + sessionId + ", " + requestId + ", " + data);
+
                     }
 
                     @Override
                     public void onFailure(int sessionId, int requestId, int errCode) {
                         mHandler.sendEmptyMessage(Constants.MSG_VIDEO_RECORD_FAIL);
+                        Log.d(TAG, "elango-camera live - startRecordLocalMp4 - onFailure : " + sessionId + ", " + requestId + ", " + errCode);
                     }
                 });
                 recordStatue(true);
@@ -611,12 +839,14 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                 public void onSuccess(int sessionId, int requestId, String data) {
                     isRecording = false;
                     mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_VIDEO_RECORD_OVER, Constants.ARG1_OPERATE_SUCCESS, data));
+                    Log.d(TAG, "elango-camera live - stopRecordLocalMp4 - onSuccess : " + sessionId + ", " + requestId + ", " + data);
                 }
 
                 @Override
                 public void onFailure(int sessionId, int requestId, int errCode) {
                     isRecording = false;
                     mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_VIDEO_RECORD_OVER, Constants.ARG1_OPERATE_FAIL));
+                    Log.d(TAG, "elango-camera live - stopRecordLocalMp4 - onFailure : " + sessionId + ", " + requestId + ", " + errCode);
                 }
             });
             recordStatue(false);
@@ -636,11 +866,13 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             @Override
             public void onSuccess(int sessionId, int requestId, String data) {
                 mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_SCREENSHOT, Constants.ARG1_OPERATE_SUCCESS, data));
+                Log.d(TAG, "elango-camera live - snapshot - onSuccess : " + sessionId + ", " + requestId + ", " + data);
             }
 
             @Override
             public void onFailure(int sessionId, int requestId, int errCode) {
                 mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_SCREENSHOT, Constants.ARG1_OPERATE_FAIL));
+                Log.d(TAG, "elango-camera live - snapshot - onFailure : " + sessionId + ", " + requestId + ", " + errCode);
             }
         });
     }
@@ -648,6 +880,23 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
     private void muteClick() {
         int mute;
         mute = previewMute == ICameraP2P.MUTE ? ICameraP2P.UNMUTE : ICameraP2P.MUTE;
+        mCameraP2P.setMute(ICameraP2P.PLAYMODE.LIVE, mute, new OperationDelegateCallBack() {
+            @Override
+            public void onSuccess(int sessionId, int requestId, String data) {
+                previewMute = Integer.valueOf(data);
+                mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_MUTE, Constants.ARG1_OPERATE_SUCCESS));
+            }
+
+            @Override
+            public void onFailure(int sessionId, int requestId, int errCode) {
+                mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_MUTE, Constants.ARG1_OPERATE_FAIL));
+            }
+        });
+    }
+
+    private void muteOrUnMute(boolean unmute) {
+        int mute;
+        mute = unmute ? ICameraP2P.UNMUTE : ICameraP2P.MUTE;
         mCameraP2P.setMute(ICameraP2P.PLAYMODE.LIVE, mute, new OperationDelegateCallBack() {
             @Override
             public void onSuccess(int sessionId, int requestId, String data) {
@@ -678,6 +927,9 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
 
                 }
             });
+
+            muteOrUnMute(false);
+
         } else {
             if (Constants.hasRecordPermission()) {
                 mCameraP2P.setEchoData(true);
@@ -694,6 +946,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                         mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_TALK_BACK_BEGIN, Constants.ARG1_OPERATE_FAIL));
                     }
                 });
+
+                muteOrUnMute(true);
             } else {
                 Constants.requestPermission(CameraLivePreviewActivity.this, Manifest.permission.RECORD_AUDIO, Constants.EXTERNAL_AUDIO_REQ_CODE, "open_recording");
             }
@@ -718,10 +972,16 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
 
     private void recordStatue(boolean isRecording) {
         speakTxt.setEnabled(!isRecording);
-        photoTxt.setEnabled(!isRecording);
-        replayTxt.setEnabled(!isRecording);
-        recordTxt.setEnabled(true);
-        recordTxt.setSelected(isRecording);
+        photo_btn.setEnabled(!isRecording);
+        reply_btn.setEnabled(!isRecording);
+        record_btn.setEnabled(true);
+
+        //record_btn.setSelected(isRecording);
+        if(isRecording) {
+            record_btn.setBackground(ContextCompat.getDrawable(CameraLivePreviewActivity.this, R.drawable.tuya_bottom_btn_bg_red));
+        } else {
+            record_btn.setBackground(ContextCompat.getDrawable(CameraLivePreviewActivity.this, R.drawable.tuya_bottom_btn_bg_trans));
+        }
     }
 
     @Override
@@ -846,6 +1106,53 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
     @Override
     public void onActionUP() {
 
+    }
+
+   /* @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_EXIT) {
+            if (resultCode == RESULT_OK) {
+                this.finish();
+
+            }
+        }
+    }*/
+
+    static final int REQUEST_EXIT = 101;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_EXIT) {
+            if (resultCode == RESULT_OK) {
+                this.finish();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Constants.EXTERNAL_AUDIO_REQ_CODE:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission is granted. Continue the action or workflow
+                    // in your app.
+                    speakClick();
+                }  else {
+                    // Explain to the user that the feature is unavailable because
+                    // the features requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                }
+                return;
+        }
+        // Other 'case' lines to check for other
+        // permissions this app might request.
     }
 }
 

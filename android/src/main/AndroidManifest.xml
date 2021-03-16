@@ -3,10 +3,15 @@
   package="com.tuya.smart.rnsdk">
 
   <application>
-    <activity android:name=".camera.activity.CameraLivePreviewActivity"></activity>
+    <activity android:name=".camera.activity.CameraLivePreviewActivity" />
     <activity
       android:name=".camera.activity.CameraPlaybackActivity"
       android:screenOrientation="portrait" />
+    <activity
+        android:name=".camera.activity.AlarmDetectionActivity"
+        android:screenOrientation="portrait" />
+    <activity android:name=".camera.activity.SettingActivity" />
+    <activity android:name=".camera.activity.StorageSettingActivity" />
   </application>
 
 </manifest>

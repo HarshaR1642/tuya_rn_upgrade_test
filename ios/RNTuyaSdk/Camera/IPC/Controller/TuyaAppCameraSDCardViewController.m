@@ -6,6 +6,8 @@
 //
 
 #import "TuyaAppCameraSDCardViewController.h"
+#import "TuyaAppTheme.h"
+#import "FCAlertView.h"
 
 #define kTitle  @"title"
 #define kValue  @"value"
@@ -27,6 +29,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[TuyaAppTheme theme].view_bg_color];
+    [self.tableView setBackgroundColor:[TuyaAppTheme theme].view_bg_color];
+    [self.topBarView setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
+    [self reloadTable];
+    
+    [self.dpManager addObserver:self];
+    self.topBarView.leftItem = self.leftBackItem;
+}
+
+- (NSString *)titleForCenterItem {
+    return @"SD Card";
+}
+
+- (void)reloadTable {
     __weak typeof(self) weakSelf = self;
     [self.dpManager valueForDP:TuyaSmartCameraSDCardStorageDPName success:^(id result) {
         NSArray *components = [result componentsSeparatedByString:@"|"];
@@ -40,29 +56,29 @@
     } failure:^(NSError *error) {
         
     }];
-    
-    UIButton *formatButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
-    [formatButton addTarget:self action:@selector(formatAction) forControlEvents:UIControlEventTouchUpInside];
-    [formatButton setTitle:NSLocalizedString(@"ipc_sdcard_format", @"") forState:UIControlStateNormal];
-    [formatButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    self.tableView.tableFooterView = formatButton;
-    self.formatButton = formatButton;
-    
-    [self.dpManager addObserver:self];
-    self.topBarView.leftItem = self.leftBackItem;
-}
-
-- (NSString *)titleForCenterItem {
-    return @"SD Card";
 }
 
 - (void)formatAction {
-    self.formatButton.enabled = NO;
-    [self.dpManager setValue:@(YES) forDP:TuyaSmartCameraSDCardFormatDPName success:^(id result) {
-        
-    } failure:^(NSError *error) {
-        
+    __weak typeof(self) weakSelf = self;
+    FCAlertView *alert = [[FCAlertView alloc] init];
+    [alert showAlertInView:self
+                 withTitle:@"Format SD Card ?"
+              withSubtitle:@"Formatting the SD Card will erase all your saved videos"
+           withCustomImage:nil
+       withDoneButtonTitle:@"Format"
+                andButtons:nil];
+    
+    [alert addButton:@"Cancel" withActionBlock:nil];
+    [alert doneActionBlock:^{
+        self.formatButton.enabled = NO;
+        [self.dpManager setValue:@(YES) forDP:TuyaSmartCameraSDCardFormatDPName success:^(id result) {
+            [weakSelf reloadTable];
+            weakSelf.formatButton.enabled = YES;
+        } failure:^(NSError *error) {
+            weakSelf.formatButton.enabled = YES;
+        }];
     }];
+    
 }
 
 - (void)reloadData {
@@ -89,14 +105,39 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     NSDictionary *data = [[[self.dataSource objectAtIndex:indexPath.section] objectForKey:kValue] objectAtIndex:indexPath.row];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
     }
-    cell.textLabel.text = [data objectForKey:kTitle];
-    cell.detailTextLabel.text = [data objectForKey:kValue];
+    
+    UIFont *font = [UIFont fontWithName:@"Quicksand-Medium" size:16.0];
+    NSDictionary *attribs = @{ NSForegroundColorAttributeName: [UIColor colorWithRed:63.0/255.0 green:77.0/255.0 blue:89.0/255.0 alpha:1.0],
+                               NSFontAttributeName: font
+                            };
+    NSMutableAttributedString *attributedText1 = [[NSMutableAttributedString alloc] initWithString:[data objectForKey:kTitle] attributes:attribs];
+    NSMutableAttributedString *attributedText2 = [[NSMutableAttributedString alloc] initWithString:[data objectForKey:kValue] attributes:attribs];
+    [cell.textLabel setAttributedText: attributedText1];
+    [cell.detailTextLabel setAttributedText:attributedText2];
     return cell;
+}
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 150)];
+    UIButton *formatButton = [[UIButton alloc] initWithFrame:CGRectMake(self.tableView.frame.size.width / 2 - 100, 50, 200, 50)];
+    [formatButton addTarget:self action:@selector(formatAction) forControlEvents:UIControlEventTouchUpInside];
+    [formatButton setTitle:NSLocalizedString(@"ipc_sdcard_format", @"") forState:UIControlStateNormal];
+    [formatButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [formatButton setBackgroundColor:[UIColor colorWithRed:254.0/255.0 green:41.0/255.0 blue:92.0/255.0 alpha:1.0]];
+    formatButton.layer.cornerRadius = 25.0;
+    formatButton.clipsToBounds = YES;
+    self.formatButton = formatButton;
+    [footerView addSubview:formatButton];
+    return footerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 100;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {

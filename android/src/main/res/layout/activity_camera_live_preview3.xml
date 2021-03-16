@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".rnsdk.camera.activity.CameraLivePreviewActivity">
+
+<!--    <androidx.appcompat.widget.toolbar-->
+<!--        android:id="@+id/toolbar_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        android:gravity="center_vertical"-->
+<!--        app:navigationIcon="@drawable/tysmart_back"-->
+<!--        app:title="Camera"-->
+<!--        app:titleTextColor="@color/black" />-->
+
+    <RelativeLayout
+        android:id="@+id/camera_video_view_Rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        >
+        <!--        android:layout_below="@id/toolbar_view">-->
+
+        <com.tuya.smart.camera.middleware.widget.TuyaCameraView
+            android:id="@+id/camera_video_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <!--<ImageView
+            android:id="@+id/camera_mute"
+            android:layout_width="@dimen/wh_28"
+            android:layout_height="@dimen/wh_28"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:src="@drawable/camera_mute_btn"
+            android:visibility="gone"/>-->
+
+        <!--<TextView
+            android:id="@+id/camera_quality"
+            android:layout_width="@dimen/wh_60"
+            android:layout_height="@dimen/wh_28"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:layout_toRightOf="@+id/camera_mute"
+            android:background="@drawable/camera_shape_wirlesswake"
+            android:gravity="center"
+            android:text="HD"
+            android:textColor="@color/white"
+            android:textSize="@dimen/ts_12"
+            android:visibility="gone"/>-->
+
+        <TextView
+            android:id="@+id/speak_Txt"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_50"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:background="@drawable/mic_bg_selector"
+            android:drawableTop="@drawable/mic_icon_selector"
+            android:drawablePadding="@dimen/mg_10"
+            android:gravity="center"
+            android:padding="@dimen/mg_5"
+            android:textColor="@color/camera_panel_control_color"
+            android:textSize="@dimen/ts_13"
+            android:clickable="true"/>
+
+        <!--<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_below="@+id/camera_video_view"
+            android:background="@color/tuya_control_bg_black">
+            <TextView
+                android:id="@+id/speak_Txt1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/camera_item_control_btn"
+                android:drawableTop="@drawable/camera_icon_mic_selector"
+                android:drawablePadding="@dimen/mg_5"
+                android:gravity="center"
+                android:padding="@dimen/mg_20"
+                android:text="speak"
+                android:textColor="@color/camera_panel_control_color"
+                android:textSize="@dimen/ts_13" />
+        </LinearLayout>-->
+
+    </RelativeLayout>
+
+    <!--<include
+        android:id="@+id/camera_control_board"
+        layout="@layout/camera_panel_control_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/camera_video_view_Rl" />-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_80"
+        android:orientation="horizontal"
+        android:layout_below="@+id/camera_video_view_Rl"
+        android:background="@color/tuya_control_bg">
+
+        <!--<ImageView
+            android:id="@+id/camera_mute"
+            android:layout_width="@dimen/wh_28"
+            android:layout_height="@dimen/wh_28"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:src="@drawable/camera_mute_btn"
+            android:visibility="visible"/>-->
+        <TextView
+            android:id="@+id/camera_mute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/camera_mute_btn"
+            android:drawablePadding="@dimen/mg_5"
+            android:gravity="center"
+            android:padding="@dimen/mg_20"
+            android:textColor="@color/camera_panel_control_color"
+            android:textSize="@dimen/ts_13" />
+        <TextView
+            android:id="@+id/photo_Txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_camera"
+            android:drawablePadding="@dimen/mg_5"
+            android:gravity="center"
+            android:padding="@dimen/mg_20"
+            android:textColor="@color/camera_panel_control_color"
+            android:textSize="@dimen/ts_13" />
+
+        <TextView
+            android:id="@+id/record_Txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_record"
+            android:drawablePadding="@dimen/mg_5"
+            android:gravity="center"
+            android:padding="@dimen/mg_20"
+            android:textColor="@color/camera_panel_control_color"
+            android:textSize="@dimen/ts_13" />
+
+        <TextView
+            android:id="@+id/replay_Txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_play_back"
+            android:drawablePadding="@dimen/mg_5"
+            android:gravity="center"
+            android:padding="@dimen/mg_20"
+            android:textColor="@color/camera_panel_control_color"
+            android:textSize="@dimen/ts_13" />
+
+        <TextView
+            android:id="@+id/cloud_Txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/camera_icon_playback_selector"
+            android:gravity="center"
+            android:padding="@dimen/mg_20"
+            android:textColor="@color/camera_panel_control_color"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/message_center_Txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_message"
+            android:drawablePadding="@dimen/mg_5"
+            android:gravity="center"
+            android:padding="@dimen/mg_20"
+            android:textColor="@color/camera_panel_control_color"
+            android:textSize="@dimen/ts_13" />
+        <TextView
+            android:id="@+id/setting_Txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/camera_icon_arrow"
+            android:gravity="center"
+            android:text="setting"
+            android:textColor="@color/camera_panel_control_color"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+</LinearLayout>

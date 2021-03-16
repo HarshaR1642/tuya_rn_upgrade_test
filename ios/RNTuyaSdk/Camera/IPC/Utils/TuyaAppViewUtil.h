@@ -33,7 +33,11 @@
 + (UIImageView *)rightArrowImageView:(CGRect)frame;
 
 + (UIImage *)getImageFromBundleWithName: (NSString *)imageName;
+
 + (UIImage *)getOriginalImageFromBundleWithName: (NSString *)imageName;
+
++ (UIViewController *)getCameraStoryBoardControllerForID:(NSString *)controllerID;
++ (UIImage *)getImageFromBundleWithname: (NSString *)imageName forTintColor: (UIColor *)color;
 
 #pragma mark - UItextField
 

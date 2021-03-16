@@ -788,7 +788,7 @@
 "ipc_sdcard_record_mode_ctns" = "Non-Stop";
 "ipc_sdcard_record_mode_event" = "Event Recording";
 "ipc_sdcard_record_mode_settings" = "Recording Mode";
-"ipc_sdcard_record_switch" = "Local Recording";
+"ipc_sdcard_record_switch" = "SD Card Recording";
 "ipc_sdcard_settings" = "Storage Settings";
 "ipc_settings_ok" = "Done";
 "ipc_settings_page_basic_function_txt" = "Basic Settings";
@@ -813,7 +813,7 @@
 "pps_day_tue" = "Tue.";
 "pps_day_wed" = "Wed.";
 "pps_flashback" = "Playback";
-"pps_no_sdcard" = "No storage device detected";
+"pps_no_sdcard" = "No storage";
 "title_device_offline" = "Offline";
 "ty_network_error" = "Network error, please try it again";
 
@@ -822,7 +822,7 @@
 "Change Speed Failed" = "Change Speed Failed";
 "Switch Table" = "Switch Table";
 "enable mute failed" = "enable mute failed";
-"record failed" = "record failed";
+"record failed" = "Record Failed";
 "Photo library permission denied" = "Photo library permission denied";
 "Video failed save to photo library" = "Video failed save to photo library";
 "Normal" = "Normal";

@@ -1,2 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <color name="tuya_header_bg">#f3faff</color>
+    <color name="tuya_header_bg_white">#FFFFFF</color>
+    <color name="tuya_page_bg">#f3faff</color>
+    <color name="tuya_page_bg_black">#000000</color>
+    <color name="tuya_control_bg">#373737</color>
+    <color name="tuya_mic_bg_white">#80FFFFFF</color>
+    <color name="tuya_mic_bg_blue">#329ddc</color>
+    <color name="tuya_quality_bg_white">#80FFFFFF</color>
+    <color name="tuya_quality_bg_blue">#329ddc</color>
+
+    <color name="tuya_list_card_bg_white">#FFFFFF</color>
+    <color name="tuya_list_card_bg_selected">#80329DDC</color>
+    <color name="tuya_list_divider">#d9edfb</color>
+
+    <color name="tuya_txt_blue">#39a1e8</color>
+    <color name="tuya_txt_greyblue">#6a97b5</color>
+    <color name="tuya_txt_gunmetal">#3f4d59</color>
+
+    <color name="tuya_btn_bg_white">#CCFFFFFF</color>
+    <color name="tuya_btn_bg_blue">#f37787</color>
+
+    <color name="tuya_button_txt_white">#FFFFFF</color>
+    <color name="tuya_button_bg_black">#000000</color>
+    <color name="tuya_button_bg_blue">#008adc</color>
+    <color name="tuya_button_bg_red">#cb0000</color>
+</resources>

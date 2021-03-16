@@ -13,6 +13,8 @@
 #import <TuyaSmartBaseKit/TuyaSmartBaseKit.h>
 #import "TuyaRNUtils+Network.h"
 #import "TuyaAppCameraViewController.h"
+#import "CameraAppViewController.h"
+#import "TuyaAppViewUtil.h"
 
 #define kControlTalk        @"talk"
 #define kControlRecord      @"record"
@@ -38,11 +40,27 @@ RCT_EXPORT_METHOD(openLivePreview:(NSDictionary *)params resolver:(RCTPromiseRes
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 
-    [[TuyaSmartUser sharedInstance] loginByEmail:countryCode email:uid password:passwd success:^{
+    [[TuyaSmartUser sharedInstance] loginOrRegisterWithCountryCode:countryCode uid:uid password:passwd createHome:false success:^(id result) {
         [TuyaSmartDevice syncDeviceInfoWithDevId:devId homeId:nil success:^{
           NSLog(@"getToken success");
-          TuyaAppCameraViewController *vc = [[TuyaAppCameraViewController alloc] initWithDeviceId:devId];
-          UIViewController *topVC = [self topViewController];
+            
+#pragma mark- Pushing to new Camera UI
+            CameraAppViewController *vc = (CameraAppViewController *)[TuyaAppViewUtil getCameraStoryBoardControllerForID:@"CameraAppViewController"];
+            vc.devId = devId;
+            [vc initCamera:devId];
+            UIViewController *topVC = [self topViewController];
+
+            [[topVC.navigationController navigationBar] setTintColor:[UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0]];
+            [[topVC.navigationController navigationBar] setBarTintColor:[UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:1.0]];
+            UIFont *font = [UIFont fontWithName:@"Quicksand-Bold" size:17.0];
+            [topVC.navigationController.navigationBar setTitleTextAttributes: @{NSForegroundColorAttributeName:[UIColor whiteColor], NSFontAttributeName: font}];
+            
+#pragma mark- Pushing to old Camera UI
+//            TuyaAppCameraViewController *vc = [[TuyaAppCameraViewController alloc] initWithDeviceId:devId];
+//            UIViewController *topVC = [self topViewController];
+            
+#pragma mark- END
+            
           [topVC.navigationController pushViewController:vc animated:YES];
         } failure:^(NSError *error) {
           NSLog(@"Streaming Failiure %@", error);

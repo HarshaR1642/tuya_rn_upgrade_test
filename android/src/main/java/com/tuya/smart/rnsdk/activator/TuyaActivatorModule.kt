@@ -1,47 +1,51 @@
 package com.tuya.smart.rnsdk.activator
 
+
 import android.content.Intent
 import android.provider.Settings
 import android.util.Log
 import com.facebook.react.bridge.*
+import com.tuya.sdk.blelib.channel.Timer.stop
 import com.tuya.smart.android.common.utils.WiFiUtil
 import com.tuya.smart.home.sdk.TuyaHomeSdk
 import com.tuya.smart.home.sdk.builder.ActivatorBuilder
-import com.tuya.smart.rnsdk.utils.*
+import com.tuya.smart.home.sdk.builder.TuyaCameraActivatorBuilder
+import com.tuya.smart.home.sdk.builder.TuyaGwActivatorBuilder
+import com.tuya.smart.home.sdk.builder.TuyaGwSubDevActivatorBuilder
+import com.tuya.smart.rnsdk.utils.Constant.DEVID
 import com.tuya.smart.rnsdk.utils.Constant.HOMEID
 import com.tuya.smart.rnsdk.utils.Constant.PASSWORD
 import com.tuya.smart.rnsdk.utils.Constant.SSID
 import com.tuya.smart.rnsdk.utils.Constant.TIME
-
-
-import com.tuya.smart.sdk.api.ITuyaActivator
-import com.tuya.smart.sdk.api.ITuyaSmartActivatorListener
+import com.tuya.smart.rnsdk.utils.Constant.TOKEN
+import com.tuya.smart.rnsdk.utils.Constant.TYPE
+import com.tuya.smart.rnsdk.utils.JsonUtils
+import com.tuya.smart.rnsdk.utils.ReactParamsCheck
+import com.tuya.smart.rnsdk.utils.TuyaReactUtils
+import com.tuya.smart.sdk.api.*
 import com.tuya.smart.sdk.bean.DeviceBean
 import com.tuya.smart.sdk.enums.ActivatorModelEnum
-import com.tuya.smart.sdk.api.ITuyaActivatorGetToken
-import com.tuya.smart.home.sdk.builder.TuyaGwSubDevActivatorBuilder
-import com.tuya.smart.rnsdk.utils.Constant.DEVID
-import com.tuya.smart.rnsdk.utils.Constant.TYPE
-
-import com.tuya.smart.home.sdk.builder.TuyaGwActivatorBuilder
-import com.tuya.smart.rnsdk.utils.TuyaReactUtils
-import com.tuya.sdk.blelib.channel.Timer.stop
-import com.tuya.smart.rnsdk.utils.ReactParamsCheck
-import java.util.*
+import com.tuyasmart.camera.devicecontrol.ITuyaCameraDevice
+import com.tuyasmart.camera.devicecontrol.TuyaCameraDeviceControlSDK
+import com.tuyasmart.camera.devicecontrol.api.ITuyaCameraDeviceControlCallback
+import com.tuyasmart.camera.devicecontrol.bean.DpSDFormat
+import com.tuyasmart.camera.devicecontrol.model.DpNotifyModel
 
 
 class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
   var mITuyaActivator: ITuyaActivator? = null
   var mTuyaGWActivator: ITuyaActivator? = null
+  var mITuyaCameraActivator: ITuyaCameraDevActivator? = null
   override fun getName(): String {
     return "TuyaActivatorModule"
   }
 
   @ReactMethod
-  fun getCurrentWifi(params: ReadableMap, successCallback: Callback,
-                     errorCallback: Callback) {
-    successCallback.invoke(WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext));
+  fun getCurrentWifi(params: ReadableMap, promise: Promise) {
+    Log.d("elango-getCurrentWifi", WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext));
+    promise.resolve(WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext));
+    //promise.resolve(if(WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext).equals("<unknown ssid>")) "" else WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext));
   }
 
   @ReactMethod
@@ -58,17 +62,66 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
   }
 
   @ReactMethod
+  fun getTokenForQRCode(params: ReadableMap, promise: Promise) {
+    if (ReactParamsCheck.checkParams(arrayOf(HOMEID), params)) {
+      TuyaHomeSdk.getActivatorInstance().getActivatorToken(params.getString(HOMEID)!!.toLong(), object : ITuyaActivatorGetToken {
+        override fun onSuccess(s: String) {
+          //promise.resolve(TuyaReactUtils.parseToWritableMap(s))
+          promise.resolve(s)
+        }
+
+        override fun onFailure(s: String, s1: String) {
+          promise.reject(s, s1)
+        }
+      })
+    }
+  }
+
+  @ReactMethod
+  fun initActivatorForQRCode(params: ReadableMap, promise: Promise) {
+    if (ReactParamsCheck.checkParams(arrayOf(SSID, PASSWORD, TIME, TOKEN), params)) {
+      Log.d("elango-initActForQRCode", params.toString() + "-----" + params.getString(SSID) + " ; " + params.getString(PASSWORD) + " ; " + params.getInt(TIME) + " ; " + params.getString(TOKEN))
+      mITuyaCameraActivator = TuyaHomeSdk.getActivatorInstance().newCameraDevActivator(TuyaCameraActivatorBuilder()
+              .setSsid(params.getString(SSID))
+              .setContext(reactApplicationContext.applicationContext)
+              .setPassword(params.getString(PASSWORD))
+              //.setActivatorModel(ActivatorModelEnum.TY_QR)
+              .setTimeOut(params.getInt(TIME).toLong())
+              .setToken(params.getString(TOKEN)).setListener(getITuyaSmartCameraActivatorListener(promise)))
+      Log.d("elango-initActForQRCode", mITuyaCameraActivator.toString())
+      mITuyaCameraActivator?.start()
+    }
+
+  }
+
+  @ReactMethod
+  fun registerForPushNotification(params: ReadableMap) {
+      Log.d("elango-registerForPushNotification", params.toString() + "-----" + params.getString("token"))
+      if (ReactParamsCheck.checkParams(arrayOf("token"), params)) {
+          TuyaHomeSdk.getPushInstance().registerDevice(params.getString("token"), "FCM", object : IResultCallback {
+            override fun onError(code: String, error: String) {
+              Log.d("TAG-FCM", "Error-" + error)
+            }
+
+            override fun onSuccess() {
+              Log.d("TAG-FCM", "Success")
+            }
+          })
+      }
+  }
+
+  @ReactMethod
   fun initActivator(params: ReadableMap, promise: Promise) {
     if (ReactParamsCheck.checkParams(arrayOf(HOMEID, SSID, PASSWORD, TIME, TYPE), params)) {
       TuyaHomeSdk.getActivatorInstance().getActivatorToken(params.getDouble(HOMEID).toLong(), object : ITuyaActivatorGetToken {
         override fun onSuccess(token: String) {
           mITuyaActivator = TuyaHomeSdk.getActivatorInstance().newActivator(ActivatorBuilder()
-            .setSsid(params.getString(SSID))
-            .setContext(reactApplicationContext.applicationContext)
-            .setPassword(params.getString(PASSWORD))
-            .setActivatorModel(ActivatorModelEnum.valueOf(params.getString(TYPE) as String))
-            .setTimeOut(params.getInt(TIME).toLong())
-            .setToken(token).setListener(getITuyaSmartActivatorListener(promise)))
+                  .setSsid(params.getString(SSID))
+                  .setContext(reactApplicationContext.applicationContext)
+                  .setPassword(params.getString(PASSWORD))
+                  .setActivatorModel(ActivatorModelEnum.valueOf(params.getString(TYPE) as String))
+                  .setTimeOut(params.getInt(TIME).toLong())
+                  .setToken(token).setListener(getITuyaSmartActivatorListener(promise)))
           mITuyaActivator?.start()
         }
 
@@ -78,7 +131,6 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
         }
       })
     }
-
   }
 
   /**
@@ -88,30 +140,30 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
   fun newGwSubDevActivator(params: ReadableMap, promise: Promise) {
     if (ReactParamsCheck.checkParams(arrayOf(DEVID, TIME), params)) {
       val builder = TuyaGwSubDevActivatorBuilder()
-        //设置网关ID
-        .setDevId(params.getString(DEVID))
-        //设置配网超时时间
-        .setTimeOut(params.getInt(TIME).toLong())
-        .setListener(object : ITuyaSmartActivatorListener {
-          override fun onError(var1: String, var2: String) {
-            promise.reject(var1, var2)
-          }
+              //设置网关ID
+              .setDevId(params.getString(DEVID))
+              //设置配网超时时间
+              .setTimeOut(params.getInt(TIME).toLong())
+              .setListener(object : ITuyaSmartActivatorListener {
+                override fun onError(var1: String, var2: String) {
+                  promise.reject(var1, var2)
+                }
 
-          /**
-           * 设备配网成功,且设备上线（手机可以直接控制），可以通过
-           */
-          override fun onActiveSuccess(var1: DeviceBean) {
-            promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
-          }
+                /**
+                 * 设备配网成功,且设备上线（手机可以直接控制），可以通过
+                 */
+                override fun onActiveSuccess(var1: DeviceBean) {
+                  promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
+                }
 
-          /**
-           * device_find 发现设备
-          device_bind_success 设备绑定成功，但还未上线，此时设备处于离线状态，无法控制设备。
-           */
-          override fun onStep(var1: String, var2: Any) {
-            // promise.reject(var1,"")
-          }
-        })
+                /**
+                 * device_find 发现设备
+                device_bind_success 设备绑定成功，但还未上线，此时设备处于离线状态，无法控制设备。
+                 */
+                override fun onStep(var1: String, var2: Any) {
+                  // promise.reject(var1,"")
+                }
+              })
 
       mTuyaGWActivator = TuyaHomeSdk.getActivatorInstance().newGwSubDevActivator(builder)
     }
@@ -127,6 +179,84 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
   fun onDestory() {
     mITuyaActivator?.onDestroy()
     mTuyaGWActivator?.onDestroy()
+  }
+
+  fun getITuyaSmartCameraActivatorListener(promise: Promise): ITuyaSmartCameraActivatorListener {
+    return object : ITuyaSmartCameraActivatorListener {
+      override fun onQRCodeSuccess(qrcodeUrl: String?) {
+        TODO("Not yet implemented")
+      }
+
+      /**
+       * 1001        网络错误
+      1002        配网设备激活接口调用失败，接口调用不成功
+      1003        配网设备激活失败，设备找不到。
+      1004        token 获取失败
+      1005        设备没有上线
+      1006        配网超时
+       */
+      override fun onError(var1: String, var2: String) {
+        promise.reject(var1, var2)
+      }
+
+      /**
+       * 设备配网成功,且设备上线（手机可以直接控制），可以通过
+       */
+      override fun onActiveSuccess(var1: DeviceBean) {
+        Log.d("elango-initActForQRCode", var1.toString())
+        Log.d("elango-initActForQRCode", var1.getDevId())
+        Log.d("elango-initActForQRCode", TuyaReactUtils.parseToWritableMap(var1).toString())
+
+        // Format the camera
+        try {
+          val mTuyaCameraDevice: ITuyaCameraDevice?  = TuyaCameraDeviceControlSDK.getCameraDeviceInstance(var1.getDevId())
+          mTuyaCameraDevice!!.registorTuyaCameraDeviceControlCallback(DpSDFormat.ID, object : ITuyaCameraDeviceControlCallback<Boolean> {
+            override fun onSuccess(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, o: Boolean) {
+              //showPublishTxt.setText("LAN/Cloud query result: $o")
+              Log.d("elango-initActForQRCode", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormat-onSuccess : $s, $o")
+              //ToastUtil.shortToast(this@StorageSettingActivity, "Successfully Formatted.")
+
+              promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
+
+              try {
+                mTuyaCameraDevice.onDestroy()
+              } catch (ex: Exception) {
+                ex.printStackTrace()
+              }
+            }
+
+            override fun onFailure(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, s1: String, s2: String) {
+              Log.d("elango-initActForQRCode", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormat-onFailure : $s, $s1, $s2")
+              //ToastUtil.shortToast(this@StorageSettingActivity, "Format failed.")
+
+              promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
+
+              try {
+                mTuyaCameraDevice.onDestroy()
+              } catch (ex: Exception) {
+                ex.printStackTrace()
+              }
+            }
+          })
+          mTuyaCameraDevice.publishCameraDps(DpSDFormat.ID, true)
+
+        } catch (e: Exception) {
+          e.printStackTrace()
+        }
+
+        // moved to Format sdcard callback
+        //promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
+      }
+
+      /**
+       * device_find 发现设备
+      device_bind_success 设备绑定成功，但还未上线，此时设备处于离线状态，无法控制设备。
+       */
+      /*override fun onStep(var1: String, var2: Any) {
+        // IOS 没有onStep保持一致
+        //promise.reject(var1,"")
+      }*/
+    }
   }
 
   fun getITuyaSmartActivatorListener(promise: Promise): ITuyaSmartActivatorListener {
@@ -182,10 +312,10 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
             }
           }
           mTuyaGWActivator = TuyaHomeSdk.getActivatorInstance().newGwActivator(TuyaGwActivatorBuilder()
-            .setToken(token)
-            .setTimeOut(params.getInt(TIME).toLong())
-            .setContext(reactApplicationContext)
-            .setListener(iTuyaSmartActivatorListener))
+                  .setToken(token)
+                  .setTimeOut(params.getInt(TIME).toLong())
+                  .setContext(reactApplicationContext)
+                  .setListener(iTuyaSmartActivatorListener))
           mTuyaGWActivator?.start()
         }
 

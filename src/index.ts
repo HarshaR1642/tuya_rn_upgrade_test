@@ -1,3 +1,4 @@
+// @flow Copyright © 2019 Rently Softwares, All Rights Reserved
 export * from './activator';
 export * from './bridgeUtils';
 export * from './device';

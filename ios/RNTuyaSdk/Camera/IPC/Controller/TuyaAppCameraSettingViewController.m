@@ -218,6 +218,7 @@
         NSString *text = [self recordModeText:self.recordMode];
         [section3 addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_record_mode_settings", @""), kValue: text, kAction: @"recordModeAction", kArrow: @"1"}];
     }
+    
     if (section3.count > 0) {
         [dataSource addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_settings", @""), kValue: section3.copy}];
     }
