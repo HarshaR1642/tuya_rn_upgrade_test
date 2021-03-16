@@ -19,13 +19,13 @@ Pod::Spec.new do |s|
   }
 
   s.dependency 'React'
-  s.dependency 'TuyaSmartHomeKit', '~> 3.17.6'
+  s.dependency 'TuyaSmartHomeKit'
   s.dependency 'TuyaCameraUIKit'
-  s.dependency 'TuyaSmartCloudServiceBizBundle'
   s.dependency 'TuyaSmartCameraKit'
   s.dependency 'TYEncryptImage'
   s.dependency 'DACircularProgress'
   s.dependency 'MBProgressHUD', '~> 0.9.2'
+  s.dependency 'SDWebImage'
 
 
 end

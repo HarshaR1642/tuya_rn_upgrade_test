@@ -22,6 +22,11 @@ export function queryRoomList(
 export type GetHomeDetailParams = {
   homeId: number;
 };
+
+export type CurrentWifiParams = {
+  ssid: string;
+};
+
 export type DeviceDetailResponse = {
   homeId: number;
   isOnline: boolean;

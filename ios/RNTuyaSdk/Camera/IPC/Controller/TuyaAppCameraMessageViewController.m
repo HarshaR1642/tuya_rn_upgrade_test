@@ -7,7 +7,7 @@
 
 #import "TuyaAppCameraMessageViewController.h"
 #import <TYEncryptImage/TYEncryptImage.h>
-#import <SDWebImage/UIImageView+WebCache.h>
+//#import <SDWebImage/UIImageView+WebCache.h>
 #import <TuyaSmartCameraKit/TuyaSmartCameraKit.h>
 
 @interface TuyaAppCameraMessageViewController ()<UITableViewDelegate, UITableViewDataSource>
@@ -49,7 +49,7 @@
     [self.schemeModels enumerateObjectsUsingBlock:^(TuyaSmartCameraMessageSchemeModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [titles addObject:obj.describe];
     }];
-    _segmentedControl = [[UISegmentedControl alloc] initWithItems:titles];
+    _segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"Roshan", @"Bisht"]];
     _segmentedControl.selectedSegmentIndex = 0;
     [self.view addSubview:_segmentedControl];
     _segmentedControl.frame = CGRectMake(0, CGRectGetMaxY(self.navigationController.navigationBar.frame), self.view.frame.size.width, 44);
@@ -88,7 +88,7 @@
     TuyaSmartCameraMessageModel *messageModel = [self.messageModelList objectAtIndex:indexPath.row];
     NSArray *components = [messageModel.attachPic componentsSeparatedByString:@"@"];
     if (components.count != 2) {
-        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:messageModel.attachPic] placeholderImage:[self placeHolder]];
+//        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:messageModel.attachPic] placeholderImage:[self placeHolder]];
     }else {
         [cell.imageView ty_setAESImageWithPath:components.firstObject encryptKey:components.lastObject placeholderImage:[self placeHolder]];
     }

@@ -7,6 +7,7 @@ export const SUBDEVLISTENER = 'subDevListener';
 export const HOMESTATUS = 'homeStatus';
 export const HOMECHANGE = 'homeChange';
 export const SINGLETRANSFER = 'SingleTransfer';
+export const REMOVE_CAMERA = "REMOVE_CAMERA";
 
 let eventEmitter = new NativeEventEmitter(NativeModules.TuyaRNEventEmitter);
 

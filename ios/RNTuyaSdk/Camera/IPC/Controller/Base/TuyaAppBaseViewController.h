@@ -29,8 +29,12 @@
 
 @property (nonatomic, strong) TuyaAppLoadingView   *loadingView;
 
-@property (nonatomic, assign) BOOL             statusBarHidden;
-@property (nonatomic, strong) TuyaAppEmptyView    *emptyView;
+@property (nonatomic, assign) BOOL                  statusBarHidden;
+@property (nonatomic, strong) TuyaAppEmptyView      *emptyView;
+
+@property (nonatomic) BOOL addLeftBarBackButtonEnabled;
+- (void)setRightBarButtonWithImage:(NSString *) image;
+
 
 
 

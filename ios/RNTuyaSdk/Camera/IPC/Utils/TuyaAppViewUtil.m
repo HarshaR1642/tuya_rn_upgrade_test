@@ -7,6 +7,7 @@
 
 #import "TuyaAppViewUtil.h"
 #import <objc/runtime.h>
+#import "TuyaAppTheme.h"
 
 @implementation TuyaAppViewUtil
 
@@ -56,19 +57,64 @@
     return view;
 }
 
-//This will return the image as a template ignoring the color information
-+ (UIImage *)getImageFromBundleWithName: (NSString *)imageName {
-    NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
-    NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
++ (UIViewController *)getCameraStoryBoardControllerForID:(NSString *)controllerID {
+    @try {
+        NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
+        NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
+        UIViewController *vc = [[UIStoryboard storyboardWithName:@"Camera" bundle:imageBundle] instantiateViewControllerWithIdentifier:controllerID];
+        return vc;
+    } @catch (NSException *exception) {
+        NSLog(@"Crash found %@", exception.reason);
+    }
     
-    return [[UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+}
+
+
+
++ (UIImage *)getImageFromBundleWithname: (NSString *)imageName forTintColor: (UIColor *)color {
+    
+    @try {
+        NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
+        NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
+        NSString *imagePath = [imageBundle pathForResource:imageName ofType:@"png"];
+        if (@available(iOS 13.0, *)) {
+            return [[UIImage imageWithContentsOfFile:imagePath] imageWithTintColor:color];
+        } else {
+            return [[UIImage imageWithContentsOfFile:imagePath] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        }
+    } @catch (NSException *exception) {
+        NSLog(@"Crash found %@", exception.reason);
+    }
+    
 }
 
 + (UIImage *)getOriginalImageFromBundleWithName: (NSString *)imageName {
-    NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
-    NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
-    
-    return [UIImage imageNamed:imageName inBundle:imageBundle compatibleWithTraitCollection:nil];
+    @try {
+        NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
+        NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
+        NSString *imagePath = [imageBundle pathForResource:imageName ofType:@"png"];
+        UIImage *image = [UIImage imageWithContentsOfFile:imagePath];
+        return image;
+    } @catch (NSException *exception) {
+        NSLog(@"Crash found %@", exception.reason);
+    }
+}
+
+//This will return the image as a template ignoring the color information
++ (UIImage *)getImageFromBundleWithName: (NSString *)imageName {
+    @try {
+        NSURL *rtfUrl = [[NSBundle mainBundle] URLForResource:@"Resources" withExtension:@"bundle"];
+        NSBundle *imageBundle = [NSBundle bundleWithURL:rtfUrl];
+        NSString *imagePath = [imageBundle pathForResource:imageName ofType:@"png"];
+        if (@available(iOS 13.0, *)) {
+            return [[UIImage imageWithContentsOfFile:imagePath] imageWithTintColor:[TuyaAppTheme theme].button_color];
+        } else {
+            return [[UIImage imageWithContentsOfFile:imagePath] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+        }
+    } @catch (NSException *exception) {
+        NSLog(@"Crash found %@", exception.reason);
+    }
+   
 }
 
 + (UIImageView *)imageViewWithFrame:(CGRect)frame image:(UIImage *)image {
