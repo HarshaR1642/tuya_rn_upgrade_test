@@ -42,8 +42,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
   }
 
   @ReactMethod
-  fun getCurrentWifi(params: ReadableMap, successCallback: Callback?,
-                     errorCallback: Callback?, promise: Promise) {
+  fun getCurrentWifi(params: ReadableMap, promise: Promise) {
     Log.d("elango-getCurrentWifi", WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext));
     promise.resolve(WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext));
     //promise.resolve(if(WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext).equals("<unknown ssid>")) "" else WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext));
