@@ -74,6 +74,10 @@ static inline BOOL TuyaRNDeviceListenTypeAvailable(TuyaRNDeviceListenType type) 
 
 }
 
+- (void)removeCameraDeviceWithDeviceID:(NSString *)deviceID {
+    
+}
+
 + (void)removeDevice:(TuyaSmartDevice *)device type:(TuyaRNDeviceListenType)type {
   [self removeDeviceWithDeviceId:device.deviceModel.devId type:type];
 }

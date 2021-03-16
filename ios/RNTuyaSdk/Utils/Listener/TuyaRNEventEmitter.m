@@ -13,7 +13,7 @@ NSString *const kTYEventEmitterDeviceInfoEvent = @"devListener";
 NSString *const kTYEventEmitterGroupInfoEvent = @"groupListener";
 NSString *const kTYEventEmitterHomeChangeEvent = @"homeChange";
 NSString *const kTYEventEmitterHomeStatusEvent = @"homeStatus";
-
+NSString *const kTYEventEmitterRemoveDevice = @"REMOVE_CAMERA";
 
 
 @interface TuyaRNEventEmitter()
@@ -70,6 +70,10 @@ RCT_EXPORT_MODULE()
 + (void)ty_sendEvent:(NSString *)event withBody:(id)body  {
   [[NSNotificationCenter defaultCenter] postNotificationName:event object:body];
 //  [[TuyaRNEventEmitter sharedInstance] sendEventWithName:event body:body];
+}
+
++ (void)sendCameraRemoveCommand:(NSString *)event {
+    [[NSNotificationCenter defaultCenter] postNotificationName:event object:@""];
 }
 
 @end

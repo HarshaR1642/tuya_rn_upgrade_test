@@ -8,13 +8,13 @@
 #import "TuyaAppCameraCloudViewController.h"
 #import "TuyaAppCloudDayCollectionViewCell.h"
 #import "TuyaAppPermissionUtil.h"
-#import <SDWebImage/UIImageView+WebCache.h>
+//#import <SDWebImage/UIImageView+WebCache.h>
 #import <TuyaSmartCameraKit/TuyaSmartCameraKit.h>
 #import <TYEncryptImage/TYEncryptImage.h>
 #import <TuyaCameraUIKit/TuyaCameraUIKit.h>
 #import "TuyaSmartCloudTimePieceModel+Timeline.h"
-#import <TuyaSmartBizCore/TuyaSmartBizCore.h>
-#import <TYModuleServices/TYCameraCloudServiceProtocol.h>
+//#import <TuyaSmartBizCore/TuyaSmartBizCore.h>
+//#import <TYModuleServices/TYCameraCloudServiceProtocol.h>
 
 #define TopBarHeight 88
 #define VideoViewWidth [UIScreen mainScreen].bounds.size.width
@@ -240,12 +240,12 @@
 }
 
 - (void)gotoCloudServicePanel {
-    id<TYCameraCloudServiceProtocol> cloudService = [[TuyaSmartBizCore sharedInstance] serviceOfProtocol:@protocol(TYCameraCloudServiceProtocol)];
-    [cloudService requestCloudServicePageWithDevice:self.device.deviceModel completionBlock:^(__kindof UIViewController *page, NSError *error) {
-        if (page) {
-            [self.navigationController pushViewController:page animated:YES];
-        }
-    }];
+//    id<TYCameraCloudServiceProtocol> cloudService = [[TuyaSmartBizCore sharedInstance] serviceOfProtocol:@protocol(TYCameraCloudServiceProtocol)];
+//    [cloudService requestCloudServicePageWithDevice:self.device.deviceModel completionBlock:^(__kindof UIViewController *page, NSError *error) {
+//        if (page) {
+//            [self.navigationController pushViewController:page animated:YES];
+//        }
+//    }];
 }
 
 - (void)alertWithMessage:(NSString *)text {

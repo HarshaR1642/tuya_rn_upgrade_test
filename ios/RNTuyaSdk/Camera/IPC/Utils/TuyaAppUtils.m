@@ -6,7 +6,7 @@
 //
 
 #import "TuyaAppUtils.h"
-#import <Reachability/Reachability.h>
+//#import <Reachability/Reachability.h>
 #import <SystemConfiguration/CaptiveNetwork.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
@@ -230,24 +230,27 @@ UINavigationController *tp_mainNavigationController() {
 }
 
 + (BOOL)IsEnableWIFI {
-    Reachability *r = [Reachability reachabilityForInternetConnection];
-    return [r currentReachabilityStatus] == ReachableViaWiFi;
+//    Reachability *r = [Reachability reachabilityForInternetConnection];
+//    return [r currentReachabilityStatus] == ReachableViaWiFi;
+    return YES;
 }
 
 + (BOOL)IsEnableInternet {
-    Reachability *r = [Reachability reachabilityForInternetConnection];
-    return [r currentReachabilityStatus] != NotReachable;
+//    Reachability *r = [Reachability reachabilityForInternetConnection];
+//    return [r currentReachabilityStatus] != NotReachable;
+    return YES;
 }
 
 + (NSString *)networkType {
-    Reachability *r = [Reachability reachabilityForInternetConnection];
-    if ([r currentReachabilityStatus] == ReachableViaWiFi) {
-        return @"wifi";
-    } else if ([r currentReachabilityStatus] == ReachableViaWWAN) {
-        return @"gprs";
-    } else {
-        return @"none";
-    }
+//    Reachability *r = [Reachability reachabilityForInternetConnection];
+//    if ([r currentReachabilityStatus] == ReachableViaWiFi) {
+//        return @"wifi";
+//    } else if ([r currentReachabilityStatus] == ReachableViaWWAN) {
+//        return @"gprs";
+//    } else {
+//        return @"none";
+//    }
+    return @"YES";
 }
 
 

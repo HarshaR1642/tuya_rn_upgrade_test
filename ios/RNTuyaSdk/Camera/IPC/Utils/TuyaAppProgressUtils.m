@@ -9,6 +9,8 @@
 #import "TuyaAppTopBarView.h"
 #import "TuyaAppViewConstants.h"
 #import "TuyaAppUtils.h"
+#import "FCAlertView.h"
+
 
 
 
@@ -38,7 +40,18 @@
     
 }
 
++ (void)showAlertForView:(UIViewController *)vc withMessage:(NSString *)message withTitle: (NSString *)title {
+    FCAlertView *alert = [[FCAlertView alloc] init];
+    [alert showAlertInView:vc
+                 withTitle:title
+              withSubtitle:message
+           withCustomImage:nil
+       withDoneButtonTitle:@"OK"
+                andButtons:nil];
+}
+
 + (void)showSuccess:(NSString *)success toView:(UIView *)view {
+    
     [TuyaAppProgressUtils show:success icon:@"TPViews.bundle/tp_progress_success" view:view delay:1.5 block:nil];
 }
 
@@ -137,7 +150,6 @@
     }
     return mainWindow;
 }
-
 
 
 
