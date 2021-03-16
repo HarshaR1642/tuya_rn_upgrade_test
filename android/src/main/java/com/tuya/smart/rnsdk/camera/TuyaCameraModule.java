@@ -29,6 +29,7 @@ public class TuyaCameraModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void openLivePreview(ReadableMap params) {
+        Log.d("CameraLivePreview", "elango - "+ params);
 
         Intent intent = new Intent(reactContext, CameraLivePreviewActivity.class);
 
@@ -38,6 +39,7 @@ public class TuyaCameraModule extends ReactContextBaseJavaModule {
             intent.putExtra(Constants.INTENT_COUNTRY_CODE, params.getString("countryCode"));
             intent.putExtra(Constants.INTENT_UID, params.getString("uid"));
             intent.putExtra(Constants.INTENT_PASSWD, params.getString("passwd"));
+            intent.putExtra(Constants.INTENT_HOME_ID, params.getString("homeId") != null ? Long.parseLong(params.getString("homeId")) : -1);
             reactContext.startActivity(intent);
             Log.d("ReactNative","Starting Activity");
         }

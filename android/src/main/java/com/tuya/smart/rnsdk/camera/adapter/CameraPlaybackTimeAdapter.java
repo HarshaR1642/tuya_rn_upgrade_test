@@ -1,11 +1,14 @@
 package com.tuya.smart.rnsdk.camera.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tuya.smart.rnsdk.R;
@@ -21,13 +24,17 @@ import java.util.List;
 
 public class CameraPlaybackTimeAdapter extends RecyclerView.Adapter<CameraPlaybackTimeAdapter.MyViewHolder> {
 
+    private Context context = null;
     private LayoutInflater mInflater;
     private List<TimePieceBean> timePieceBeans;
     private OnTimeItemListener listener;
+    private int row_index = -1;
 
     public CameraPlaybackTimeAdapter(Context context, List<TimePieceBean> timePieceBeans) {
+        this.context = context;
         mInflater = LayoutInflater.from(context);
         this.timePieceBeans = timePieceBeans;
+        setHasStableIds(true);
     }
 
     public void setListener(OnTimeItemListener listener) {
@@ -50,10 +57,22 @@ public class CameraPlaybackTimeAdapter extends RecyclerView.Adapter<CameraPlayba
             @Override
             public void onClick(View v) {
                 if (null != listener) {
+                    /*row_index=position;
+                    notifyDataSetChanged();*/
                     listener.onClick(ipcVideoBean);
                 }
             }
         });
+
+        /*if(row_index==position){
+            holder.cardView.setBackgroundColor(ContextCompat.getColor(context, R.color.tuya_list_card_bg_selected));
+            //holder.tv1.setTextColor(Color.parseColor("#ffffff"));
+        }
+        else
+        {
+            holder.cardView.setBackgroundColor(ContextCompat.getColor(context, R.color.tuya_list_card_bg_white));
+            //holder.tv1.setTextColor(Color.parseColor("#000000"));
+        }*/
     }
 
     @Override
@@ -64,16 +83,19 @@ public class CameraPlaybackTimeAdapter extends RecyclerView.Adapter<CameraPlayba
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView mTvStartTime;
         TextView mTvDuration;
+        CardView cardView;
 
         public MyViewHolder(final View view) {
             super(view);
             mTvStartTime = view.findViewById(R.id.time_start);
             mTvDuration = view.findViewById(R.id.time_duration);
+            cardView = view.findViewById(R.id.cardView);
         }
     }
 
     public static String timeFormat(long time) {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        //SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         Date date = new Date(time);
         return sdf.format(date);
     }

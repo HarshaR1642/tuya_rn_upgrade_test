@@ -39,25 +39,31 @@ export type RegisterForPushNotificationParams = {
 };
 
 export function initActivator(
-  params: InitActivatorParams
+    params: InitActivatorParams
 ): Promise<DeviceDetailResponse> {
   return tuya.initActivator(params);
 }
 
 export function getTokenForQRCode (
-  params: GetTokenParams
+    params: GetTokenParams
 ): Promise<DeviceDetailResponse> {
   return tuya.getTokenForQRCode(params);
 }
 
 export function initActivatorForQRCode(
-  params: InitActivatorQRCodeParams
+    params: InitActivatorQRCodeParams
 ): Promise<DeviceDetailResponse> {
   return tuya.initActivatorForQRCode(params);
 }
 
+export function registerForPushNotification (
+    params: RegisterForPushNotificationParams
+) {
+  return tuya.registerForPushNotification(params);
+}
+
 export function newGwActivator(
-  params: InitGwActivatorParams
+    params: InitGwActivatorParams
 ): Promise<DeviceDetailResponse> {
   return tuya.newGwActivator(params);
 }
@@ -68,10 +74,4 @@ export function stopConfig() {
 
 export function getCurrentWifi() {
   return tuya.getCurrentWifi({});
-}
-
-export function registerForPushNotification (
-  params: RegisterForPushNotificationParams
-) {
-  return tuya.registerForPushNotification(params);
 }
