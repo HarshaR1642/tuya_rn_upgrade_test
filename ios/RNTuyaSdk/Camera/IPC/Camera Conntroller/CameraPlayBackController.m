@@ -413,7 +413,9 @@ UITableViewDelegate>
 {
     NSCalendarUnit units = NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
     NSDateComponents *components = [[NSCalendar currentCalendar] components:units fromDate: startDate toDate: endDate options: 0];
-    return [NSString stringWithFormat:@"%ti H | %ti M | %ti S", [components hour], [components minute], [components second]];
+    
+    return [NSString stringWithFormat:@"Duration: %02ld:%02ld:%02ld", (long)[components hour], (long)[components minute], (long)[components second]];
+//     [NSString stringWithFormat:@"%ti H | %ti M | %ti S", [components hour], [components minute], [components second]];
 }
 
 - (NSString *)getStringByDate:(NSDate *)date {

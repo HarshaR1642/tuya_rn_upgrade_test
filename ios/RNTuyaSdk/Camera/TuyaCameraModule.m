@@ -69,19 +69,6 @@ RCT_EXPORT_METHOD(openLivePreview:(NSDictionary *)params resolver:(RCTPromiseRes
     } failure:^(NSError *error) {
         [TuyaRNUtils rejecterWithError:error handler:rejecter];
     }];
-//    [[TuyaSmartUser sharedInstance] loginByEmail:countryCode email:uid password:passwd success:^{
-//        [TuyaSmartDevice syncDeviceInfoWithDevId:devId homeId:nil success:^{
-//          NSLog(@"getToken success");
-//          TuyaAppCameraViewController *vc = [[TuyaAppCameraViewController alloc] initWithDeviceId:devId];
-//          UIViewController *topVC = [self topViewController];
-//          [topVC.navigationController pushViewController:vc animated:YES];
-//        } failure:^(NSError *error) {
-//          NSLog(@"Streaming Failiure %@", error);
-//            [TuyaRNUtils rejecterWithError:error handler:rejecter];
-//        }];
-//    } failure:^(NSError *error) {
-//        [TuyaRNUtils rejecterWithError:error handler:rejecter];
-//    }];
 }
 
 - (UIViewController *) topViewController {

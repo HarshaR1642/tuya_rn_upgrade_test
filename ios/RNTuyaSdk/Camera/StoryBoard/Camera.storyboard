@@ -32,12 +32,10 @@
                                         <rect key="frame" x="0.0" y="202" width="414" height="250"/>
                                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="250" id="9Zt-C9-ff4"/>
                                             <constraint firstAttribute="width" secondItem="ZAg-wf-vru" secondAttribute="height" multiplier="207:125" id="dO0-P1-TsH"/>
                                         </constraints>
                                         <variation key="heightClass=compact">
                                             <mask key="constraints">
-                                                <exclude reference="9Zt-C9-ff4"/>
                                                 <exclude reference="dO0-P1-TsH"/>
                                             </mask>
                                         </variation>
@@ -192,6 +190,15 @@
                                             <action selector="changeVideoModeAction:" destination="gVj-Vv-cwe" eventType="touchUpInside" id="y4U-SD-Cam"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qib-gR-4E5">
+                                        <rect key="frame" x="30" y="633" width="30" height="22"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="7DO-1A-eDd"/>
+                                            <constraint firstAttribute="height" constant="22" id="Vz6-wO-G27"/>
+                                        </constraints>
+                                        <state key="normal" image="ty_camera_control_sd_normal.png"/>
+                                        <state key="selected" image="ty_camera_control_hd_normal"/>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -206,10 +213,12 @@
                                     <constraint firstItem="Ifh-pz-vaf" firstAttribute="leading" secondItem="MPS-GI-8V4" secondAttribute="leading" id="HTl-50-a7A"/>
                                     <constraint firstItem="ZAg-wf-vru" firstAttribute="top" secondItem="MPS-GI-8V4" secondAttribute="top" constant="10" id="Iab-i2-1DH"/>
                                     <constraint firstItem="VHr-Xk-z3D" firstAttribute="centerX" secondItem="aEn-do-yec" secondAttribute="centerX" id="KNk-hB-bTg"/>
+                                    <constraint firstItem="Qib-gR-4E5" firstAttribute="centerY" secondItem="VHr-Xk-z3D" secondAttribute="centerY" id="Ndg-oO-WcY"/>
                                     <constraint firstItem="Xal-1R-hNY" firstAttribute="centerX" secondItem="ZAg-wf-vru" secondAttribute="centerX" id="OnD-TN-xJr"/>
                                     <constraint firstItem="eXy-O6-VyJ" firstAttribute="leading" secondItem="MPS-GI-8V4" secondAttribute="leading" constant="20" id="QF6-2v-PMC"/>
                                     <constraint firstAttribute="trailing" secondItem="ZAg-wf-vru" secondAttribute="trailing" id="Rz9-QA-EXJ"/>
                                     <constraint firstItem="VHr-Xk-z3D" firstAttribute="centerY" secondItem="aEn-do-yec" secondAttribute="centerY" id="W9H-0H-aHO"/>
+                                    <constraint firstItem="Qib-gR-4E5" firstAttribute="leading" secondItem="MPS-GI-8V4" secondAttribute="leading" constant="30" id="WZd-5a-Ehw"/>
                                     <constraint firstAttribute="trailing" secondItem="aEn-do-yec" secondAttribute="trailing" constant="30" id="Zgs-JG-U7l"/>
                                     <constraint firstItem="Xal-1R-hNY" firstAttribute="centerY" secondItem="ZAg-wf-vru" secondAttribute="centerY" id="ZqX-iW-Qv4"/>
                                     <constraint firstItem="3Ls-ld-iCS" firstAttribute="centerX" secondItem="ZAg-wf-vru" secondAttribute="centerX" id="a2h-1H-I5V"/>
@@ -283,6 +292,7 @@
                         <outlet property="bottomControlView" destination="Ifh-pz-vaf" id="Zro-lV-1py"/>
                         <outlet property="contentView" destination="MPS-GI-8V4" id="uFI-DG-WIj"/>
                         <outlet property="controlView" destination="ZAg-wf-vru" id="XCk-p2-O9h"/>
+                        <outlet property="hdButton" destination="Qib-gR-4E5" id="hFP-eI-VDP"/>
                         <outlet property="indicatorView" destination="3Ls-ld-iCS" id="aax-Xb-ehP"/>
                         <outlet property="messageButton" destination="85Z-xL-ugL" id="xpN-Gj-oC7"/>
                         <outlet property="muteButton" destination="BFY-0X-hGX" id="Fyq-SU-K1b"/>
@@ -390,7 +400,7 @@
                                         </connections>
                                     </tableView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Messages available at the moment " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ru-IQ-7ZN">
-                                        <rect key="frame" x="55" y="364.5" width="304" height="45"/>
+                                        <rect key="frame" x="55" y="366" width="304" height="42"/>
                                         <fontDescription key="fontDescription" name="Quicksand-Bold" family="Quicksand" pointSize="18"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -524,7 +534,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1xg-dh-T68">
-                                                    <rect key="frame" x="15" y="10" width="42" height="103"/>
+                                                    <rect key="frame" x="15" y="10" width="39.5" height="103"/>
                                                     <fontDescription key="fontDescription" name="Quicksand-Medium" family="Quicksand Medium" pointSize="16"/>
                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
@@ -537,7 +547,7 @@
                                                     </constraints>
                                                 </view>
                                                 <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SeX-hD-JR7">
-                                                    <rect key="frame" x="67" y="10" width="327" height="103"/>
+                                                    <rect key="frame" x="64.5" y="10" width="329.5" height="103"/>
                                                     <inset key="titleEdgeInsets" minX="0.0" minY="0.0" maxX="30" maxY="0.0"/>
                                                     <state key="normal" title="Button">
                                                         <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -921,7 +931,9 @@
         <image name="keyless_sound_on.png" width="46" height="46"/>
         <image name="keyless_speak_off.png" width="240" height="90"/>
         <image name="keyless_speak_on.png" width="169" height="69"/>
-        <image name="pps_right_arrow.png" width="8" height="15"/>
+        <image name="pps_right_arrow.png" width="16" height="30"/>
+        <image name="ty_camera_control_hd_normal" width="128" height="128"/>
+        <image name="ty_camera_control_sd_normal.png" width="30" height="20"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

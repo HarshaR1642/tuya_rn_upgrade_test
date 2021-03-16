@@ -22,7 +22,6 @@
 #import "CameraSettingsViewController.h"
 #import "TuyaAppTheme.h"
 
-
 #define kControlTalk        @"talk"
 #define kControlRecord      @"record"
 #define kControlPhoto       @"photo"
@@ -32,23 +31,23 @@
 
 @interface CameraAppViewController ()<TuyaSmartCameraObserver, TuyaSmartCameraDPObserver>
 
-@property  (strong, nonatomic) IBOutlet TuyaSmartCameraControlView *controlView;
-@property (nonatomic, strong) TuyaSmartCamera                   *camera;
-@property (strong, nonatomic) IBOutlet UIView                   *contentView;
-@property (weak, nonatomic) IBOutlet UIView                     *superContentView;
-@property (weak, nonatomic) IBOutlet UIButton                   *talkButton;
-@property (weak, nonatomic) IBOutlet UIButton                   *muteButton;
-@property (weak, nonatomic) IBOutlet UIButton                   *retryButton;
-@property (weak, nonatomic) IBOutlet UIButton                   *takePhotoButton;
-@property (weak, nonatomic) IBOutlet UIButton                   *recordButton;
-@property (weak, nonatomic) IBOutlet UIButton                   *playBackButton;
-@property (weak, nonatomic) IBOutlet UIButton                   *messageButton;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView    *indicatorView;
-@property (weak, nonatomic) IBOutlet UILabel                    *stateLabel;
-@property (nonatomic, strong) UIBarButtonItem                   *rightSettingButton;
-@property (weak, nonatomic) IBOutlet UIView                     *bottomControlView;
-@property (nonatomic, assign) BOOL                              isLandscapeEnabled;
-@property (weak, nonatomic) IBOutlet UIButton                   *roateButtton;
+@property (strong, nonatomic) IBOutlet UIView                       *controlView;
+@property (strong, nonatomic) TuyaSmartCamera                       *camera;
+@property (strong, nonatomic) IBOutlet UIView                       *contentView;
+@property (weak, nonatomic) IBOutlet UIView                         *superContentView;
+@property (weak, nonatomic) IBOutlet UIButton                       *talkButton;
+@property (weak, nonatomic) IBOutlet UIButton                       *muteButton;
+@property (weak, nonatomic) IBOutlet UIButton                       *retryButton;
+@property (weak, nonatomic) IBOutlet UIButton                       *takePhotoButton;
+@property (weak, nonatomic) IBOutlet UIButton                       *recordButton;
+@property (weak, nonatomic) IBOutlet UIButton                       *playBackButton;
+@property (weak, nonatomic) IBOutlet UIButton                       *messageButton;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView        *indicatorView;
+@property (weak, nonatomic) IBOutlet UILabel                        *stateLabel;
+@property (nonatomic, strong) UIBarButtonItem                       *rightSettingButton;
+@property (weak, nonatomic) IBOutlet UIView                         *bottomControlView;
+@property (weak, nonatomic) IBOutlet UIButton                       *roateButtton;
+@property (weak, nonatomic) IBOutlet UIButton *hdButton;
 
 @end
 
@@ -57,22 +56,24 @@
 
 - (void)initCamera:(NSString *)devId {
     if (self) {
-        if (_camera == nil) {
+        if (self.camera == nil) {
+            _devId = devId;
             _camera = [[TuyaSmartCamera alloc] initWithDeviceId:devId];
             [_camera.dpManager addObserver:self];
         }
     }
 }
 
-
 #pragma mark - View Life Cycle Methods
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [self forcePotraitView];
+    self.navigationController.navigationBarHidden = YES;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
     [self.camera stopPreview];
     [self.camera removeObserver:self];
     [self.camera.dpManager removeObserver:self];
-    [self makeViewPotrait];
-    self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)actionLeftBarButton: (id)obj {
@@ -82,29 +83,41 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self setCameraViewTheme];
-    [self.camera addObserver:self];
     self.navigationController.navigationBarHidden = NO;
     self.navigationItem.rightBarButtonItem = self.rightSettingButton;
     [self.indicatorView setHidden:YES];
     [self.stateLabel setHidden:YES];
     [self.retryButton setHidden: YES];
-    [self retryAction];
     _superContentView.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0];
     _bottomControlView.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0];
     self.addLeftBarBackButtonEnabled = YES;
     [self.retryButton addTarget:self action:@selector(retryConnect) forControlEvents:UIControlEventTouchUpInside];
     [self.topBarView setHidden:YES];
-    self.isLandscapeEnabled = NO;
+    [self.hdButton addTarget:self action:@selector(hdAction) forControlEvents:UIControlEventTouchUpInside];
+    self.view.accessibilityLabel = @"CameraAppViewController";
+    [self.camera addObserver:self];
+    [self retryAction];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
+- (void)hdAction {
+    [self.camera enableHD:!self.camera.isHD success:^{
+    } failure:^(NSError *error) {
+        [self showAlertWithMessage:NSLocalizedString(@"ipc_errmsg_change_definition_failed", @"") complete:nil];
+    }];
+}
 - (void)retryConnect {
     [self retryAction];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = self.camera.device.deviceModel.name;
+
+    self.title = self.camera.device.deviceModel.name ? self.camera.device.deviceModel.name : @"Video Doorbell Camera";
     /**
+     
+     
      
      Setting the Camera Chime  DP Value to Mechanical Default
      
@@ -118,8 +131,7 @@
         }
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+
    
     // Do any additional setup after loading the view.
 }
@@ -146,36 +158,18 @@
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-
-        if (size.width > size.height) {
-            
-        } else {
-            
-        }
-        
-        self.view.accessibilityLabel = _isLandscapeEnabled ? @"CameraAppViewController" : @"";
-        NSNumber *number = [NSNumber numberWithInt:_isLandscapeEnabled ? UIDeviceOrientationLandscapeLeft : UIDeviceOrientationPortrait];
-        NSNumber *StatusBarOrientation = [NSNumber numberWithInt:_isLandscapeEnabled ? UIInterfaceOrientationMaskLandscapeLeft : UIInterfaceOrientationMaskPortrait];
-        [UIViewController attemptRotationToDeviceOrientation];
-        [[UIDevice currentDevice] setValue:number forKey:@"orientation"];
-        [[UIApplication sharedApplication] performSelector:@selector(setStatusBarOrientation:) withObject:StatusBarOrientation];
-        [UIViewController attemptRotationToDeviceOrientation];
+//        _isLandscapeEnabled = !_isLandscapeEnabled;
         [self startPreview];
         [self.camera.videoView layoutIfNeeded];
-        // Stuff you used to do in willRotateToInterfaceOrientation would go here.
-        // If you don't need anything special, you can set this block to nil.
 
     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-
         // Stuff you used to do in didRotateFromInterfaceOrientation would go here.
         // If not needed, set to nil.
-
     }];
 }
 
-- (void)makeViewPotrait {
+- (void)forcePotraitView {
     [_roateButtton setSelected:NO];
     NSNumber *number = [NSNumber numberWithInt: UIDeviceOrientationPortrait];
     NSNumber *StatusBarOrientation = [NSNumber numberWithInt:UIInterfaceOrientationMaskPortrait];
@@ -185,22 +179,29 @@
     [UIViewController attemptRotationToDeviceOrientation];
 }
 
-- (IBAction)changeVideoModeAction:(UIButton *)sender {
-    _isLandscapeEnabled = !_isLandscapeEnabled;
-    [sender setSelected:!sender.isSelected];
-    self.view.accessibilityLabel = _isLandscapeEnabled ? @"CameraAppViewController" : @"";
-    NSNumber *number = [NSNumber numberWithInt:_isLandscapeEnabled ? UIDeviceOrientationLandscapeLeft : UIDeviceOrientationPortrait];
-    NSNumber *StatusBarOrientation = [NSNumber numberWithInt:_isLandscapeEnabled ? UIInterfaceOrientationMaskLandscapeLeft : UIInterfaceOrientationMaskPortrait];
+- (void)forceLandscapeView {
+    [_roateButtton setSelected:YES];
+    NSNumber *number = [NSNumber numberWithInt: UIDeviceOrientationLandscapeLeft];
+    NSNumber *StatusBarOrientation = [NSNumber numberWithInt:UIInterfaceOrientationMaskLandscapeLeft];
     [UIViewController attemptRotationToDeviceOrientation];
     [[UIDevice currentDevice] setValue:number forKey:@"orientation"];
     [[UIApplication sharedApplication] performSelector:@selector(setStatusBarOrientation:) withObject:StatusBarOrientation];
     [UIViewController attemptRotationToDeviceOrientation];
+}
+
+- (IBAction)changeVideoModeAction:(UIButton *)sender {
+    [sender setSelected:!sender.isSelected];
+    if (sender.isSelected) {
+        [self forceLandscapeView];
+    } else {
+        [self forcePotraitView];
+    }
     [self startPreview];
     [self.camera.videoView layoutIfNeeded];
 }
 
 - (void) settingAction {
-    [self makeViewPotrait];
+    [self forcePotraitView];
     CameraSettingsViewController *settingVC = (CameraSettingsViewController *)[TuyaAppViewUtil getCameraStoryBoardControllerForID:@"CameraSettingsViewController"];
     settingVC.devId = self.devId;
     settingVC.dpManager = self.camera.dpManager;
@@ -236,21 +237,14 @@
 #pragma mark - Camera UI control methods
 
 - (IBAction)playbackButtonAction:(UIButton *)sender {
-//    TuyaAppCameraPlaybackViewController *vc = [TuyaAppCameraPlaybackViewController new];
-//    vc.camera = self.camera;
-//    [self.navigationController pushViewController:vc animated:YES];
-    [self makeViewPotrait];
+    [self forcePotraitView];
     CameraPlayBackController *messageVC = (CameraPlayBackController *)[TuyaAppViewUtil getCameraStoryBoardControllerForID:@"CameraPlayBackController"];
     messageVC.camera = self.camera;
     [self.navigationController pushViewController:messageVC animated:YES];
 }
 
 - (IBAction)messageButtonAction:(UIButton *)sender {
-//    TuyaAppCameraMessageViewController *vc = [TuyaAppCameraMessageViewController new];
-//    vc.devId = self.devId;
-//    [self.navigationController pushViewController:vc animated:YES];
-
-    [self makeViewPotrait];
+    [self forcePotraitView];
     CameraMessageViewController *messageVC = (CameraMessageViewController *)[TuyaAppViewUtil getCameraStoryBoardControllerForID:@"CameraMessageViewController"];
     messageVC.devId = self.devId;
     [self.navigationController pushViewController:messageVC animated:YES];
@@ -400,9 +394,10 @@
 #pragma mark - Application entering background/foreground methods
 - (void)didEnterBackground {
     [self.camera stopPreview];
+    [self.camera disConnect];
     /*
      disconnect p2p channel when enter background
-     [self.camera disConnect];
+     
      */
 }
 
@@ -411,16 +406,18 @@
 }
 
 - (void)startPreview {
-    [self.controlView addSubview:self.camera.videoView];
-    self.camera.videoView.frame = self.controlView.bounds;
-    self.camera.videoView.scaleToFill = YES;
-    [self.camera startPreview:^{
-//        [self hideCameraOptions];
-        [self stopLoading];
-    } failure:^(NSError *error) {
-        [self stopLoading];
-        self.retryButton.hidden = NO;
-    }];
+    if (self.camera.videoView) {
+        [self.controlView addSubview:self.camera.videoView];
+        self.camera.videoView.frame = self.controlView.bounds;
+        self.camera.videoView.scaleToFill = YES;
+        [self.camera startPreview:^{
+            [self stopLoading];
+        } failure:^(NSError *error) {
+            [self stopLoading];
+            self.retryButton.hidden = NO;
+        }];
+    }
+
 }
 
 - (BOOL)isDoorbell {
@@ -436,7 +433,10 @@
         return;
     }
     if ([self isDoorbell]) {
-        [self.camera.device awakeDeviceWithSuccess:nil failure:nil];
+        [self.camera.device awakeDeviceWithSuccess:^{
+        } failure:^(NSError *error) {
+        }];
+//        [self.camera.device awakeDeviceWithSuccess:nil failure:nil];
     }
     [self connectCamera:^(BOOL success) {
         if (success) {
@@ -462,10 +462,14 @@
     } failure:^(NSError *error) {
         complete(NO);
     }];
+    
+ 
 }
 
 - (void)dealloc {
+    [self.camera stopPreview];
     [self.camera disConnect];
+    self.camera = nil;
 }
 
 #pragma mark - TuyaSmartCameraObserver
@@ -487,11 +491,10 @@
 }
 
 - (void)camera:(TuyaSmartCamera *)camera didReceiveDefinitionState:(BOOL)isHd {
-    NSString *imageName = @"ty_camera_control_sd_normal";
+    [self.hdButton setSelected:NO];
     if (isHd) {
-        imageName = @"ty_camera_control_hd_normal";
+        [self.hdButton setSelected:YES];
     }
-//    [self.hdButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
 }
 
 - (void)camera:(TuyaSmartCamera *)camera didReceiveVideoFrame:(CMSampleBufferRef)sampleBuffer frameInfo:(TuyaSmartVideoFrameInfo)frameInfo {
