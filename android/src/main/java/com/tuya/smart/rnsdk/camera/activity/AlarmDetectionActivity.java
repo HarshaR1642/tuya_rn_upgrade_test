@@ -23,14 +23,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.tuya.smart.home.sdk.TuyaHomeSdk;
 import com.tuya.smart.rnsdk.R;
+import com.tuya.smart.rnsdk.camera.bean.CameraMessageBean;
+import com.tuya.smart.rnsdk.core.TuyaCoreModule;
 import com.tuya.smart.rnsdk.utils.MessageUtil;
 import com.tuya.smart.rnsdk.camera.adapter.AlarmDetectionAdapter;
 import com.tuya.smart.rnsdk.utils.DateUtils;
 import com.tuya.smart.rnsdk.utils.TimeZoneUtils;
 import com.tuya.smart.android.network.Business;
 import com.tuya.smart.android.network.http.BusinessResponse;
-import com.tuya.smart.ipc.messagecenter.bean.CameraMessageBean;
 import com.tuya.smart.ipc.messagecenter.bean.CameraMessageClassifyBean;
 import com.tuya.smart.ipc.messagecenter.business.CameraMessageBusiness;
 import com.tuya.smart.utils.ToastUtil;
@@ -116,14 +118,15 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
     private void handlAlarmDetectionDateSuccess(Message msg) {
         if (null != messageBusiness) {
             long time = DateUtils.getCurrentTime(year, month, day);
-            long startTime = DateUtils.getTodayStart(time);
+            //long startTime = DateUtils.getTodayStart(time);
+            long startTime = DateUtils.getDate1YearMinus(time);
             long endTime = DateUtils.getTodayEnd(time) - 1L;
             JSONObject object = new JSONObject();
             object.put("msgSrcId", devId);
             object.put("startTime", startTime);
             object.put("endTime", endTime);
             object.put("msgType", 4);
-            object.put("limit", 30);
+            object.put("limit", 2000);
             object.put("keepOrig", true);
             object.put("offset", offset);
             if (null != selectClassify) {
@@ -170,6 +173,8 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
         initView();
         initData();
         initListener();
+
+        queryAlarmDetectionByMonth();
     }
 
     private void initListener() {
@@ -245,7 +250,7 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_messages, menu);
+        //getMenuInflater().inflate(R.menu.menu_messages, menu);
         return true;
     }
 

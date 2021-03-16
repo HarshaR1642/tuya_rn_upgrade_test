@@ -2,6 +2,7 @@ package com.tuya.smart.rnsdk.camera.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.tuya.drawee.view.DecryptImageView;
-import com.tuya.smart.ipc.messagecenter.bean.CameraMessageBean;
 import com.tuya.smart.rnsdk.R;
+import com.tuya.smart.rnsdk.camera.bean.CameraMessageBean;
 
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAd
     private LayoutInflater mInflater;
     private List<CameraMessageBean> cameraMessageBeans;
     private OnItemListener listener;
+
+    String TAG = "AlarmDetectionActivity";
 
     public AlarmDetectionAdapter(Context context, List<CameraMessageBean> cameraMessageBeans) {
         mInflater = LayoutInflater.from(context);
@@ -53,7 +56,7 @@ public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAd
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final CameraMessageBean ipcVideoBean = cameraMessageBeans.get(position);
         holder.mTvStartTime.setText(ipcVideoBean.getDateTime());
-        holder.mTvDescription.setText(ipcVideoBean.getMsgTypeContent());
+        holder.mTvDescription.setText(ipcVideoBean.getMsgContent());
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -100,7 +103,16 @@ public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAd
                 try {
                     String decryption = attachPics.substring(index + 1);
                     String imageUrl = attachPics.substring(0, index);
+                    Log.d(TAG, "elango message showPicture : " + imageUrl +", " + decryption);
                     mSnapshot.setImageURI(imageUrl, decryption.getBytes());
+                    /*ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(Uri.parse(imageUrl))
+                            .setRotationOptions(RotationOptions.autoRotateAtRenderTime())
+                            .disableDiskCache();
+                    DecryptImageRequest imageRequest = new DecryptImageRequest(builder, "AES", "AES/CBC/PKCS5Padding",
+                            decryption.getBytes());
+                    DraweeController controller = Fresco.newDraweeControllerBuilder().setImageRequest(imageRequest)
+                            .build();
+                    mSnapshot.setController(controller);*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

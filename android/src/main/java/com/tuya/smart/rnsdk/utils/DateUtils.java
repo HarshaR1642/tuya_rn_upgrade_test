@@ -1,6 +1,8 @@
 package com.tuya.smart.rnsdk.utils;
 
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,12 +22,30 @@ public class DateUtils {
      * @param currentTime
      * @return
      */
+    public static long getDate1YearMinus(long currentTime) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTimeInMillis(currentTime);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.add(Calendar.YEAR, -1);
+        Log.d("elango", "elango time getDate1YearMinus : " + calendar.getTime());
+        return calendar.getTimeInMillis() / 1000L;
+    }
+
+    /**
+     * 获取当前时间的起点（00:00:00）
+     *
+     * @param currentTime
+     * @return
+     */
     public static long getTodayStart(long currentTime) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(currentTime);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
+        Log.d("elango", "elango time getTodayStart : " + calendar.getTime());
         return calendar.getTimeInMillis() / 1000L;
     }
 
@@ -42,6 +62,7 @@ public class DateUtils {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Log.d("elango", "elango time getTodayEnd : " + calendar.getTime());
         return calendar.getTimeInMillis() / 1000L;
     }
 

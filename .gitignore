@@ -5,3 +5,10 @@ build/
 .gradle
 local.properties
 *.iml
+dist/
+
+# node.js
+#
+node_modules/
+npm-debug.log
+yarn-error.log

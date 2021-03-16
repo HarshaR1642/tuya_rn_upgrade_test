@@ -2,6 +2,7 @@ package com.tuya.smart.rnsdk.camera.activity;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -53,6 +55,7 @@ import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -117,10 +120,58 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                 case MSG_DATA_DATE_BY_DAY_FAIL:
                     handleDataDay(msg);
                     break;
+                case Constants.MSG_SCREENSHOT:
+                    handlesnapshot(msg);
+                    break;
+                case Constants.MSG_VIDEO_RECORD_BEGIN:
+                    //ToastUtil.shortToast(CameraPlaybackActivity.this, "record start success");
+                    break;
+                case Constants.MSG_VIDEO_RECORD_FAIL:
+                    //ToastUtil.shortToast(CameraPlaybackActivity.this, "record start fail");
+                    break;
+                case Constants.MSG_VIDEO_RECORD_OVER:
+                    handleVideoRecordOver(msg);
+                    break;
             }
             super.handleMessage(msg);
         }
     };
+
+    private void handleVideoRecordOver(Message msg) {
+        if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
+            //ToastUtil.shortToast(CameraLivePreviewActivity.this, "record success " + msg.obj);
+            AlertDialog.Builder builder = new AlertDialog.Builder(CameraPlaybackActivity.this);
+            builder.setTitle("Success");
+            builder.setMessage("Video has been saved to your photos gallery.");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            //ToastUtil.shortToast(CameraPlaybackActivity.this, "operation fail");
+        }
+    }
+
+    private void handlesnapshot(Message msg) {
+        if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
+            //ToastUtil.shortToast(CameraLivePreviewActivity.this, "snapshot success " + msg.obj);
+            AlertDialog.Builder builder = new AlertDialog.Builder(CameraPlaybackActivity.this);
+            builder.setTitle("Success");
+            builder.setMessage("A screenshot has been saved to your photos gallery.");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            //ToastUtil.shortToast(CameraPlaybackActivity.this, "operation fail");
+        }
+    }
 
     private void handleDataDay(Message msg) {
         if (msg.arg1 == ARG1_OPERATE_SUCCESS) {
@@ -128,7 +179,39 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
             //Timepieces with data for the query day
             List<TimePieceBean> timePieceBeans = mBackDataDayCache.get(mCameraP2P.getDayKey());
             if (timePieceBeans != null) {
+                Collections.reverse(timePieceBeans); // now the list is in reverse order
                 queryDateList.addAll(timePieceBeans);
+
+                // to play first item on opening
+                if(timePieceBeans.size() > 0) {
+                    mCameraP2P.startPlayBack(timePieceBeans.get(0).getStartTime(),
+                            timePieceBeans.get(0).getEndTime(),
+                            timePieceBeans.get(0).getStartTime(), new OperationDelegateCallBack() {
+                                @Override
+                                public void onSuccess(int sessionId, int requestId, String data) {
+                                    //isPlayback = true;
+                                    setPlayBackFlag(true);
+                                }
+
+                                @Override
+                                public void onFailure(int sessionId, int requestId, int errCode) {
+                                    //isPlayback = false;
+                                    setPlayBackFlag(false);
+                                }
+                            }, new OperationDelegateCallBack() {
+                                @Override
+                                public void onSuccess(int sessionId, int requestId, String data) {
+                                    //isPlayback = false;
+                                    setPlayBackFlag(false);
+                                }
+
+                                @Override
+                                public void onFailure(int sessionId, int requestId, int errCode) {
+                                    //isPlayback = false;
+                                    setPlayBackFlag(false);
+                                }
+                            });
+                }
             } else {
                 showErrorToast();
             }
@@ -213,6 +296,15 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
         imgView.setImageDrawable(ResourcesCompat.getDrawable(getResources(), res, getApplicationContext().getTheme()));
     }
 
+    private void setPlayBackFlag(boolean playBack) {
+        isPlayback = playBack;
+        if(isPlayback) {
+            setImageViewSrc(pauseBtn, R.drawable.ic_pause);
+        } else {
+            setImageViewSrc(pauseBtn, R.drawable.ic_play);
+        }
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -268,7 +360,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         queryRv.setLayoutManager(mLayoutManager);
-        queryRv.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        //queryRv.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         queryDateList = new ArrayList<>();
         adapter = new CameraPlaybackTimeAdapter(this, queryDateList);
         queryRv.setAdapter(adapter);
@@ -283,6 +375,8 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
         dateInputEdt.setText(simpleDateFormat.format(date));
 
         myCalendar = Calendar.getInstance();
+
+        queryDayByMonthClick();
         /*final DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -316,6 +410,8 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
             myCalendar.set(Calendar.MONTH, monthOfYear);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             updateLabel();
+
+            stopPlayBack();
             queryDayByMonthClick();
         }
 
@@ -372,22 +468,26 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                         timePieceBean.getStartTime(), new OperationDelegateCallBack() {
                             @Override
                             public void onSuccess(int sessionId, int requestId, String data) {
-                                isPlayback = true;
+                                //isPlayback = true;
+                                setPlayBackFlag(true);
                             }
 
                             @Override
                             public void onFailure(int sessionId, int requestId, int errCode) {
-                                isPlayback = false;
+                                //isPlayback = false;
+                                setPlayBackFlag(false);
                             }
                         }, new OperationDelegateCallBack() {
                             @Override
                             public void onSuccess(int sessionId, int requestId, String data) {
-                                isPlayback = false;
+                                //isPlayback = false;
+                                setPlayBackFlag(false);
                             }
 
                             @Override
                             public void onFailure(int sessionId, int requestId, int errCode) {
-                                isPlayback = false;
+                                //isPlayback = false;
+                                setPlayBackFlag(false);
                             }
                         });
             }
@@ -402,7 +502,13 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
         } else if (id == R.id.query_btn) {
             queryDayByMonthClick();
         } else if (id == R.id.pause_btn) {
-            pauseClick();
+            if(isPlayback) {
+                pauseClick();
+                setImageViewSrc(pauseBtn, R.drawable.ic_play);
+            } else {
+                resumeClick();
+                setImageViewSrc(pauseBtn, R.drawable.ic_pause);
+            }
         } else if (id == R.id.record_btn) {
             recordClick();
         } else if (id == R.id.photo_btn) {
@@ -416,7 +522,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
         }*/
     }
 
-    private void startPlayback() {
+    /*private void startPlayback() {
         if (null != queryDateList && queryDateList.size() > 0) {
             TimePieceBean timePieceBean = queryDateList.get(0);
             if (null != timePieceBean) {
@@ -446,7 +552,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
             ToastUtil.shortToast(this, "No data for query date");
         }
     }
-
+*/
     private void stopClick() {
         mCameraP2P.stopPlayBack(new OperationDelegateCallBack() {
             @Override
@@ -460,6 +566,24 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
             }
         });
         isPlayback = false;
+    }
+
+    private void stopPlayBack() {
+        if(mCameraP2P != null) {
+            mCameraP2P.stopPlayBack(new OperationDelegateCallBack() {
+                @Override
+                public void onSuccess(int sessionId, int requestId, String data) {
+
+                }
+
+                @Override
+                public void onFailure(int sessionId, int requestId, int errCode) {
+
+                }
+            });
+        }
+        //isPlayback = false;
+        setPlayBackFlag(false);
     }
 
     private void resumeClick() {

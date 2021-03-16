@@ -8,12 +8,18 @@ buildscript {
   repositories {
 
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    maven {
+      url 'https://maven-other.tuya.com/repository/maven-releases/'
+    }
+    maven {
+      url 'https://maven-other.tuya.com/repository/maven-snapshots/'
+    }
     jcenter()
     google()
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.0.1'
+    classpath 'com.android.tools.build:gradle:3.5.3'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
@@ -60,11 +66,14 @@ dependencies {
   implementation 'com.tuya.smart:tuyasmart-ipc-camera-utils:3.13.0r129h1'
   implementation 'com.tuya.smart:tuyasmart-ipc-camera-message:3.13.0r128'
   implementation 'com.tuya.smart:tuyasmart-ipc-devicecontrol:3.17.0r139'
+  //implementation 'com.tuya.smart:tuyasmart-ipc-sdk:3.22.0-open'
   // support tutk
   implementation 'com.tuya.smart:tuyasmart-ipc-camera-v1:3.17.0r139h4'
   // messge center imagepipeline
   implementation 'com.tuya.smart:tuyasmart-imagepipeline-okhttp3:0.0.1'
   implementation 'com.facebook.fresco:fresco:1.3.0'
+//  implementation 'com.facebook.fresco:imagepipeline:2.2.0'
+//  implementation 'com.facebook.fresco:imagepipeline-base:2.2.0'
   //Mall components
   implementation 'com.tuya.smart:tuyasmart-webcontainer:3.17.6r141-open'
   implementation 'com.tuya.smart:tuyasmart-xplatformmanager:1.1.0'
@@ -76,11 +85,19 @@ dependencies {
   implementation 'androidx.appcompat:appcompat:1.2.0'
   implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
   implementation "androidx.recyclerview:recyclerview:1.1.0"
+  implementation "androidx.cardview:cardview:1.0.0"
+  implementation "androidx.core:core:1.3.2"
 }
 repositories {
   maven {
     // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
     url "$projectDir/../node_modules/react-native/android"
+  }
+  maven {
+    url 'https://maven-other.tuya.com/repository/maven-releases/'
+  }
+  maven {
+    url 'https://maven-other.tuya.com/repository/maven-snapshots/'
   }
   mavenCentral()
   google()

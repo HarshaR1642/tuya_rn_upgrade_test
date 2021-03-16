@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
@@ -41,16 +42,6 @@
             android:layout_toRightOf="@id/rv_iv_oval"
             android:gravity="center_vertical"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_alarm_detection_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="@dimen/ts_15" />
-
             <TextView
                 android:id="@+id/tv_time_range_start_time"
                 android:layout_width="wrap_content"
@@ -58,7 +49,18 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@color/black_60"
-                android:textSize="@dimen/ts_12" />
+                android:textSize="@dimen/ts_12"
+                tools:text="10-03-2021 10:20:30"/>
+
+            <TextView
+                android:id="@+id/tv_alarm_detection_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/tuya_txt_blue"
+                android:textSize="@dimen/ts_15"
+                tools:text="Video Door Bell has detected movement." />
         </LinearLayout>
     </RelativeLayout>
 

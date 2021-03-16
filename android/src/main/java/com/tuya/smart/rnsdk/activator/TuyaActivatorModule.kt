@@ -25,6 +25,11 @@ import com.tuya.smart.rnsdk.utils.TuyaReactUtils
 import com.tuya.smart.sdk.api.*
 import com.tuya.smart.sdk.bean.DeviceBean
 import com.tuya.smart.sdk.enums.ActivatorModelEnum
+import com.tuyasmart.camera.devicecontrol.ITuyaCameraDevice
+import com.tuyasmart.camera.devicecontrol.TuyaCameraDeviceControlSDK
+import com.tuyasmart.camera.devicecontrol.api.ITuyaCameraDeviceControlCallback
+import com.tuyasmart.camera.devicecontrol.bean.DpSDFormat
+import com.tuyasmart.camera.devicecontrol.model.DpNotifyModel
 
 
 class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -37,9 +42,11 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
   }
 
   @ReactMethod
-  fun getCurrentWifi(params: ReadableMap, successCallback: Callback,
-                     errorCallback: Callback) {
-    successCallback.invoke(WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext));
+  fun getCurrentWifi(params: ReadableMap, successCallback: Callback?,
+                     errorCallback: Callback?, promise: Promise) {
+    Log.d("elango-getCurrentWifi", WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext));
+    promise.resolve(WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext));
+    //promise.resolve(if(WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext).equals("<unknown ssid>")) "" else WiFiUtil.getCurrentSSID(reactApplicationContext.applicationContext));
   }
 
   @ReactMethod
@@ -63,6 +70,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
           //promise.resolve(TuyaReactUtils.parseToWritableMap(s))
           promise.resolve(s)
         }
+
         override fun onFailure(s: String, s1: String) {
           promise.reject(s, s1)
         }
@@ -95,6 +103,7 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
             override fun onError(code: String, error: String) {
               Log.d("TAG-FCM", "Error-" + error)
             }
+
             override fun onSuccess() {
               Log.d("TAG-FCM", "Success")
             }
@@ -123,7 +132,6 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
         }
       })
     }
-
   }
 
   /**
@@ -200,23 +208,45 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
         Log.d("elango-initActForQRCode", var1.getDevId())
         Log.d("elango-initActForQRCode", TuyaReactUtils.parseToWritableMap(var1).toString())
 
-        promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
+        // Format the camera
+        try {
+          val mTuyaCameraDevice: ITuyaCameraDevice?  = TuyaCameraDeviceControlSDK.getCameraDeviceInstance(var1.getDevId())
+          mTuyaCameraDevice!!.registorTuyaCameraDeviceControlCallback(DpSDFormat.ID, object : ITuyaCameraDeviceControlCallback<Boolean> {
+            override fun onSuccess(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, o: Boolean) {
+              //showPublishTxt.setText("LAN/Cloud query result: $o")
+              Log.d("elango-initActForQRCode", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormat-onSuccess : $s, $o")
+              //ToastUtil.shortToast(this@StorageSettingActivity, "Successfully Formatted.")
 
-        /*var jObjG = JSONObject()
-        var jObj = JSONObject()
-        jObj.put("devId", var1.getDevId())
-        jObj.put("productId", var1.getProductId())
-        jObj.put("uuid", var1.getUuid())
-        jObjG.put("originJson", jObj);
-        Log.d("elango-initActForQRCode",  jObj.toString())
-        promise.resolve(jObj)*/
+              promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
 
-        /*val resultData: WritableMap = WritableNativeMap()
-        resultData.putString("devId", var1.getDevId())
-        resultData.putString("productId", var1.getProductId())
-        resultData.putString("uuid", var1.getUuid())
-        Log.d("elango-initActForQRCode",  resultData.toString())
-        promise.resolve(resultData)*/
+              try {
+                mTuyaCameraDevice.onDestroy()
+              } catch (ex: Exception) {
+                ex.printStackTrace()
+              }
+            }
+
+            override fun onFailure(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, s1: String, s2: String) {
+              Log.d("elango-initActForQRCode", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormat-onFailure : $s, $s1, $s2")
+              //ToastUtil.shortToast(this@StorageSettingActivity, "Format failed.")
+
+              promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
+
+              try {
+                mTuyaCameraDevice.onDestroy()
+              } catch (ex: Exception) {
+                ex.printStackTrace()
+              }
+            }
+          })
+          mTuyaCameraDevice.publishCameraDps(DpSDFormat.ID, true)
+
+        } catch (e: Exception) {
+          e.printStackTrace()
+        }
+
+        // moved to Format sdcard callback
+        //promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
       }
 
       /**

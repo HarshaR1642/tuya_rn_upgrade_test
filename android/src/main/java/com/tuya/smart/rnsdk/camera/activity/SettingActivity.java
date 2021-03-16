@@ -1,23 +1,35 @@
 package com.tuya.smart.rnsdk.camera.activity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.facebook.react.ReactApplication;
+import com.facebook.react.bridge.ReadableMap;
 import com.tuya.smart.android.common.utils.L;
+import com.tuya.smart.android.device.api.IPropertyCallback;
 import com.tuya.smart.home.sdk.TuyaHomeSdk;
 import com.tuya.smart.rnsdk.R;
+import com.tuya.smart.rnsdk.camera.utils.RNOperationHelper;
 import com.tuya.smart.sdk.api.IDevListener;
+import com.tuya.smart.sdk.api.IDeviceListener;
 import com.tuya.smart.sdk.api.IResultCallback;
 import com.tuya.smart.sdk.api.ITuyaDevice;
+import com.tuya.smart.sdk.bean.DeviceBean;
 import com.tuyasmart.camera.devicecontrol.ITuyaCameraDevice;
 import com.tuyasmart.camera.devicecontrol.TuyaCameraDeviceControlSDK;
 import com.tuyasmart.camera.devicecontrol.api.ITuyaCameraDeviceControlCallback;
@@ -44,11 +56,17 @@ import com.tuyasmart.camera.devicecontrol.model.MotionSensitivityMode;
 import com.tuyasmart.camera.devicecontrol.model.NightStatusMode;
 import com.tuyasmart.camera.devicecontrol.model.RecordMode;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
+    private static final String TAG = "SettingActivity";
     private List<String> mData;
     ITuyaCameraDevice mTuyaCameraDevice;
     ITuyaDevice mTuyaDevice;
@@ -58,11 +76,21 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private String devId;
 
     private ToggleButton toggle_FlipScreen, toggle_OSD, toggle_MotionDetection, toggle_LocalRecording;
+    private TextView txt_NightVision, txt_ChimeType, txt_MotionSensitivity, txt_RecordType;
+    private LinearLayout layout_MotionSensitivity, layout_RecordType, layout_StorageSetting, layout_ResetWifi;
+    private Button btn_RemoveDevice;
+
+    private Handler handler;
+    private ProgressDialog progressDialog;
+    private RNOperationHelper rnOperationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+        handler = new Handler();
+
         toolbar = findViewById(R.id.toolbar_view);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -80,26 +108,63 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         toggle_MotionDetection = findViewById(R.id.toggle_MotionDetection);
         toggle_LocalRecording = findViewById(R.id.toggle_LocalRecording);
 
+        layout_MotionSensitivity = findViewById(R.id.layout_MotionSensitivity);
+        layout_RecordType = findViewById(R.id.layout_RecordType);
+        layout_StorageSetting = findViewById(R.id.layout_StorageSetting);
+        layout_ResetWifi = findViewById(R.id.layout_ResetWifi);
+
         toggle_FlipScreen.setOnCheckedChangeListener(this);
         toggle_OSD.setOnCheckedChangeListener(this);
         toggle_MotionDetection.setOnCheckedChangeListener(this);
         toggle_LocalRecording.setOnCheckedChangeListener(this);
 
-        findViewById(R.id.txt_NightVision).setOnClickListener(this);
-        findViewById(R.id.txt_ChimeType).setOnClickListener(this);
-        findViewById(R.id.txt_RecordType).setOnClickListener(this);
-        /*findViewById(R.id.btn_sdstatus).setOnClickListener(this);
-        findViewById(R.id.btn_storage).setOnClickListener(this);
-        findViewById(R.id.btn_basic_flip).setOnClickListener(this);
-        findViewById(R.id.btn_motion_sensitivity).setOnClickListener(this);
-        findViewById(R.id.btn_sd_format).setOnClickListener(this);
-        findViewById(R.id.btn_sd_format_status).setOnClickListener(this);
-        findViewById(R.id.btn_record_switch).setOnClickListener(this);
-        findViewById(R.id.btn_record_model).setOnClickListener(this);
-        findViewById(R.id.btn_wireless_powermode).setOnClickListener(this);
-        findViewById(R.id.btn_wireless_lowpower).setOnClickListener(this);
-        findViewById(R.id.btn_wireless_batterylock).setOnClickListener(this);
-        findViewById(R.id.btn_wireless_electricity).setOnClickListener(this);*/
+        txt_NightVision = findViewById(R.id.txt_NightVision);
+        txt_ChimeType = findViewById(R.id.txt_ChimeType);
+        txt_RecordType = findViewById(R.id.txt_RecordType);
+        txt_MotionSensitivity = findViewById(R.id.txt_MotionSensitivity);
+
+        btn_RemoveDevice = findViewById(R.id.btn_RemoveDevice);
+
+        txt_NightVision.setOnClickListener(this);
+        txt_ChimeType.setOnClickListener(this);
+        txt_RecordType.setOnClickListener(this);
+        txt_MotionSensitivity.setOnClickListener(this);
+        layout_StorageSetting.setOnClickListener(this);
+        layout_ResetWifi.setOnClickListener(this);
+        btn_RemoveDevice.setOnClickListener(this);
+
+        ReactApplication rApp = (ReactApplication) getApplication();
+        rnOperationHelper = new RNOperationHelper(rApp, SettingActivity.this, new RNOperationHelper.OperationCallback() {
+            @Override
+            public void onSuccess(RNOperationHelper.Operation operation) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "elango-RemoveDevice onSuccess-:" + devId);
+                        hideProgressDialog();
+                        setResult(RESULT_OK, null);
+                        finish();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(final String message) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "elango-RemoveDevice onFailure-:" + message);
+                        hideProgressDialog();
+                    }
+                });
+            }
+
+            @Override
+            public void foundLock(ReadableMap lock) {
+
+            }
+        });
+
         initData();
         initDeviceControl();
         initAllDevicePointControl();
@@ -112,12 +177,31 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void initAllDevicePointControl() {
+
+        DeviceBean mCameraDevice =  TuyaHomeSdk.getDataInstance().getDeviceBean(devId);
+        Log.d(TAG, "elango-mCameraDevice getDps:" + mCameraDevice.getDps());
+        for (Map.Entry<String, Object> entry : mCameraDevice.getDps().entrySet()) {
+            System.out.println(entry.getKey() + "/" + entry.getValue());
+            if(entry.getKey() != null && entry.getValue() != null)
+                updateSetting(entry.getKey(), entry.getValue().toString());
+        }
+
+
         mTuyaCameraDevice.setRegisterDevListener(new IDevListener()  {
             @Override
             public void onDpUpdate(String s, String s1) {
-                L.d("SettingActivity", "elango-mTuyaCameraDevice-onDpUpdate devId:" + s + "  dps " + s1);
-                Log.d("SettingActivity", "elango-mTuyaCameraDevice-onDpUpdate devId:" + s + "  dps " + s1);
-                //此处监听所有dp点的信息
+                L.d(TAG, "elango-mTuyaCameraDevice-onDpUpdate devId:" + s + "  dps " + s1);
+                Log.d(TAG, "elango-mTuyaCameraDevice-onDpUpdate devId:" + s + "  dps " + s1);
+
+                try {
+                    JSONObject obj = new JSONObject(s1);
+                    Iterator<String> keys = obj.keys();
+                    String key = keys.next();
+                    if(key != null && obj.getString(key) != null)
+                        updateSetting(key, obj.getString(key));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -144,8 +228,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         mTuyaDevice.registerDevListener(new IDevListener()  {
             @Override
             public void onDpUpdate(String s, String s1) {
-                L.d("SettingActivity", "elango-mTuyaDevice-onDpUpdate devId:" + s + "  dps " + s1);
-                Log.d("SettingActivity", "elango-mTuyaDevice-onDpUpdate devId:" + s + "  dps " + s1);
+                L.d(TAG, "elango-mTuyaDevice-onDpUpdate devId:" + s + "  dps " + s1);
+                Log.d(TAG, "elango-mTuyaDevice-onDpUpdate devId:" + s + "  dps " + s1);
                 //此处监听所有dp点的信息
             }
 
@@ -170,8 +254,19 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        List<String> list = new ArrayList<>();
-        list.add("165");
+        /*mTuyaDevice.publishDps("{\"165\": \"2\"}", new IResultCallback() {
+            @Override
+            public void onError(String code, String error) {
+                Log.d(TAG, " publishDps - onError : " + error);
+            }
+
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, " publishDps - onSuccess : ");
+            }
+        });*/
+
+        /*List<String> list = new ArrayList<>();
         list.add(DpBasicFlip.ID);
         list.add(DpBasicNightvision.ID);
         list.add(DpBasicOSD.ID);
@@ -179,6 +274,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         list.add(DpSDStorage.ID);
         list.add(DpSDRecordSwitch.ID);
         list.add(DpSDRecordModel.ID);
+        list.add("165");
         mTuyaDevice.getDpList(list, new IResultCallback() {
             @Override
             public void onError(String code, String error) {
@@ -190,6 +286,103 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
+
+        mTuyaDevice.getDp("165", new IResultCallback() {
+            @Override
+            public void onError(String code, String error) {
+                Log.d(TAG, " getDp - onError : " + error);
+            }
+
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, " getDp - onSuccess : ");
+            }
+        });*/
+    }
+
+    private void showProgressDialog() {
+        progressDialog = new ProgressDialog(SettingActivity.this);
+        progressDialog.setMessage("Loading..");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private void updateSetting(String key, String value) {
+        Log.d(TAG, " elango-updateSetting : key-" + key + ", value-" + value);
+
+        if(key.equalsIgnoreCase(DpBasicFlip.ID)) {
+            toggle_FlipScreen.setChecked(Boolean.parseBoolean(value));
+        } else if(key.equalsIgnoreCase(DpBasicOSD.ID)) {
+            toggle_OSD.setChecked(Boolean.parseBoolean(value));
+        } else if(key.equalsIgnoreCase(DpMotionSwitch.ID)) {
+            toggle_MotionDetection.setChecked(Boolean.parseBoolean(value));
+            if(Boolean.parseBoolean(value)) {
+                layout_MotionSensitivity.setVisibility(View.VISIBLE);
+            } else {
+                layout_MotionSensitivity.setVisibility(View.GONE);
+            }
+        } else if(key.equalsIgnoreCase(DpSDRecordSwitch.ID)) {
+            toggle_LocalRecording.setChecked(Boolean.parseBoolean(value));
+            if(Boolean.parseBoolean(value)) {
+                layout_RecordType.setVisibility(View.VISIBLE);
+            } else {
+                layout_RecordType.setVisibility(View.GONE);
+            }
+        } else if(key.equalsIgnoreCase(DpBasicNightvision.ID)) {
+            switch (Integer.parseInt(value)) {
+                case 0: // Auto
+                    txt_NightVision.setText("Auto");
+                    break;
+                case 1: // Off
+                    txt_NightVision.setText("Off");
+                    break;
+                case 2: // On
+                    txt_NightVision.setText("On");
+                    break;
+            }
+        } else if(key.equalsIgnoreCase(DpMotionSensitivity.ID)) {
+            switch (Integer.parseInt(value)) {
+                case 0: // Low
+                    txt_MotionSensitivity.setText("Low");
+                    break;
+                case 1: // Medium
+                    txt_MotionSensitivity.setText("Medium");
+                    break;
+                case 2: // High
+                    txt_MotionSensitivity.setText("High");
+                    break;
+            }
+        } else if(key.equalsIgnoreCase("165")) {
+            switch (Integer.parseInt(value)) {
+                case 0: // none
+                    txt_ChimeType.setText("Not Selected");
+                    break;
+                case 1: // Mechanical
+                    txt_ChimeType.setText("Mechanical");
+                    break;
+                case 2: // Wireless
+                    txt_ChimeType.setText("Wireless");
+                    break;
+                case 3: // No Bells
+                    txt_ChimeType.setText("No Bells");
+                    break;
+            }
+        } else if(key.equalsIgnoreCase(DpSDRecordModel.ID)) {
+            switch (Integer.parseInt(value)) {
+                case 1: // Event Recording
+                    txt_RecordType.setText("Event Recording");
+                    break;
+                case 2: // Non-Stop
+                    txt_RecordType.setText("Non-Stop");
+                    break;
+            }
+        }
     }
 
     private void initData() {
@@ -216,265 +409,59 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        /*if (R.id.btn_sdstatus == v.getId()) {
-            *//*if (mTuyaCameraDevice.isSupportCameraDps(DpSDStatus.ID)) {
-                int o = mTuyaCameraDevice.queryIntegerCurrentCameraDps(DpSDStatus.ID);
-                showQueryTxt.setText("local query result: " + o);
-                mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDStatus.ID, new ITuyaCameraDeviceControlCallback<Integer>() {
-                    @Override
-                    public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Integer o) {
-                        showPublishTxt.setText("LAN/Cloud query result: " + o);
-                    }
-
-                    @Override
-                    public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                    }
-                });
-                mTuyaCameraDevice.publishCameraDps(DpSDStatus.ID, null);
-            }*//*
-            if (mTuyaCameraDevice.isSupportCameraDps("155")) {
-                int o = mTuyaCameraDevice.queryIntegerCurrentCameraDps("155");
-                showQueryTxt.setText("local query result: " + o);
-                *//*mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDStatus.ID, new ITuyaCameraDeviceControlCallback<Integer>() {
-                    @Override
-                    public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Integer o) {
-                        showPublishTxt.setText("LAN/Cloud query result: " + o);
-                    }
-
-                    @Override
-                    public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                    }
-                });*//*
-                mTuyaCameraDevice.publishCameraDps("155", 1);
-                //mTuyaDevice.publishDps("155", 1);
-            }
-        } else if (R.id.btn_basic_flip == v.getId()) {
-            if (mTuyaCameraDevice.isSupportCameraDps(DpBasicFlip.ID)) {
-                boolean o = mTuyaCameraDevice.queryBooleanCameraDps(DpBasicFlip.ID);
-                showQueryTxt.setText("local query result: " + o);
-                mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpBasicFlip.ID, new ITuyaCameraDeviceControlCallback<Boolean>() {
-                    @Override
-                    public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Boolean o) {
-                        showPublishTxt.setText("LAN/Cloud query result: " + o);
-                    }
-
-                    @Override
-                    public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                    }
-                });
-                mTuyaCameraDevice.publishCameraDps(DpBasicFlip.ID, true);
-            }
-        } else if (R.id.btn_motion_sensitivity == v.getId()) {
-            if (mTuyaCameraDevice.isSupportCameraDps(DpMotionSensitivity.ID)) {
-
-                *//*mTuyaCameraDevice.publishCameraDps(DpMotionSwitch.ID, true);
-                String o1 = mTuyaCameraDevice.queryStringCurrentCameraDps(DpMotionSwitch.ID);
-                showQueryTxt.setText("DpMotionSwitch: " + o1);*//*
-
-                String o = mTuyaCameraDevice.queryStringCurrentCameraDps(DpMotionSensitivity.ID);
-                showQueryTxt.setText("local query result: " + o);
-                mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpMotionSensitivity.ID, new ITuyaCameraDeviceControlCallback<String>() {
-                    @Override
-                    public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String o) {
-                        showPublishTxt.setText("LAN/Cloud query result: " + o);
-                    }
-
-                    @Override
-                    public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                    }
-                });
-                mTuyaCameraDevice.publishCameraDps(DpMotionSensitivity.ID, MotionSensitivityMode.HIGH.getDpValue());
-                //mTuyaDevice.publishDps("155", );
-            }
-        } else if (R.id.btn_storage == v.getId()) {
-            if (mTuyaCameraDevice.isSupportCameraDps(DpSDStorage.ID)) {
-                String o = mTuyaCameraDevice.queryStringCurrentCameraDps(DpSDStorage.ID);
-                showQueryTxt.setText("local query result: " + o);
-                mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDStorage.ID, new ITuyaCameraDeviceControlCallback<String>() {
-                    @Override
-                    public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String o) {
-                        showPublishTxt.setText("LAN/Cloud query result: " + o);
-                    }
-
-                    @Override
-                    public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                    }
-                });
-                mTuyaCameraDevice.publishCameraDps(DpSDStorage.ID, null);
-            }
-        } else if (R.id.btn_sd_format == v.getId()) {
-            if (mTuyaCameraDevice.isSupportCameraDps(DpSDFormat.ID)) {
-                mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDFormat.ID, new ITuyaCameraDeviceControlCallback<Boolean>() {
-                    @Override
-                    public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Boolean o) {
-                        showPublishTxt.setText("LAN/Cloud query result: " + o);
-                    }
-
-                    @Override
-                    public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                    }
-                });
-                mTuyaCameraDevice.publishCameraDps(DpSDFormat.ID, true);
-            }
-        } else if (R.id.btn_sd_format_status == v.getId()) {
-            if (mTuyaCameraDevice.isSupportCameraDps(DpSDFormatStatus.ID)) {
-                mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDFormatStatus.ID, new ITuyaCameraDeviceControlCallback<Integer>() {
-                    @Override
-                    public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Integer o) {
-                        showPublishTxt.setText("LAN/Cloud query result: " + o);
-                    }
-
-                    @Override
-                    public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                    }
-                });
-                mTuyaCameraDevice.publishCameraDps(DpSDFormatStatus.ID, null);
-            }
-        } else if (R.id.btn_record_switch == v.getId()) {
-            if (mTuyaCameraDevice.isSupportCameraDps(DpSDRecordSwitch.ID)) {
-                boolean o = mTuyaCameraDevice.queryBooleanCameraDps(DpSDRecordSwitch.ID);
-                showQueryTxt.setText("local query result: " + o);
-                mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDRecordSwitch.ID, new ITuyaCameraDeviceControlCallback<Boolean>() {
-                    @Override
-                    public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Boolean o) {
-                        showPublishTxt.setText("LAN/Cloud query result: " + o);
-                    }
-
-                    @Override
-                    public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                    }
-                });
-                mTuyaCameraDevice.publishCameraDps(DpSDRecordSwitch.ID, true);
-            }
-        } else if (R.id.btn_record_model == v.getId()) {
-            if (mTuyaCameraDevice.isSupportCameraDps(DpSDRecordModel.ID)) {
-                String o = mTuyaCameraDevice.queryStringCurrentCameraDps(DpSDRecordModel.ID);
-                showQueryTxt.setText("local query result: " + o);
-                mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDRecordModel.ID, new ITuyaCameraDeviceControlCallback<String>() {
-                    @Override
-                    public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String o) {
-                        showPublishTxt.setText("LAN/Cloud query result: " + o);
-                    }
-
-                    @Override
-                    public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                    }
-                });
-                mTuyaCameraDevice.publishCameraDps(DpSDRecordModel.ID, RecordMode.EVENT.getDpValue());
-            }
-        } else if (R.id.btn_wireless_batterylock == v.getId()) {
-            if (mTuyaCameraDevice.isSupportCameraDps(DpWirelessBatterylock.ID)) {
-                boolean o = mTuyaCameraDevice.queryBooleanCameraDps(DpWirelessBatterylock.ID);
-                showQueryTxt.setText("local query result: " + o);
-                mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpWirelessBatterylock.ID, new ITuyaCameraDeviceControlCallback<Boolean>() {
-                    @Override
-                    public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Boolean o) {
-                        showPublishTxt.setText("LAN/Cloud query result: " + o);
-                    }
-
-                    @Override
-                    public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                    }
-                });
-                mTuyaCameraDevice.publishCameraDps(DpWirelessBatterylock.ID, true);
-            }
-        } else if (R.id.btn_wireless_electricity == v.getId()) {
-            int o = mTuyaCameraDevice.queryIntegerCurrentCameraDps(DpWirelessElectricity.ID);
-            showQueryTxt.setText("local query result: " + o);
-            mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpWirelessElectricity.ID, new ITuyaCameraDeviceControlCallback<Integer>() {
-                @Override
-                public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Integer o) {
-                    showPublishTxt.setText("LAN/Cloud query result: " + o);
-                }
-
-                @Override
-                public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                }
-            });
-            mTuyaCameraDevice.publishCameraDps(DpWirelessElectricity.ID, null);
-        } else if (R.id.btn_wireless_lowpower == v.getId()) {
-            int o = mTuyaCameraDevice.queryIntegerCurrentCameraDps(DpWirelessLowpower.ID);
-            showQueryTxt.setText("local query result: " + o);
-            mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpWirelessLowpower.ID, new ITuyaCameraDeviceControlCallback<Integer>() {
-                @Override
-                public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Integer o) {
-                    showPublishTxt.setText("LAN/Cloud query result: " + o);
-                }
-
-                @Override
-                public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                }
-            });
-            mTuyaCameraDevice.publishCameraDps(DpWirelessLowpower.ID, 20);
-        } else if (R.id.btn_wireless_powermode == v.getId()) {
-            String o = mTuyaCameraDevice.queryStringCurrentCameraDps(DpWirelessPowermode.ID);
-            showQueryTxt.setText("local query result: " + o);
-            mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpWirelessPowermode.ID, new ITuyaCameraDeviceControlCallback<String>() {
-                @Override
-                public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String o) {
-                    showPublishTxt.setText("LAN/Cloud query result: " + o);
-                }
-
-                @Override
-                public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
-
-                }
-            });
-            mTuyaCameraDevice.publishCameraDps(DpWirelessPowermode.ID, null);
-        } else if (R.id.btn_resetore == v.getId()) {
-            //mTuyaCameraDevice.publishCameraDps(DpRestore.ID, true);
-            *//*mTuyaDevice.queryData("165", new IResultCallback() {
-                @Override
-                public void onError(String code, String error) {
-                    Log.d("SettingsActivity", " queryData - onError : " + error);
-                }
-
-                @Override
-                public void onSuccess() {
-
-                }
-            });*//*
-            mTuyaDevice.getDp("165", new IResultCallback() {
-                @Override
-                public void onError(String code, String error) {
-                    Log.d("SettingActivity", " getDp - onError : " + error);
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d("SettingActivity", " getDp - onSuccess : ");
-                }
-            });
-            mTuyaDevice.publishDps("{\"165\": \"1\"}", new IResultCallback() {
-                @Override
-                public void onError(String code, String error) {
-                    Log.d("SettingActivity", " publishDps - onError : " + error);
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d("SettingActivity", " publishDps - onSuccess : ");
-                }
-            });
-        }*/
         if (R.id.txt_NightVision == v.getId()) {
             openIRNightVisionDialog();
         } else if (R.id.txt_ChimeType == v.getId()) {
             openChimeTypeDialog();
         } else if (R.id.txt_RecordType == v.getId()) {
             openRecordingTypeDialog();
+        } else if (R.id.txt_MotionSensitivity == v.getId()) {
+            openMotionSensitivityDialog();
+        } else if (R.id.layout_StorageSetting == v.getId()) {
+            Intent intent1 = new Intent(SettingActivity.this, StorageSettingActivity.class);
+            intent1.putExtra("devId", devId);
+            //startActivityForResult(intent1, REQUEST_EXIT);
+            startActivity(intent1);
+        } else if (R.id.layout_ResetWifi == v.getId()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+            builder.setTitle("Reset WiFi");
+            builder.setMessage("Please go to Manage tab then Add Camera and follow the reset instruction video shown on Add Camera screen and add your camera again.");
+            builder.setPositiveButton("Reset WiFi", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+
+                    setResult(RESULT_OK, null);
+                    finish();
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+        } else if (R.id.btn_RemoveDevice == v.getId()) {
+            Log.d(TAG, "elango-RemoveDevice devId:" + devId);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+            builder.setTitle("Remove Device");
+            builder.setMessage("After the device is disconnected, all the device related settings and data will be deleted.");
+            builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+
+                    rnOperationHelper.performOperation(RNOperationHelper.Operation.REMOVE_CAMERA, devId);
+                    showProgressDialog();
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
     }
 
@@ -507,6 +494,35 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         dialog.show();
     }
 
+    private void openMotionSensitivityDialog() {
+        // setup the alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+        builder.setTitle("Motion Sensitivity");
+
+        // add a list
+        String[] strings = {"Low", "Medium", "High"};
+        builder.setItems(strings, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: // Low
+                        mTuyaCameraDevice.publishCameraDps(DpMotionSensitivity.ID, MotionSensitivityMode.LOW.getDpValue());
+                        break;
+                    case 1: // Medium
+                        mTuyaCameraDevice.publishCameraDps(DpMotionSensitivity.ID, MotionSensitivityMode.MIDDLE.getDpValue());
+                        break;
+                    case 2: // High
+                        mTuyaCameraDevice.publishCameraDps(DpMotionSensitivity.ID, MotionSensitivityMode.HIGH.getDpValue());
+                        break;
+                }
+            }
+        });
+
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     private void openChimeTypeDialog() {
         // setup the alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
@@ -522,12 +538,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         mTuyaDevice.publishDps("{\"165\": \"1\"}", new IResultCallback() {
                             @Override
                             public void onError(String code, String error) {
-                                //Log.d("SettingActivity", " publishDps - onError : " + error);
+                                //Log.d(TAG, " publishDps - onError : " + error);
                             }
 
                             @Override
                             public void onSuccess() {
-                                //Log.d("SettingActivity", " publishDps - onSuccess : ");
+                                //Log.d(TAG, " publishDps - onSuccess : ");
                             }
                         });
                         break;
@@ -535,12 +551,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         mTuyaDevice.publishDps("{\"165\": \"2\"}", new IResultCallback() {
                             @Override
                             public void onError(String code, String error) {
-                                //Log.d("SettingActivity", " publishDps - onError : " + error);
+                                //Log.d(TAG, " publishDps - onError : " + error);
                             }
 
                             @Override
                             public void onSuccess() {
-                                //Log.d("SettingActivity", " publishDps - onSuccess : ");
+                                //Log.d(TAG, " publishDps - onSuccess : ");
                             }
                         });
                         break;
@@ -548,12 +564,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         mTuyaDevice.publishDps("{\"165\": \"3\"}", new IResultCallback() {
                             @Override
                             public void onError(String code, String error) {
-                                //Log.d("SettingActivity", " publishDps - onError : " + error);
+                                //Log.d(TAG, " publishDps - onError : " + error);
                             }
 
                             @Override
                             public void onSuccess() {
-                                //Log.d("SettingActivity", " publishDps - onSuccess : ");
+                                //Log.d(TAG, " publishDps - onSuccess : ");
                             }
                         });
                         break;
@@ -609,21 +625,33 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         } else if (R.id.toggle_MotionDetection == buttonView.getId()) {
             if(isChecked) {
                 mTuyaCameraDevice.publishCameraDps(DpMotionSwitch.ID, true);
+                layout_MotionSensitivity.setVisibility(View.VISIBLE);
             } else {
                 mTuyaCameraDevice.publishCameraDps(DpMotionSwitch.ID, false);
+                layout_MotionSensitivity.setVisibility(View.GONE);
             }
         } else if (R.id.toggle_LocalRecording == buttonView.getId()) {
             if(isChecked) {
                 mTuyaCameraDevice.publishCameraDps(DpSDRecordSwitch.ID, true);
+                layout_RecordType.setVisibility(View.VISIBLE);
             } else {
                 mTuyaCameraDevice.publishCameraDps(DpSDRecordSwitch.ID, false);
-            }
-        } else if (R.id.toggle_MotionDetection == buttonView.getId()) {
-            if(isChecked) {
-                mTuyaCameraDevice.publishCameraDps(DpMotionSwitch.ID, true);
-            } else {
-                mTuyaCameraDevice.publishCameraDps(DpMotionSwitch.ID, false);
+                layout_RecordType.setVisibility(View.GONE);
             }
         }
     }
+
+    /*static final int REQUEST_EXIT = 102;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_EXIT) {
+            if (resultCode == RESULT_OK) {
+
+                this.finish();
+            }
+        }
+    }*/
 }

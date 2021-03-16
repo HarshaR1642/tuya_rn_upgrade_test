@@ -7,6 +7,7 @@ import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ViewManager
 import com.tuya.smart.rnsdk.activator.TuyaActivatorModule
+import com.tuya.smart.rnsdk.camera.KeylessModule
 import com.tuya.smart.rnsdk.core.TuyaCoreModule
 import com.tuya.smart.rnsdk.device.TuyaDeviceModule
 import com.tuya.smart.rnsdk.device.TuyaGatewayModule
@@ -57,6 +58,7 @@ class TuyaReactPackage : ReactPackage {
     module.add(TuyaUserModule(reactContext))
     module.add(TuyaSceneModule(reactContext))
     module.add(TuyaCameraModule(reactContext))
+    module.add(KeylessModule(reactContext))
     return module
   }
 
