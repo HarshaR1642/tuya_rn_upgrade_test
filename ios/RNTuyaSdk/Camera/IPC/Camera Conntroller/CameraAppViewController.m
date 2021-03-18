@@ -47,7 +47,7 @@
 @property (nonatomic, strong) UIBarButtonItem                       *rightSettingButton;
 @property (weak, nonatomic) IBOutlet UIView                         *bottomControlView;
 @property (weak, nonatomic) IBOutlet UIButton                       *roateButtton;
-@property (weak, nonatomic) IBOutlet UIButton *hdButton;
+@property (weak, nonatomic) IBOutlet UIButton                       *hdButton;
 
 @end
 
@@ -97,8 +97,18 @@
     self.view.accessibilityLabel = @"CameraAppViewController";
     [self.camera addObserver:self];
     [self retryAction];
+    UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(viewPinched:)];
+    [self.camera.videoView addGestureRecognizer:pinch];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+- (void)viewPinched:(UIPinchGestureRecognizer *)gesture {
+    if (gesture.scale > 1.0) {
+        [self.camera.videoView tuya_setScaled:2.0];
+    } else {
+        [self.camera.videoView tuya_clear];
+    }
 }
 
 - (void)hdAction {
@@ -115,23 +125,6 @@
     [super viewDidLoad];
 
     self.title = self.camera.device.deviceModel.name ? self.camera.device.deviceModel.name : @"Video Doorbell Camera";
-    /**
-     
-     
-     
-     Setting the Camera Chime  DP Value to Mechanical Default
-     
-     */
-    if (self.camera.dpManager) {
-        NSInteger number  = [[self.camera.dpManager valueForDP:@"165"] tysdk_toInt];
-        if ([self.camera.dpManager isSupportDP:@"165"] && number == 0) { // Chime Settings
-            [self.camera.dpManager setValue:@"1" forDP:@"165" success:^(id result) {
-            } failure:^(NSError *error) {
-            }];
-        }
-    }
-    
-
    
     // Do any additional setup after loading the view.
 }
@@ -469,6 +462,7 @@
 - (void)dealloc {
     [self.camera stopPreview];
     [self.camera disConnect];
+    [TuyaSmartCameraFactory resetSocket];
     self.camera = nil;
 }
 
