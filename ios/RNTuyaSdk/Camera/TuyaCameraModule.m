@@ -36,8 +36,8 @@ RCT_EXPORT_METHOD(openLivePreview:(NSDictionary *)params resolver:(RCTPromiseRes
     NSArray *hideCameraOptionsArray = params[@"options"];
     
     if(hideCameraOptionsArray != nil || [hideCameraOptionsArray count] != 0) {
-        [[NSUserDefaults standardUserDefaults] setObject:hideCameraOptionsArray forKey:@"OPTIONS_ARRAY"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+//        [[NSUserDefaults standardUserDefaults] setObject:hideCameraOptionsArray forKey:@"OPTIONS_ARRAY"];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 
     [[TuyaSmartUser sharedInstance] loginOrRegisterWithCountryCode:countryCode uid:uid password:passwd createHome:false success:^(id result) {

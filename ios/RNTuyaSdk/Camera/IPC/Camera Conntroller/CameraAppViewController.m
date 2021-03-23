@@ -44,10 +44,12 @@
 @property (weak, nonatomic) IBOutlet UIButton                       *messageButton;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView        *indicatorView;
 @property (weak, nonatomic) IBOutlet UILabel                        *stateLabel;
-@property (nonatomic, strong) UIBarButtonItem                       *rightSettingButton;
+@property (nonatomic, strong)        UIBarButtonItem                *rightSettingButton;
 @property (weak, nonatomic) IBOutlet UIView                         *bottomControlView;
 @property (weak, nonatomic) IBOutlet UIButton                       *roateButtton;
 @property (weak, nonatomic) IBOutlet UIButton                       *hdButton;
+@property (weak, nonatomic) IBOutlet UIScrollView                   *scrollView;
+@property (weak, nonatomic) IBOutlet UIImageView                    *tempUiImageView;
 
 @end
 
@@ -83,6 +85,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self setCameraViewTheme];
+    [self.camera.videoView tuya_clear];
     self.navigationController.navigationBarHidden = NO;
     self.navigationItem.rightBarButtonItem = self.rightSettingButton;
     [self.indicatorView setHidden:YES];
@@ -99,22 +102,20 @@
     [self retryAction];
     UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(viewPinched:)];
     [self.camera.videoView addGestureRecognizer:pinch];
+    self.camera.videoView.scaleToFill = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
+
 - (void)viewPinched:(UIPinchGestureRecognizer *)gesture {
-    if (gesture.scale > 1.0) {
-        [self.camera.videoView tuya_setScaled:2.0];
-    } else {
-        [self.camera.videoView tuya_clear];
-    }
+    [self.camera.videoView tuya_setScaled:gesture.scale];
 }
 
 - (void)hdAction {
     [self.camera enableHD:!self.camera.isHD success:^{
     } failure:^(NSError *error) {
-        [self showAlertWithMessage:NSLocalizedString(@"ipc_errmsg_change_definition_failed", @"") complete:nil];
+        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"ipc_errmsg_change_definition_failed", @"") withTitle:@"Failed"];
     }];
 }
 - (void)retryConnect {
@@ -152,7 +153,6 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-//        _isLandscapeEnabled = !_isLandscapeEnabled;
         [self startPreview];
         [self.camera.videoView layoutIfNeeded];
 
@@ -347,7 +347,7 @@
         [self.camera enableMute:TRUE success:^{
             NSLog(@"enable mute success");
         } failure:^(NSError *error) {
-            [self showAlertWithMessage:NSLocalizedString(@"enable mute failed", @"") complete:nil];
+            [TuyaAppProgressUtils showAlertForView:self withMessage:@"enable mute failed" withTitle:@""];
         }];
     }else {
         [self.camera startTalk:^{
@@ -368,7 +368,7 @@
     if ([TuyaAppPermissionUtil isPhotoLibraryNotDetermined]) {
         [TuyaAppPermissionUtil requestPhotoPermission:complete];
     }else if ([TuyaAppPermissionUtil isPhotoLibraryDenied]) {
-        [self showAlertWithMessage:NSLocalizedString(@"Photo library permission denied", @"") complete:nil];
+        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"Photo library permission denied", @"") withTitle:@""];
         !complete?:complete(NO);
     }else {
         !complete?:complete(YES);
@@ -400,9 +400,9 @@
 
 - (void)startPreview {
     if (self.camera.videoView) {
+        self.camera.videoView.scaleToFill = NO;
         [self.controlView addSubview:self.camera.videoView];
         self.camera.videoView.frame = self.controlView.bounds;
-        self.camera.videoView.scaleToFill = YES;
         [self.camera startPreview:^{
             [self stopLoading];
         } failure:^(NSError *error) {
@@ -462,13 +462,10 @@
 - (void)dealloc {
     [self.camera stopPreview];
     [self.camera disConnect];
-    [TuyaSmartCameraFactory resetSocket];
-    self.camera = nil;
 }
 
 #pragma mark - TuyaSmartCameraObserver
 - (void)cameraDidDisconnected:(TuyaSmartCamera *)camera {
-//    [self.controlView disableAllControl];
     [self makeButtonEnable:NO];
     self.retryButton.hidden = NO;
 }
