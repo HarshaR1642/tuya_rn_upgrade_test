@@ -114,18 +114,22 @@
 }
 
 - (void)removeAction {
+    
+    [self removeDeviceFromAsset];
     /*
      
      First Format the SD card and On success Call the Listener to call the remove device API from Asset
      
+     __weak typeof(self) weakSelf = self;
+     [self.dpManager setValue:@(YES) forDP:TuyaSmartCameraSDCardFormatDPName success:^(id result) {
+        
+     } failure:^(NSError *error) {
+         [weakSelf removeDeviceFromAsset];
+     }];
+     
      **/
 //    [self removeDeviceFromAsset];
-    __weak typeof(self) weakSelf = self;
-    [self.dpManager setValue:@(YES) forDP:TuyaSmartCameraSDCardFormatDPName success:^(id result) {
-        [weakSelf removeDeviceFromAsset];
-    } failure:^(NSError *error) {
-        [weakSelf removeDeviceFromAsset];
-    }];
+    
 }
 
 
@@ -506,7 +510,7 @@
                          @{kTitle: [self recordModeText:TuyaSmartCameraRecordModeAlways],
                            kValue: TuyaSmartCameraRecordModeAlways}];
     __weak typeof(self) weakSelf = self;
-    [self showActionSheet:options withTitle: @"Recording Type" selectedHandler:^(id result) {
+    [self showActionSheet:options withTitle:@"Recording Type" selectedHandler:^(id result) {
         
         [self.dpManager setValue:result forDP:TuyaSmartCameraRecordModeDPName success:^(id result) {
             weakSelf.recordMode = result;

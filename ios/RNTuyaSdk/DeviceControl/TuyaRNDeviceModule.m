@@ -11,6 +11,7 @@
 #import <TuyaSmartDeviceKit/TuyaSmartDeviceKit.h>
 #import "TuyaRNUtils.h"
 #import "YYModel.h"
+#import <TuyaSmartCameraKit/TuyaSmartCameraKit.h>
 
 
 #define kTuyaDeviceModuleDevId @"devId"
@@ -21,6 +22,13 @@
 @interface TuyaRNDeviceModule()
 
 @property (strong, nonatomic) TuyaSmartDevice *smartDevice;
+@property (strong, nonatomic) TuyaSmartCameraDPManager *cameraDPManager;
+
+@property(copy, nonatomic) RCTPromiseResolveBlock promiseResolveBlock;
+@property(copy, nonatomic) RCTPromiseRejectBlock promiseRejectBlock;
+
+
+@property(copy, nonatomic) RCTPromiseResolveBlock resetpromiseBlock;
 
 @end
 
@@ -102,6 +110,85 @@ RCT_EXPORT_METHOD(renameDevice:(NSDictionary *)params resolver:(RCTPromiseResolv
   } failure:^(NSError *error) {
     [TuyaRNUtils rejecterWithError:error handler:rejecter];
   }];
+    
+}
+
+RCT_EXPORT_METHOD(resetDevice:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
+    
+    _resetpromiseBlock = resolver;
+    __weak typeof(self) weakSelf = self;
+    self.cameraDPManager = [self cameraWithParams:params];
+    if (self.cameraDPManager) {
+        NSInteger number  = [[self.cameraDPManager valueForDP:@"165"] tysdk_toInt];
+        if ([self.cameraDPManager isSupportDP:@"165"] && number == 0) { // Chime Settings
+            [self.cameraDPManager setValue:@"1" forDP:@"165" success:^(id result) {
+            } failure:^(NSError *error) {
+            }];
+        }
+        
+        // After formatting successfully, query the capacity information of the device
+        [self.cameraDPManager setValue:TuyaSmartCameraRecordModeEvent forDP:TuyaSmartCameraRecordModeDPName success:^(id result) {
+        } failure:^(NSError *error) {
+        }];
+        [self.cameraDPManager valueForDP:TuyaSmartCameraSDCardStatusDPName success:^(id result) {
+            [self checkStatus:[result integerValue]];
+        } failure:^(NSError *error) {
+            [TuyaRNUtils resolverWithHandler:weakSelf.resetpromiseBlock];
+        }];
+    }
+}
+
+- (void)checkStatus:(TuyaSmartCameraSDCardStatus)status {
+    if (status == TuyaSmartCameraSDCardStatusNone) {
+        [TuyaRNUtils resolverWithHandler:_resetpromiseBlock];
+        return;
+    }else if (status == TuyaSmartCameraSDCardStatusException) {
+        [self formatAction];
+    }else if (status == TuyaSmartCameraSDCardStatusFormatting) {
+        [self handleFormatting];
+    } else {
+        [self formatAction];
+    }
+}
+
+- (int)getFormatStatus {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block int status = -1;
+    [self.cameraDPManager valueForDP:TuyaSmartCameraSDCardFormatStateDPName success:^(id result) {
+        status = [result intValue];
+        dispatch_semaphore_signal(semaphore);
+    } failure:^(NSError *error) {
+        dispatch_semaphore_signal(semaphore);
+    }];
+        // timeout
+    dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 300.0f * NSEC_PER_SEC));
+    return status;
+}
+
+- (void)handleFormatting {
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+          // Query the formatting progress, because some manufacturers' devices will not automatically report the progress
+        int status = [self getFormatStatus];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (status >= 0 && status < 100) {
+                [self performSelector:@selector(handleFormatting) withObject:nil afterDelay:1.0];
+            } else if (status == 100) {
+                [TuyaRNUtils resolverWithHandler:weakSelf.resetpromiseBlock];
+            } else {
+                [TuyaRNUtils resolverWithHandler:weakSelf.resetpromiseBlock];
+            }
+        });
+    });
+}
+
+- (void)formatAction {
+    __weak typeof(self) weakSelf = self;
+    [self.cameraDPManager setValue:@(YES) forDP:TuyaSmartCameraSDCardFormatDPName success:^(id result) {
+        [weakSelf handleFormatting];
+    } failure:^(NSError *error) {
+        [TuyaRNUtils resolverWithHandler:weakSelf.resetpromiseBlock];
+    }];
 }
 
 // 更新单个设备信息:
@@ -195,6 +282,16 @@ RCT_EXPORT_METHOD(getOtaInfo:(NSDictionary *)params resolver:(RCTPromiseResolveB
     return nil;
   }
   return [TuyaSmartDevice deviceWithDeviceId:deviceId];
+}
+
+
+#pragma mark -
+- (TuyaSmartCameraDPManager *)cameraWithParams:(NSDictionary *)params {
+  NSString *deviceId = params[kTuyaDeviceModuleDevId];
+  if(deviceId.length == 0) {
+    return nil;
+  }
+    return [[TuyaSmartCameraDPManager alloc] initWithDeviceId:deviceId];
 }
 
 
