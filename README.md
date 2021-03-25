@@ -1,12 +1,10 @@
-# @volst/react-native-tuya
+# Rently/react-native-tuya
 
-This is a fork of [TuyaInc/tuyasmart-home-sdk-react-native](https://github.com/TuyaInc/tuyasmart-home-sdk-react-native), fixing a lot of issues we came across and a better install guide. It also uses TypeScript. We use it currently in multiple projects for clients and it is stable.
-
-Some features are not implemented, feel free to send a PR for those missing features. Unfortunately there is no demo yet
+This is the official repo for Rently React-Native-Tuya which includes the all the camera features and UI which is needed.
 
 ## Feature Overview
 
-Tuya Smart APP SDK provides the interface package for the communication with hardware and Tuya Cloud to accelerate the application development process, including the following features:
+Rently React-Native-Tuya SDK provides the interface package for the communication with hardware and Tuya Cloud to accelerate the application development process, including the following features:
 
 Hardware functions (network configuration, control, status reporting, regular tasks, groups, firmware upgrades, sharing)
 Account system (phone number, email registration, login, password reset and other general account functions)
@@ -15,18 +13,18 @@ Tuya Cloud HTTP API interface package
 ## Getting started
 
 ```
-npm install @volst/react-native-tuya
+yarn install @rently/react-native-tuya
 ```
 
 This library contains native code which is automatically linked in React Native >= 0.59. For iOS, run `cd ios && pod install`.
 
 ## Installation
 
-In the Tuya development environment create a new app and make sure you have an "App key", "App secret" and "Secure image". [Read how to do this](https://tuyainc.github.io/tuyasmart_home_ios_sdk_doc/en/resource/Preparation.html).
+This SDK have pre-requisite keys to be integrate, make sure you have an "App key", "App secret" and "Secure image". [Read how to do this](https://tuyainc.github.io/tuyasmart_home_ios_sdk_doc/en/resource/Preparation.html).
 
 ### iOS
 
-Put the secure image into the root path of your project as [explained here](https://tuyainc.github.io/tuyasmart_home_ios_sdk_doc/en/resource/Preparation.html).
+Put the secure image with name t_s.bmp into the root path of your project as [explained here](https://tuyainc.github.io/tuyasmart_home_ios_sdk_doc/en/resource/Preparation.html).
 
 In `ios/AppDelegate.m`, add the following import;
 
@@ -99,7 +97,7 @@ android {
 
 ## Usage
 
-Now you can actually use the methods in this package. Unfortunately I don't have time to document them all, so it is advised to read the source code, but here's a start.
+Now you can actually use the methods in this package. Few of them listed below rest can be found in .ts files
 
 To login with an existing account:
 
