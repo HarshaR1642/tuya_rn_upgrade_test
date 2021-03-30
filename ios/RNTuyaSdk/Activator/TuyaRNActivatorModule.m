@@ -215,12 +215,15 @@ RCT_EXPORT_METHOD(onDestory:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromis
 /// 配网状态更新的回调，wifi单品，zigbee网关，zigbee子设备
 - (void)activator:(TuyaSmartActivator *)activator didReceiveDevice:(TuyaSmartDeviceModel *)deviceModel error:(NSError *)error {
   
-  if (error) {
-    if (activatorInstance.promiseRejectBlock) {
-      [TuyaRNUtils rejecterWithError:error handler:activatorInstance.promiseRejectBlock];
+    if (error && activatorInstance.promiseRejectBlock) {
+        if (error.code == 1512 && [error.localizedDescription isEqualToString:@"Timeout"]) {
+            NSDictionary *timeoutDict = @{@"originJson": @{@"is_timeout": @"true"}};
+            self.promiseResolveBlock([timeoutDict yy_modelToJSONObject]);
+        } else {
+            [TuyaRNUtils rejecterWithError:error handler:activatorInstance.promiseRejectBlock];
+        }
+        return;
     }
-    return;
-  }
   
   //开始回调
   if (activatorInstance.promiseResolveBlock) {
