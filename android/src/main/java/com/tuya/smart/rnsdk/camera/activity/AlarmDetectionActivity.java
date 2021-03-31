@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,6 +71,7 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
     private EditText dateInputEdt;
     private RecyclerView queryRv;
     private Button queryBtn;
+    private TextView txt_NoData;
     private AlarmDetectionAdapter adapter;
     private int day, year, month;
     private int offset = 0;
@@ -109,6 +111,14 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
     private void handleAlarmDetection() {
         adapter.updateAlarmDetectionMessage(mCameraMessageList);
         adapter.notifyDataSetChanged();
+
+        if(mCameraMessageList != null && mCameraMessageList.size() > 0) {
+            queryRv.setVisibility(View.VISIBLE);
+            txt_NoData.setVisibility(View.GONE);
+        } else {
+            queryRv.setVisibility(View.GONE);
+            txt_NoData.setVisibility(View.VISIBLE);
+        }
     }
 
     private void handlAlarmDetectionDateFail(Message msg) {
@@ -120,14 +130,16 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
             long time = DateUtils.getCurrentTime(year, month, day);
             //long startTime = DateUtils.getTodayStart(time);
             long startTime = DateUtils.getDate1YearMinus(time);
-            long endTime = DateUtils.getTodayEnd(time) - 1L;
+            //long endTime = DateUtils.getTodayEnd(time) - 1L;
+            Date date = new Date(System.currentTimeMillis());
+            long endTime = date.getTime(); // fixed current date messages missing issue
             JSONObject object = new JSONObject();
             object.put("msgSrcId", devId);
             object.put("startTime", startTime);
             object.put("endTime", endTime);
             object.put("msgType", 4);
             object.put("limit", 2000);
-            object.put("keepOrig", true);
+            //object.put("keepOrig", true);
             object.put("offset", offset);
             if (null != selectClassify) {
                 object.put("msgCodes", selectClassify.getMsgCode());
@@ -193,6 +205,7 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
         dateInputEdt = findViewById(R.id.date_input_edt);
         queryBtn = findViewById(R.id.query_btn);
         queryRv = findViewById(R.id.query_list);
+        txt_NoData = findViewById(R.id.txt_NoData);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         Date date = new Date(System.currentTimeMillis());
         dateInputEdt.setHint(simpleDateFormat.format(date));
@@ -217,15 +230,15 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
 
             @Override
             public void onItemClick(CameraMessageBean o) {
-                /*Intent intent = new Intent(AlarmDetectionActivity.this, CameraCloudVideoActivity.class);
-                String attachVideo = o.getAttachVideos()[0];
-                String playUrl = attachVideo.substring(0, attachVideo.lastIndexOf('@'));
-                String encryptKey = attachVideo.substring(attachVideo.lastIndexOf('@') + 1);
-                intent.putExtra("playUrl", playUrl);
+                Intent intent = new Intent(AlarmDetectionActivity.this, ImageFullViewActivity.class);
+                String attachPics = o.getAttachPics();
+                /*String playUrl = attachPics.substring(0, attachPics.lastIndexOf('@'));
+                String encryptKey = attachPics.substring(attachPics.lastIndexOf('@') + 1);
+                intent.putExtra("imageUrl", playUrl);
+                intent.putExtra("encryptKey", encryptKey);*/
+                intent.putExtra("image", attachPics);
 
-                intent.putExtra("encryptKey", encryptKey);
-
-                startActivity(intent);*/
+                startActivity(intent);
             }
         });
         queryRv.setAdapter(adapter);
@@ -343,6 +356,7 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
         String[] substring = inputStr.split("/");
         year = Integer.parseInt(substring[0]);
         month = Integer.parseInt(substring[1]);
+        //day = Integer.parseInt(substring[2]);
         final JSONObject object = new JSONObject();
         object.put("msgSrcId", devId);
         object.put("timeZone", TimeZoneUtils.getTimezoneGCMById(TimeZone.getDefault().getID()));

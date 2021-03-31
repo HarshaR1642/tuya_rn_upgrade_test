@@ -316,6 +316,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private void updateSetting(String key, String value) {
         Log.d(TAG, " elango-updateSetting : key-" + key + ", value-" + value);
 
+        hideProgressDialog();
         if(key.equalsIgnoreCase(DpBasicFlip.ID)) {
             toggle_FlipScreen.setChecked(Boolean.parseBoolean(value));
         } else if(key.equalsIgnoreCase(DpBasicOSD.ID)) {
@@ -477,12 +478,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0: // Auto
+                        showProgressDialog();
                         mTuyaCameraDevice.publishCameraDps(DpBasicNightvision.ID, NightStatusMode.AUTO.getDpValue());
                         break;
                     case 1: // On
+                        showProgressDialog();
                         mTuyaCameraDevice.publishCameraDps(DpBasicNightvision.ID, NightStatusMode.OPEN.getDpValue());
                         break;
                     case 2: // Off
+                        showProgressDialog();
                         mTuyaCameraDevice.publishCameraDps(DpBasicNightvision.ID, NightStatusMode.CLOSE.getDpValue());
                         break;
                 }
@@ -506,12 +510,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0: // Low
+                        showProgressDialog();
                         mTuyaCameraDevice.publishCameraDps(DpMotionSensitivity.ID, MotionSensitivityMode.LOW.getDpValue());
                         break;
                     case 1: // Medium
+                        showProgressDialog();
                         mTuyaCameraDevice.publishCameraDps(DpMotionSensitivity.ID, MotionSensitivityMode.MIDDLE.getDpValue());
                         break;
                     case 2: // High
+                        showProgressDialog();
                         mTuyaCameraDevice.publishCameraDps(DpMotionSensitivity.ID, MotionSensitivityMode.HIGH.getDpValue());
                         break;
                 }
@@ -535,6 +542,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0: // Mechanical
+                        showProgressDialog();
                         mTuyaDevice.publishDps("{\"165\": \"1\"}", new IResultCallback() {
                             @Override
                             public void onError(String code, String error) {
@@ -548,6 +556,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         });
                         break;
                     case 1: // Wireless
+                        showProgressDialog();
                         mTuyaDevice.publishDps("{\"165\": \"2\"}", new IResultCallback() {
                             @Override
                             public void onError(String code, String error) {
@@ -561,6 +570,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         });
                         break;
                     case 2: // No Bells
+                        showProgressDialog();
                         mTuyaDevice.publishDps("{\"165\": \"3\"}", new IResultCallback() {
                             @Override
                             public void onError(String code, String error) {
@@ -594,9 +604,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0: // Event Recording
+                        showProgressDialog();
                         mTuyaCameraDevice.publishCameraDps(DpSDRecordModel.ID, RecordMode.EVENT.getDpValue());
                         break;
                     case 1: // Non-Stop
+                        showProgressDialog();
                         mTuyaCameraDevice.publishCameraDps(DpSDRecordModel.ID, RecordMode.CONTINUOUS_RECORD.getDpValue());
                         break;
                 }
@@ -611,18 +623,21 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (R.id.toggle_FlipScreen == buttonView.getId()) {
+            showProgressDialog();
             if(isChecked) {
                 mTuyaCameraDevice.publishCameraDps(DpBasicFlip.ID, true);
             } else {
                 mTuyaCameraDevice.publishCameraDps(DpBasicFlip.ID, false);
             }
         } else if (R.id.toggle_OSD == buttonView.getId()) {
+            showProgressDialog();
             if(isChecked) {
                 mTuyaCameraDevice.publishCameraDps(DpBasicOSD.ID, true);
             } else {
                 mTuyaCameraDevice.publishCameraDps(DpBasicOSD.ID, false);
             }
         } else if (R.id.toggle_MotionDetection == buttonView.getId()) {
+            showProgressDialog();
             if(isChecked) {
                 mTuyaCameraDevice.publishCameraDps(DpMotionSwitch.ID, true);
                 layout_MotionSensitivity.setVisibility(View.VISIBLE);
@@ -631,6 +646,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 layout_MotionSensitivity.setVisibility(View.GONE);
             }
         } else if (R.id.toggle_LocalRecording == buttonView.getId()) {
+            showProgressDialog();
             if(isChecked) {
                 mTuyaCameraDevice.publishCameraDps(DpSDRecordSwitch.ID, true);
                 layout_RecordType.setVisibility(View.VISIBLE);

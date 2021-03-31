@@ -34,6 +34,19 @@
             android:keepScreenOn="true"
             />
 
+        <TextView
+            android:id="@+id/txt_Retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="Connect failed, click retry"
+            android:textColor="@color/tuya_button_txt_white"
+            android:textSize="@dimen/sp_18"
+            android:layout_marginHorizontal="@dimen/mg_70"
+            android:textColorLink="@color/color_primary"
+            android:visibility="visible"/>
+
         <!--<ImageView
             android:id="@+id/camera_mute"
             android:layout_width="@dimen/wh_28"

@@ -12,6 +12,7 @@
         android:screenOrientation="portrait" />
     <activity android:name=".camera.activity.SettingActivity" />
     <activity android:name=".camera.activity.StorageSettingActivity" />
+    <activity android:name=".camera.activity.ImageFullViewActivity" />
   </application>
 
 </manifest>
