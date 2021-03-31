@@ -6,11 +6,17 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,6 +86,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
     private TextView qualityTv;
     private TextView speakTxt, settingTxt, cloudStorageTxt;
     private ProgressDialog progressDialog;
+    private TextView txt_Retry;
 
     private ICameraP2P mCameraP2P;
     private static final int ASPECT_RATIO_WIDTH = 9;
@@ -246,7 +253,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
             preview();
         } else {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "connect fail");
+            //ToastUtil.shortToast(CameraLivePreviewActivity.this, "connect fail");
+            txt_Retry.setVisibility(View.VISIBLE);
         }
     }
 
@@ -357,6 +365,30 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         settingTxt.setOnClickListener(this);
         cloudStorageTxt = findViewById(R.id.cloud_Txt);
         message_btn =  findViewById(R.id.message_btn);
+
+        txt_Retry =  findViewById(R.id.txt_Retry);
+        SpannableString ss = new SpannableString("Connect failed, click retry");
+        ClickableSpan clickableTerms = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                // show toast here
+                txt_Retry.setVisibility(View.GONE);
+                showProgressDialog();
+                getHomeData();
+            }
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(true);
+
+            }
+        };
+        //ss.setSpan(clickableTerms, 4, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(clickableTerms, ss.length()-5, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        txt_Retry.setText(ss);
+        txt_Retry.setMovementMethod(LinkMovementMethod.getInstance());
+        //txt_Retry.setHighlightColor(Color.TRANSPARENT);
+        txt_Retry.setVisibility(View.GONE);
 
         /*WindowManager windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
         int width = windowManager.getDefaultDisplay().getWidth();
@@ -477,6 +509,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                 Log.d(TAG, "elango-camera live - getHomeData onError : " + errorCode + ", " + errorMsg);
                 //mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_CONNECT, Constants.ARG1_OPERATE_FAIL, errorMsg));
                 ToastUtil.shortToast(CameraLivePreviewActivity.this, errorMsg);
+                hideProgressDialog();
+                txt_Retry.setVisibility(View.VISIBLE);
             }
         });
         TuyaHomeSdk.newHomeInstance(HOME_ID).registerHomeStatusListener(new ITuyaHomeStatusListener() {
@@ -688,6 +722,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                 Log.d(TAG, "elango-camera live - connect - onFailure : " + sessionId + ", " + requestId + ", " + errCode);
                 mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_CONNECT, Constants.ARG1_OPERATE_FAIL, errCode));
                 hideProgressDialog();
+
+                //txt_Retry.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -831,7 +867,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                 });
                 recordStatue(true);
             } else {
-                Constants.requestPermission(CameraLivePreviewActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "open_storage");
+                Constants.requestPermission(CameraLivePreviewActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "Please enable the storage permission in app setting.");
             }
         } else {
             mCameraP2P.stopRecordLocalMp4(new OperationDelegateCallBack() {
@@ -854,27 +890,31 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
     }
 
     private void snapShotClick() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Camera/";
-            File file = new File(path);
-            if (!file.exists()) {
-                file.mkdirs();
+        if (Constants.hasStoragePermission()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Camera/";
+                File file = new File(path);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                picPath = path;
             }
-            picPath = path;
-        }
-        mCameraP2P.snapshot(picPath, CameraLivePreviewActivity.this, ICameraP2P.PLAYMODE.LIVE, new OperationDelegateCallBack() {
-            @Override
-            public void onSuccess(int sessionId, int requestId, String data) {
-                mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_SCREENSHOT, Constants.ARG1_OPERATE_SUCCESS, data));
-                Log.d(TAG, "elango-camera live - snapshot - onSuccess : " + sessionId + ", " + requestId + ", " + data);
-            }
+            mCameraP2P.snapshot(picPath, CameraLivePreviewActivity.this, ICameraP2P.PLAYMODE.LIVE, new OperationDelegateCallBack() {
+                @Override
+                public void onSuccess(int sessionId, int requestId, String data) {
+                    mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_SCREENSHOT, Constants.ARG1_OPERATE_SUCCESS, data));
+                    Log.d(TAG, "elango-camera live - snapshot - onSuccess : " + sessionId + ", " + requestId + ", " + data);
+                }
 
-            @Override
-            public void onFailure(int sessionId, int requestId, int errCode) {
-                mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_SCREENSHOT, Constants.ARG1_OPERATE_FAIL));
-                Log.d(TAG, "elango-camera live - snapshot - onFailure : " + sessionId + ", " + requestId + ", " + errCode);
-            }
-        });
+                @Override
+                public void onFailure(int sessionId, int requestId, int errCode) {
+                    mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_SCREENSHOT, Constants.ARG1_OPERATE_FAIL));
+                    Log.d(TAG, "elango-camera live - snapshot - onFailure : " + sessionId + ", " + requestId + ", " + errCode);
+                }
+            });
+        } else {
+            Constants.requestPermission(CameraLivePreviewActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "Please enable the storage permission in app setting.");
+        }
     }
 
     private void muteClick() {

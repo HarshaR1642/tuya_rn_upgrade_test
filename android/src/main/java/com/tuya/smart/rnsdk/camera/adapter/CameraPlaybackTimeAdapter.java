@@ -34,7 +34,7 @@ public class CameraPlaybackTimeAdapter extends RecyclerView.Adapter<CameraPlayba
         this.context = context;
         mInflater = LayoutInflater.from(context);
         this.timePieceBeans = timePieceBeans;
-        setHasStableIds(true);
+        //setHasStableIds(true);
     }
 
     public void setListener(OnTimeItemListener listener) {

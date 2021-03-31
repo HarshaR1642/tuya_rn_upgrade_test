@@ -38,6 +38,10 @@ export type RegisterForPushNotificationParams = {
   token: any
 };
 
+export type ResetDeviceParams = {
+  devId: string;
+};
+
 export function initActivator(
     params: InitActivatorParams
 ): Promise<DeviceDetailResponse> {
@@ -74,4 +78,10 @@ export function stopConfig() {
 
 export function getCurrentWifi() {
   return tuya.getCurrentWifi({});
+}
+
+export function resetDevice (
+    params: ResetDeviceParams
+) {
+  return tuya.resetDevice(params);
 }

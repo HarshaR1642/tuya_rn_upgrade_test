@@ -1,6 +1,7 @@
 package com.tuya.smart.rnsdk.camera.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +17,13 @@ import com.tuya.drawee.view.DecryptImageView;
 import com.tuya.smart.rnsdk.R;
 import com.tuya.smart.rnsdk.camera.bean.CameraMessageBean;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by huangdaju on 2018/3/5.
@@ -105,14 +112,21 @@ public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAd
                     String imageUrl = attachPics.substring(0, index);
                     Log.d(TAG, "elango message showPicture : " + imageUrl +", " + decryption);
                     mSnapshot.setImageURI(imageUrl, decryption.getBytes());
-                    /*ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(Uri.parse(imageUrl))
-                            .setRotationOptions(RotationOptions.autoRotateAtRenderTime())
-                            .disableDiskCache();
-                    DecryptImageRequest imageRequest = new DecryptImageRequest(builder, "AES", "AES/CBC/PKCS5Padding",
-                            decryption.getBytes());
-                    DraweeController controller = Fresco.newDraweeControllerBuilder().setImageRequest(imageRequest)
-                            .build();
-                    mSnapshot.setController(controller);*/
+
+                    /*ITuyaIPCTool tool = TuyaIPCSdk.getTool();
+                    if (tool != null) {
+                        tool.downloadEncryptedImg(imageUrl, decryption, new ITuyaResultCallback<Bitmap>() {
+                            @Override
+                            public void onSuccess(Bitmap result) {
+                                Log.d(TAG, "elango message downloadEncryptedImg onSuccess : " + result);
+                            }
+
+                            @Override
+                            public void onError(String errorCode, String errorMessage) {
+                                Log.d(TAG, "elango message downloadEncryptedImg onSuccess : " + errorCode +", " + errorMessage);
+                            }
+                        });
+                    }*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -135,5 +149,4 @@ public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAd
 
         void onItemClick(CameraMessageBean o);
     }
-
 }

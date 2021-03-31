@@ -11,7 +11,6 @@ import com.tuya.smart.rnsdk.utils.Constant.API_REQUEST_ERROR
 import com.tuya.smart.rnsdk.utils.Constant.NEEDLOGIN
 import com.tuya.smart.rnsdk.utils.TYRCTCommonUtil
 import com.tuya.smart.rnsdk.utils.TuyaReactUtils
-import com.tuya.smart.sdk.TuyaSdk
 import com.tuya.smart.sdk.api.INeedLoginListener
 import com.tuya.smart.sdk.api.IResultCallback
 import com.tuya.smart.sdk.api.ITuyaDataCallback

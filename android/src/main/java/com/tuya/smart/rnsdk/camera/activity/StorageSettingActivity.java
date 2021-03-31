@@ -2,6 +2,7 @@ package com.tuya.smart.rnsdk.camera.activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.tuya.smart.home.sdk.TuyaHomeSdk;
 import com.tuya.smart.rnsdk.R;
 import com.tuya.smart.rnsdk.camera.utils.ToastUtil;
 import com.tuya.smart.sdk.api.IDevListener;
+import com.tuya.smart.sdk.api.IResultCallback;
 import com.tuya.smart.sdk.api.ITuyaDevice;
 import com.tuya.smart.sdk.bean.DeviceBean;
 import com.tuyasmart.camera.devicecontrol.ITuyaCameraDevice;
@@ -31,6 +33,7 @@ import com.tuyasmart.camera.devicecontrol.bean.DpBasicOSD;
 import com.tuyasmart.camera.devicecontrol.bean.DpBasicPrivate;
 import com.tuyasmart.camera.devicecontrol.bean.DpMotionSensitivity;
 import com.tuyasmart.camera.devicecontrol.bean.DpSDFormat;
+import com.tuyasmart.camera.devicecontrol.bean.DpSDFormatStatus;
 import com.tuyasmart.camera.devicecontrol.bean.DpSDStatus;
 import com.tuyasmart.camera.devicecontrol.bean.DpSDStorage;
 import com.tuyasmart.camera.devicecontrol.model.DpNotifyModel;
@@ -199,13 +202,19 @@ public class StorageSettingActivity extends AppCompatActivity implements View.On
                     dialog.dismiss();
 
                     showProgressDialog();
+
+                    //Log.d(TAG, "elango-publishCameraDps-DpSDFormatStatus :" + mTuyaCameraDevice.queryIntegerCurrentCameraDps(DpSDStatus.ID));
+
                     mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDFormat.ID, new ITuyaCameraDeviceControlCallback<Boolean>() {
                         @Override
                         public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Boolean o) {
                             showPublishTxt.setText("LAN/Cloud query result: " + o);
                             Log.d(TAG, "elango-registorTuyaCameraDeviceControlCallback-DpSDFormat-onSuccess : " + s + ", " + o);
-                            hideProgressDialog();
-                            ToastUtil.shortToast(StorageSettingActivity.this,"Successfully Formatted.");
+                            /*hideProgressDialog();
+                            ToastUtil.shortToast(StorageSettingActivity.this,"Successfully Formatted.");*/
+
+                            //handleFormatting();
+                            new SDCardFormatting().execute();
                         }
 
                         @Override
@@ -216,6 +225,7 @@ public class StorageSettingActivity extends AppCompatActivity implements View.On
                         }
                     });
                     mTuyaCameraDevice.publishCameraDps(DpSDFormat.ID, true);
+
                 }
             });
             builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -225,6 +235,130 @@ public class StorageSettingActivity extends AppCompatActivity implements View.On
             });
             AlertDialog alert = builder.create();
             alert.show();
+        }
+    }
+
+    int formatStatus = 0;
+    private void handleFormatting() {
+        formatStatus = 0;
+        mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDFormatStatus.ID, new ITuyaCameraDeviceControlCallback<Integer>() {
+            @Override
+            public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Integer o) {
+                //showPublishTxt.setText("LAN/Cloud query result: " + o);
+                Log.d(TAG, "elango-registorTuyaCameraDeviceControlCallback-DpSDFormatStatus-onSuccess : " + s + ", " + o);
+                //hideProgressDialog();
+                //ToastUtil.shortToast(StorageSettingActivity.this,"Successfully Formatted.");
+
+                formatStatus = o;
+            }
+
+            @Override
+            public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
+                Log.d(TAG, "elango-registorTuyaCameraDeviceControlCallback-DpSDFormatStatus-onFailure : " + s + ", " + s1 + ", " + s2);
+                //hideProgressDialog();
+                //ToastUtil.shortToast(StorageSettingActivity.this,"Format failed.");
+
+                formatStatus = -1;
+            }
+        });
+        mTuyaCameraDevice.publishCameraDps(DpSDFormatStatus.ID, null);
+        //Log.d(TAG, "elango-publishCameraDps-DpSDFormatStatus");
+
+        // 30 second timeout
+        int i = 30;
+        while(i>0) {
+            if (formatStatus >= 0 && formatStatus < 100) {
+                try {
+                    Thread.currentThread().sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                mTuyaCameraDevice.publishCameraDps(DpSDFormatStatus.ID, null);
+                //Log.d(TAG, "elango-publishCameraDps-DpSDFormatStatus :" + mTuyaCameraDevice.queryIntegerCurrentCameraDps(DpSDFormatStatus.ID));
+
+            } else if (formatStatus == 100) {
+
+                break;
+            } else {
+                break;
+            }
+            i--;
+        }
+        hideProgressDialog();
+        ToastUtil.shortToast(StorageSettingActivity.this,"Successfully Formatted.");
+    }
+
+    class SDCardFormatting extends AsyncTask<Void, Void, Integer> {
+
+        //int formatStatus = 0;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            formatStatus = 0;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+
+            mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDFormatStatus.ID, new ITuyaCameraDeviceControlCallback<Integer>() {
+                @Override
+                public void onSuccess(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, Integer o) {
+                    //showPublishTxt.setText("LAN/Cloud query result: " + o);
+                    Log.d(TAG, "elango-registorTuyaCameraDeviceControlCallback-DpSDFormatStatus-onSuccess : " + s + ", " + o);
+                    //hideProgressDialog();
+                    //ToastUtil.shortToast(StorageSettingActivity.this,"Successfully Formatted.");
+
+                    formatStatus = o;
+                }
+
+                @Override
+                public void onFailure(String s, DpNotifyModel.ACTION action, DpNotifyModel.SUB_ACTION sub_action, String s1, String s2) {
+                    Log.d(TAG, "elango-registorTuyaCameraDeviceControlCallback-DpSDFormatStatus-onFailure : " + s + ", " + s1 + ", " + s2);
+                    //hideProgressDialog();
+                    //ToastUtil.shortToast(StorageSettingActivity.this,"Format failed.");
+
+                    formatStatus = -1;
+                }
+            });
+            //mTuyaCameraDevice.publishCameraDps(DpSDFormatStatus.ID, null);
+            //Log.d(TAG, "elango-publishCameraDps-DpSDFormatStatus");
+
+            // 30 second timeout
+            int i = 30;
+            while(i>0) {
+                if (formatStatus >= 0 && formatStatus < 100) {
+                    try {
+                        Thread.currentThread().sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    mTuyaCameraDevice.publishCameraDps(DpSDFormatStatus.ID, null);
+                    //Log.d(TAG, "elango-publishCameraDps-DpSDFormatStatus :" + mTuyaCameraDevice.queryIntegerCurrentCameraDps(DpSDStatus.ID));
+                    //Log.d(TAG, "elango-publishCameraDps-DpSDFormatStatus :" + mTuyaCameraDevice.queryStringCurrentCameraDps(DpSDStorage.ID));
+                    //Log.d(TAG, "elango-publishCameraDps-DpSDFormatStatus :" + mTuyaCameraDevice.queryIntegerCurrentCameraDps(DpSDFormatStatus.ID));
+
+
+                } else if (formatStatus == 100) {
+
+                    break;
+                } else {
+                    break;
+                }
+                i--;
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+
+            hideProgressDialog();
+            ToastUtil.shortToast(StorageSettingActivity.this,"Successfully Formatted.");
         }
     }
 }

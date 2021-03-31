@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -84,6 +85,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
     //private Button queryBtn, startBtn, pauseBtn, resumeBtn, stopBtn;
     private Button queryBtn;
     private ImageView record_btn, pauseBtn, photo_btn;
+    private TextView txt_NoData;
 
     private ICameraP2P mCameraP2P;
     private static final int ASPECT_RATIO_WIDTH = 9;
@@ -179,8 +181,12 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
             //Timepieces with data for the query day
             List<TimePieceBean> timePieceBeans = mBackDataDayCache.get(mCameraP2P.getDayKey());
             if (timePieceBeans != null) {
+                queryRv.setVisibility(View.VISIBLE);
+                txt_NoData.setVisibility(View.GONE);
+                Log.d(TAG, "elango-playback-timePieceBeans : " + timePieceBeans);
                 Collections.reverse(timePieceBeans); // now the list is in reverse order
                 queryDateList.addAll(timePieceBeans);
+                Log.d(TAG, "elango-playback-timePieceBeans reverse : " + timePieceBeans);
 
                 // to play first item on opening
                 if(timePieceBeans.size() > 0) {
@@ -213,12 +219,15 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                             });
                 }
             } else {
-                showErrorToast();
+                //showErrorToast();
+                queryRv.setVisibility(View.GONE);
+                txt_NoData.setVisibility(View.VISIBLE);
             }
 
             adapter.notifyDataSetChanged();
         } else {
-
+            queryRv.setVisibility(View.GONE);
+            txt_NoData.setVisibility(View.VISIBLE);
         }
     }
 
@@ -228,9 +237,13 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
 
             try {
                 if (days== null || days.size() == 0) {
-                    showErrorToast();
+                    //showErrorToast();
+                    queryRv.setVisibility(View.GONE);
+                    txt_NoData.setVisibility(View.VISIBLE);
                     return;
                 }
+                queryRv.setVisibility(View.VISIBLE);
+                txt_NoData.setVisibility(View.GONE);
                 final String inputStr = dateInputEdt.getText().toString();
                 if (!TextUtils.isEmpty(inputStr) && inputStr.contains("/")) {
                     String[] substring = inputStr.split("/");
@@ -241,6 +254,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                         @Override
                         public void onSuccess(int sessionId, int requestId, String data) {
                             L.e(TAG, inputStr + " --- " + data);
+                            Log.d(TAG, "elango-playback-queryRecordTimeSliceByDay : " + data);
                             parsePlaybackData(data);
                         }
 
@@ -336,6 +350,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
         photo_btn = findViewById(R.id.photo_btn);
 
         queryRv = findViewById(R.id.query_list);
+        txt_NoData = findViewById(R.id.txt_NoData);
 
         //播放器view最好宽高比设置16:9
         WindowManager windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
@@ -696,7 +711,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                     });
                     recordStatue(true);
                 } else {
-                    Constants.requestPermission(CameraPlaybackActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "open_storage");
+                    Constants.requestPermission(CameraPlaybackActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "Please enable the storage permission in app setting.");
                 }
             } else {
                 mCameraP2P.stopRecordLocalMp4(new OperationDelegateCallBack() {
@@ -720,25 +735,29 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
     }
 
     private void snapShotClick() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Camera/";
-            File file = new File(path);
-            if (!file.exists()) {
-                file.mkdirs();
+        if (Constants.hasStoragePermission()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Camera/";
+                File file = new File(path);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                picPath = path;
             }
-            picPath = path;
-        }
-        mCameraP2P.snapshot(picPath, CameraPlaybackActivity.this, ICameraP2P.PLAYMODE.LIVE, new OperationDelegateCallBack() {
-            @Override
-            public void onSuccess(int sessionId, int requestId, String data) {
-                mHandler.sendMessage(com.tuyasmart.stencil.utils.MessageUtil.getMessage(Constants.MSG_SCREENSHOT, Constants.ARG1_OPERATE_SUCCESS, data));
-            }
+            mCameraP2P.snapshot(picPath, CameraPlaybackActivity.this, ICameraP2P.PLAYMODE.LIVE, new OperationDelegateCallBack() {
+                @Override
+                public void onSuccess(int sessionId, int requestId, String data) {
+                    mHandler.sendMessage(com.tuyasmart.stencil.utils.MessageUtil.getMessage(Constants.MSG_SCREENSHOT, Constants.ARG1_OPERATE_SUCCESS, data));
+                }
 
-            @Override
-            public void onFailure(int sessionId, int requestId, int errCode) {
-                mHandler.sendMessage(com.tuyasmart.stencil.utils.MessageUtil.getMessage(Constants.MSG_SCREENSHOT, Constants.ARG1_OPERATE_FAIL));
-            }
-        });
+                @Override
+                public void onFailure(int sessionId, int requestId, int errCode) {
+                    mHandler.sendMessage(com.tuyasmart.stencil.utils.MessageUtil.getMessage(Constants.MSG_SCREENSHOT, Constants.ARG1_OPERATE_FAIL));
+                }
+            });
+        } else {
+            Constants.requestPermission(CameraPlaybackActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "Please enable the storage permission in app setting.");
+        }
     }
 
     private void recordStatue(boolean isRecording) {
