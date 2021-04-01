@@ -1,6 +1,5 @@
 import { NativeModules, EmitterSubscription } from 'react-native';
 import { addEvent, bridge, DEVLISTENER } from './bridgeUtils';
-import {ResetDeviceParams} from "activator";
 
 const tuya = NativeModules.TuyaDeviceModule;
 
