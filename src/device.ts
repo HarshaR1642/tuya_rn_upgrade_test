@@ -66,9 +66,14 @@ export function removeDevice(params: RemoveDeviceParams): Promise<string> {
 }
 
 export type RenameDeviceParams = { devId: string; name: string };
+export type resetDeviceParams = { devId: string };
 
 export function renameDevice(params: RenameDeviceParams): Promise<string> {
   return tuya.renameDevice(params);
+}
+
+export function resetDevice(params: resetDeviceParams): Promise<string> {
+  return tuya.resetDevice(params);
 }
 
 export type GetDataPointStatsParams = {

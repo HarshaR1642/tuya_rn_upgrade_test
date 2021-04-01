@@ -83,6 +83,7 @@ UITableViewDelegate>
     [self.bottomTabControlView setBackgroundColor:[UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0]];
     self.addLeftBarBackButtonEnabled = YES;
     [self setRightBarButtonWithImage:@"keyless_filter"];
+    self.camera.videoView.scaleToFill = YES;
     self.noDataAvialbleLabel.textColor = [TuyaAppTheme theme].font_color;
 }
 
@@ -143,7 +144,7 @@ UITableViewDelegate>
     if ([TuyaAppPermissionUtil isPhotoLibraryNotDetermined]) {
         [TuyaAppPermissionUtil requestPhotoPermission:complete];
     }else if ([TuyaAppPermissionUtil isPhotoLibraryDenied]) {
-        [self showAlertWithMessage:NSLocalizedString(@"Photo library permission denied", @"") complete:nil];
+        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"Photo library permission denied", @"") withTitle:@""];
         !complete?:complete(NO);
     }else {
         !complete?:complete(YES);
@@ -157,7 +158,7 @@ UITableViewDelegate>
 //        [sender setSelected: YES];
     } failure:^(NSError *error) {
 //        [sender setSelected: NO];
-        [self showAlertWithMessage:NSLocalizedString(@"fail", @"") complete:nil];
+        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"fail", @"") withTitle:@""];
     }];
 }
 - (IBAction)recodButtonAction:(UIButton *)sender {
@@ -192,7 +193,7 @@ UITableViewDelegate>
             [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_pause"] forState: UIControlStateSelected];
         } failure:^(NSError *error) {
             [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_play_playback"] forState: UIControlStateNormal];
-            [self showAlertWithMessage:NSLocalizedString(@"fail", @"") complete:nil];
+            [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"fail", @"") withTitle:@""];
         }];
     }else if (self.camera.isPlaybacking) {
         [self.camera pausePlayback:^{
@@ -200,7 +201,7 @@ UITableViewDelegate>
             self.recordButton.enabled = NO;
             [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_play_playback"] forState: UIControlStateNormal];
         } failure:^(NSError *error) {
-            [self showAlertWithMessage:NSLocalizedString(@"fail", @"") complete:nil];
+            [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"fail", @"") withTitle:@""];
             [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_pause"] forState: UIControlStateSelected];
         }];
     }
@@ -210,9 +211,9 @@ UITableViewDelegate>
     [self checkPhotoPermision:^(BOOL result) {
         if (result) {
             [self.camera snapShoot:^{
-                [self showAlertWithMessage:@"A Screenshot has been saved to your photos gallery." complete:nil];
+                [TuyaAppProgressUtils showAlertForView:self withMessage:@"A Screenshot has been saved to your photos gallery." withTitle:@""];
             } failure:^(NSError *error) {
-                [self showAlertWithMessage:@"Failed to save" complete:nil];
+                [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to save" withTitle:@""];
             }];
         }
     }];
@@ -264,6 +265,7 @@ UITableViewDelegate>
 
 - (void)startPlayback {
     [self.camera.videoView tuya_clear];
+    self.camera.videoView.scaleToFill = YES;
     [self.controlView addSubview:self.camera.videoView];
     self.camera.videoView.frame = self.controlView.bounds;
     [self getRecordAndPlay:[TuyaSmartPlaybackDate new]];
