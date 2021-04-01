@@ -1,6 +1,5 @@
 import { NativeModules, EmitterSubscription } from 'react-native';
 import { addEvent, bridge, DEVLISTENER } from './bridgeUtils';
-import {ResetDeviceParams} from "activator";
 
 const tuya = NativeModules.TuyaDeviceModule;
 
@@ -17,10 +16,6 @@ export type DevListenerType =
   | 'onFirmwareUpgradeSuccess'
   | 'onFirmwareUpgradeFailure'
   | 'onFirmwareUpgradeProgress';
-
-export type ResetDeviceParams = {
-  devId: string;
-};
 
 let devListenerSubs: { [devId: string]: EmitterSubscription } = {};
 
@@ -88,10 +83,4 @@ export function getDataPointStat(
   params: GetDataPointStatsParams
 ): Promise<any> {
   return tuya.getDataPointStat(params);
-}
-
-export function resetDevice (
-    params: ResetDeviceParams
-) {
-  return tuya.resetDevice(params);
 }
