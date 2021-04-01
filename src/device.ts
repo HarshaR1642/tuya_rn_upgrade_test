@@ -17,10 +17,6 @@ export type DevListenerType =
   | 'onFirmwareUpgradeFailure'
   | 'onFirmwareUpgradeProgress';
 
-export type ResetDeviceParams = {
-  devId: string;
-};
-
 let devListenerSubs: { [devId: string]: EmitterSubscription } = {};
 
 export function registerDevListener(
@@ -87,10 +83,4 @@ export function getDataPointStat(
   params: GetDataPointStatsParams
 ): Promise<any> {
   return tuya.getDataPointStat(params);
-}
-
-export function resetDevice (
-    params: ResetDeviceParams
-) {
-  return tuya.resetDevice(params);
 }
