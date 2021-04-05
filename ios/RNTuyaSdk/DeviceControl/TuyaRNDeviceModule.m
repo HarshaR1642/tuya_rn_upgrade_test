@@ -119,22 +119,30 @@ RCT_EXPORT_METHOD(resetDevice:(NSDictionary *)params resolver:(RCTPromiseResolve
     __weak typeof(self) weakSelf = self;
     self.cameraDPManager = [self cameraWithParams:params];
     if (self.cameraDPManager) {
-        NSInteger number  = [[self.cameraDPManager valueForDP:@"165"] tysdk_toInt];
-        if ([self.cameraDPManager isSupportDP:@"165"] && number == 0) { // Chime Settings
-            [self.cameraDPManager setValue:@"1" forDP:@"165" success:^(id result) {
+        if ([self.cameraDPManager isSupportDP:@"165"] || [self.cameraDPManager isSupportDP:TuyaSmartCameraRecordModeDPName] || [self.cameraDPManager isSupportDP:TuyaSmartCameraSDCardStatusDPName]) {
+            if ([[self.cameraDPManager valueForDP:@"165"] tysdk_toInt] == 0) { // Chime Settings
+                [self.cameraDPManager setValue:@"1" forDP:@"165" success:^(id result) {
+                    
+                } failure:^(NSError *error) {
+                    
+                }];
+            }
+            
+            // After formatting successfully, query the capacity information of the device
+            [self.cameraDPManager setValue:TuyaSmartCameraRecordModeEvent forDP:TuyaSmartCameraRecordModeDPName success:^(id result) {
+                
             } failure:^(NSError *error) {
+                
             }];
+            [self.cameraDPManager valueForDP:TuyaSmartCameraSDCardStatusDPName success:^(id result) {
+                [self checkStatus:[result integerValue]];
+            } failure:^(NSError *error) {
+                [TuyaRNUtils resolverWithHandler:weakSelf.resetpromiseBlock];
+            }];
+            
+        } else {
+            [TuyaRNUtils resolverWithHandler:_resetpromiseBlock];
         }
-        
-        // After formatting successfully, query the capacity information of the device
-        [self.cameraDPManager setValue:TuyaSmartCameraRecordModeEvent forDP:TuyaSmartCameraRecordModeDPName success:^(id result) {
-        } failure:^(NSError *error) {
-        }];
-        [self.cameraDPManager valueForDP:TuyaSmartCameraSDCardStatusDPName success:^(id result) {
-            [self checkStatus:[result integerValue]];
-        } failure:^(NSError *error) {
-            [TuyaRNUtils resolverWithHandler:weakSelf.resetpromiseBlock];
-        }];
     }
 }
 

@@ -81,22 +81,30 @@ RCT_EXPORT_METHOD(initActivator:(NSDictionary *)params resolver:(RCTPromiseResol
 }
 
 RCT_EXPORT_METHOD(initActivatorForQRCode:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
- 
-    NSString *ssid = params[kTuyaRNActivatorModuleSSID];
-      NSString *password = params[kTuyaRNActivatorModulePassword];
-  NSNumber *time = params[kTuyaRNActivatorModuleOverTime];
-  NSString *token = params[kTuyaRNActivatorModuleAcccessToken];
     
-
-  
-  if (activatorInstance == nil) {
-    activatorInstance = [TuyaRNActivatorModule new];
-  }
-  
-  [TuyaSmartActivator sharedInstance].delegate = activatorInstance;
-  activatorInstance.promiseResolveBlock = resolver;
-  activatorInstance.promiseRejectBlock = rejecter;
-  [[TuyaSmartActivator sharedInstance] startConfigWiFi:TYActivatorModeQRCode ssid:ssid password:password token:token timeout:time.doubleValue];
+    NSString *ssid = params[kTuyaRNActivatorModuleSSID];
+    NSString *password = params[kTuyaRNActivatorModulePassword];
+    NSNumber *time = params[kTuyaRNActivatorModuleOverTime];
+    NSString *token = params[kTuyaRNActivatorModuleAcccessToken];
+    
+    
+    if ((ssid == nil || [ssid isKindOfClass:[NSNull class]]) || (password == nil || [password isKindOfClass:[NSNull class]]) || (token == nil || [token isKindOfClass:[NSNull class]])) {
+        NSMutableDictionary* details = [NSMutableDictionary dictionary];
+        [details setValue:@"Halt Due to Multiple call" forKey:NSLocalizedDescriptionKey];
+        NSError *error = [NSError errorWithDomain:@"121" code:121 userInfo:details];
+        [[TuyaSmartActivator sharedInstance] stopConfigWiFi];
+        rejecter([NSString stringWithFormat:@"%ld", error.code], error.userInfo[NSLocalizedDescriptionKey], error);
+        return;
+    } else {
+        if (activatorInstance == nil) {
+            activatorInstance = [TuyaRNActivatorModule new];
+        }
+        [TuyaSmartActivator sharedInstance].delegate = activatorInstance;
+        activatorInstance.promiseResolveBlock = resolver;
+        activatorInstance.promiseRejectBlock = rejecter;
+        [[TuyaSmartActivator sharedInstance] startConfigWiFi:TYActivatorModeQRCode ssid:ssid password:password token:token timeout:time.doubleValue];
+    }
+    
 }
 
 RCT_EXPORT_METHOD(getTokenForQRCode:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
@@ -215,12 +223,15 @@ RCT_EXPORT_METHOD(onDestory:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromis
 /// 配网状态更新的回调，wifi单品，zigbee网关，zigbee子设备
 - (void)activator:(TuyaSmartActivator *)activator didReceiveDevice:(TuyaSmartDeviceModel *)deviceModel error:(NSError *)error {
   
-  if (error) {
-    if (activatorInstance.promiseRejectBlock) {
-      [TuyaRNUtils rejecterWithError:error handler:activatorInstance.promiseRejectBlock];
+    if (error && activatorInstance.promiseRejectBlock) {
+        if (error.code == 1512 && [error.localizedDescription isEqualToString:@"Timeout"]) {
+            NSDictionary *timeoutDict = @{@"originJson": @{@"is_timeout": @"true"}};
+            self.promiseResolveBlock([timeoutDict yy_modelToJSONObject]);
+        } else {
+            [TuyaRNUtils rejecterWithError:error handler:activatorInstance.promiseRejectBlock];
+        }
+        return;
     }
-    return;
-  }
   
   //开始回调
   if (activatorInstance.promiseResolveBlock) {
