@@ -13,7 +13,7 @@ Tuya Cloud HTTP API interface package
 ## Getting started
 
 ```
-yarn install @rently/react-native-tuya
+yarn install @rently-tuya
 ```
 
 This library contains native code which is automatically linked in React Native >= 0.59. For iOS, run `cd ios && pod install`.
