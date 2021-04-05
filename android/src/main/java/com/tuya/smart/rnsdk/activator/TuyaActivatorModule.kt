@@ -86,39 +86,44 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
   fun initActivatorForQRCode(params: ReadableMap, promise: Promise) {
     if (ReactParamsCheck.checkParams(arrayOf(SSID, PASSWORD, TIME, TOKEN), params)) {
       Log.d("elango-initActForQRCode", params.toString() + "-----" + params.getString(SSID) + " ; " + params.getString(PASSWORD) + " ; " + params.getInt(TIME) + " ; " + params.getString(TOKEN))
-      mITuyaCameraActivator = TuyaHomeSdk.getActivatorInstance().newCameraDevActivator(TuyaCameraActivatorBuilder()
-              .setSsid(params.getString(SSID))
-              .setContext(reactApplicationContext.applicationContext)
-              .setPassword(params.getString(PASSWORD))
-              //.setActivatorModel(ActivatorModelEnum.TY_QR)
-              .setTimeOut(params.getInt(TIME).toLong())
-              //.setTimeOut(params.getString(TIME)!!.toLong())
-              .setToken(params.getString(TOKEN)).setListener(getITuyaSmartCameraActivatorListener(promise)))
-      Log.d("elango-initActForQRCode", mITuyaCameraActivator.toString())
-      mITuyaCameraActivator?.start()
+      if(params.getString(SSID) != null && params.getString(PASSWORD) != null && params.getString(TOKEN) != null) {
+        mITuyaCameraActivator = TuyaHomeSdk.getActivatorInstance().newCameraDevActivator(TuyaCameraActivatorBuilder()
+                .setSsid(params.getString(SSID))
+                .setContext(reactApplicationContext.applicationContext)
+                .setPassword(params.getString(PASSWORD))
+                //.setActivatorModel(ActivatorModelEnum.TY_QR)
+                .setTimeOut(params.getInt(TIME).toLong())
+                //.setTimeOut(params.getString(TIME)!!.toLong())
+                .setToken(params.getString(TOKEN)).setListener(getITuyaSmartCameraActivatorListener(promise)))
+        Log.d("elango-initActForQRCode", mITuyaCameraActivator.toString())
+        mITuyaCameraActivator?.start()
+      } else {
+        promise.reject("121", "Halt Due to Multiple call.")
+      }
     }
 
   }
 
   @ReactMethod
   fun registerForPushNotification(params: ReadableMap) {
-      Log.d("elango-registerForPushNotification", params.toString() + "-----" + params.getString("token"))
-      if (ReactParamsCheck.checkParams(arrayOf("token"), params)) {
-          TuyaHomeSdk.getPushInstance().registerDevice(params.getString("token"), "FCM", object : IResultCallback {
-            override fun onError(code: String, error: String) {
-              Log.d("TAG-FCM", "Error-" + error)
-            }
+    Log.d("elango-registerForPushNotification", params.toString() + "-----" + params.getString("token"))
+    if (ReactParamsCheck.checkParams(arrayOf("token"), params)) {
+      TuyaHomeSdk.getPushInstance().registerDevice(params.getString("token"), "FCM", object : IResultCallback {
+        override fun onError(code: String, error: String) {
+          Log.d("TAG-FCM", "Error-" + error)
+        }
 
-            override fun onSuccess() {
-              Log.d("TAG-FCM", "Success")
-            }
-          })
-      }
+        override fun onSuccess() {
+          Log.d("TAG-FCM", "Success")
+        }
+      })
+    }
   }
 
   @ReactMethod
   fun initActivator(params: ReadableMap, promise: Promise) {
     if (ReactParamsCheck.checkParams(arrayOf(HOMEID, SSID, PASSWORD, TIME, TYPE), params)) {
+
       TuyaHomeSdk.getActivatorInstance().getActivatorToken(params.getDouble(HOMEID).toLong(), object : ITuyaActivatorGetToken {
         override fun onSuccess(token: String) {
           mITuyaActivator = TuyaHomeSdk.getActivatorInstance().newActivator(ActivatorBuilder()
@@ -279,6 +284,9 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
 
         /* *-* moved to Format sdcard callback *-* */
         promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
+        /*val map: WritableMap = Arguments.createMap()
+        map.putString("is_timeout", "true")
+        promise.resolve(map)*/
       }
 
       /**

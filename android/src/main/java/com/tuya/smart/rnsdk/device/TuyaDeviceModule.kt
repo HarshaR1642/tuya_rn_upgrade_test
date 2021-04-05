@@ -19,7 +19,21 @@ import com.tuya.smart.rnsdk.utils.Constant.getIResultCallback
 import com.tuya.smart.rnsdk.utils.ReactParamsCheck
 import com.tuya.smart.rnsdk.utils.TuyaReactUtils
 import com.tuya.smart.sdk.api.IDevListener
+import com.tuya.smart.sdk.api.IResultCallback
 import com.tuya.smart.sdk.api.ITuyaDevice
+import com.tuyasmart.camera.devicecontrol.ITuyaCameraDevice
+import com.tuyasmart.camera.devicecontrol.TuyaCameraDeviceControlSDK
+import com.tuyasmart.camera.devicecontrol.api.ITuyaCameraDeviceControlCallback
+import com.tuyasmart.camera.devicecontrol.bean.DpSDFormat
+import com.tuyasmart.camera.devicecontrol.bean.DpSDFormatStatus
+import com.tuyasmart.camera.devicecontrol.bean.DpSDRecordModel
+import com.tuyasmart.camera.devicecontrol.bean.DpSDStatus
+import com.tuyasmart.camera.devicecontrol.model.DpNotifyModel
+import com.tuyasmart.camera.devicecontrol.model.RecordMode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -178,120 +192,106 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
         return TuyaHomeSdk.newDeviceInstance(devId);
     }
     @ReactMethod
-      fun resetDevice(params: ReadableMap, promise: Promise) {
+    fun resetDevice(params: ReadableMap, promise: Promise) {
         Log.d("elango-resetDevice", "elango-resetDevice")
         if (ReactParamsCheck.checkParams(arrayOf(DEVID), params)) {
-          try {
-            //set Chime setting to Mechanical
-            val mTuyaDevice: ITuyaDevice? = TuyaHomeSdk.newDeviceInstance(params.getString(DEVID))
-            mTuyaDevice?.publishDps("{\"165\": \"1\"}", object : IResultCallback {
-              override fun onError(code: String, error: String) {
-                //Log.d(TAG, " publishDps - onError : " + error);
-              }
+            try {
 
-              override fun onSuccess() {
-                //Log.d(TAG, " publishDps - onSuccess : ");
-              }
-            })
 
-            val mTuyaCameraDevice: ITuyaCameraDevice?  = TuyaCameraDeviceControlSDK.getCameraDeviceInstance(params.getString(DEVID))
-            //set Recording to Event Recording
-            mTuyaCameraDevice!!.publishCameraDps(DpSDRecordModel.ID, RecordMode.EVENT.dpValue)
+                val mTuyaCameraDevice: ITuyaCameraDevice?  = TuyaCameraDeviceControlSDK.getCameraDeviceInstance(params.getString(DEVID))
+                val mTuyaDevice: ITuyaDevice? = TuyaHomeSdk.newDeviceInstance(params.getString(DEVID))
 
-            // Format the camera
-            mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDFormat.ID, object : ITuyaCameraDeviceControlCallback<Boolean> {
-              override fun onSuccess(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, o: Boolean) {
-                Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormat-onSuccess : $s, $o")
-                //ToastUtil.shortToast(this@StorageSettingActivity, "Successfully Formatted.")
+                if(mTuyaCameraDevice != null && mTuyaCameraDevice.isSupportCameraDps(DpSDRecordModel.ID) && mTuyaCameraDevice.isSupportCameraDps(DpSDStatus.ID) ) {
+                    Log.d("elango-resetDevice", "elango-resetDevice , " + mTuyaCameraDevice + ", " + mTuyaCameraDevice.isSupportCameraDps("165") + ", " + mTuyaCameraDevice.isSupportCameraDps(DpSDRecordModel.ID) + ", " + mTuyaCameraDevice.isSupportCameraDps(DpSDStatus.ID))
+                    //set Chime setting to Mechanical
+                    if (mTuyaDevice != null) {
+                        mTuyaDevice.publishDps("{\"165\": \"1\"}", object : IResultCallback {
+                            override fun onError(code: String, error: String) {
+                                //Log.d(TAG, " publishDps - onError : " + error);
+                            }
 
-    //            promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
-                handleFormatting(params.getString(DEVID), promise)
-                /*try {
-                  mTuyaCameraDevice.onDestroy()
-                } catch (ex: Exception) {
-                  ex.printStackTrace()
-                }*/
-              }
+                            override fun onSuccess() {
+                                //Log.d(TAG, " publishDps - onSuccess : ");
+                            }
+                        })
+                    }
 
-              override fun onFailure(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, s1: String, s2: String) {
-                Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormat-onFailure : $s, $s1, $s2")
-                //ToastUtil.shortToast(this@StorageSettingActivity, "Format failed.")
+                    //set Recording to Event Recording
+                    if (mTuyaCameraDevice != null) {
+                        mTuyaCameraDevice.publishCameraDps(DpSDRecordModel.ID, RecordMode.EVENT.dpValue)
+                    }
 
-    //            promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
-                promise.reject(s, s1)
-                try {
-                  mTuyaCameraDevice.onDestroy()
-                } catch (ex: Exception) {
-                  ex.printStackTrace()
+                    // Format the camera
+                    if (mTuyaCameraDevice != null) {
+                        mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDFormat.ID, object : ITuyaCameraDeviceControlCallback<Boolean> {
+                            override fun onSuccess(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, o: Boolean) {
+                                Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormat-onSuccess : $s, $o")
+                                //ToastUtil.shortToast(this@StorageSettingActivity, "Successfully Formatted.")
+
+                                //            promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
+                                GlobalScope.launch(Dispatchers.Main) {
+                                    handleFormatting(params.getString(DEVID), promise)
+                                }
+                            }
+
+                            override fun onFailure(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, s1: String, s2: String) {
+                                Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormat-onFailure : $s, $s1, $s2")
+                                //ToastUtil.shortToast(this@StorageSettingActivity, "Format failed.")
+
+                                //            promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
+                                //promise.reject(s, s1)
+                                val map: WritableMap = Arguments.createMap()
+                                map.putString("success", "false")
+                                promise.resolve(map)
+                                try {
+                                    mTuyaCameraDevice.onDestroy()
+                                } catch (ex: Exception) {
+                                    ex.printStackTrace()
+                                }
+                            }
+                        })
+                    }
+                    mTuyaCameraDevice.publishCameraDps(DpSDFormat.ID, true)
+
+                } else {
+                    Log.d("elango-resetDevice", "elango-resetDevice , " + mTuyaCameraDevice + ", fails")
+
+                    val map: WritableMap = Arguments.createMap()
+                    map.putString("success", "false")
+                    promise.resolve(map)
                 }
-              }
-            })
-            mTuyaCameraDevice.publishCameraDps(DpSDFormat.ID, true)
-          } catch (e: Exception) {
-            e.printStackTrace()
+            } catch (e: Exception) {
+                e.printStackTrace()
 
-    //        promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
-          }
+                //        promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
+            }
         }
-      }
+    }
 
-      /*fun handleFormatting(devId: String?, promise: Promise) {
-        val mTuyaCameraDevice: ITuyaCameraDevice?  = TuyaCameraDeviceControlSDK.getCameraDeviceInstance(devId)
-        // Format the camera
-        mTuyaCameraDevice!!.registorTuyaCameraDeviceControlCallback(DpSDFormatStatus.ID, object : ITuyaCameraDeviceControlCallback<Boolean> {
-          override fun onSuccess(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, o: Boolean) {
-            Log.d("elango-resetDevice", "elango-handleFormatting-DpSDFormatStatus-onSuccess : $s, $o")
-            //ToastUtil.shortToast(this@StorageSettingActivity, "Successfully Formatted.")
-
-    //            promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
-            try {
-              mTuyaCameraDevice.onDestroy()
-            } catch (ex: Exception) {
-              ex.printStackTrace()
-            }
-          }
-
-          override fun onFailure(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, s1: String, s2: String) {
-            Log.d("elango-resetDevice", "elango-handleFormatting-DpSDFormatStatus-onFailure : $s, $s1, $s2")
-            //ToastUtil.shortToast(this@StorageSettingActivity, "Format failed.")
-
-            //promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
-            promise.reject(s, s1)
-            try {
-              mTuyaCameraDevice.onDestroy()
-            } catch (ex: Exception) {
-              ex.printStackTrace()
-            }
-          }
-        })
-
-        mTuyaCameraDevice.publishCameraDps(DpSDFormatStatus.ID, null);
-      }*/
-
-      var formatStatus = 0
-      private fun handleFormatting(devId: String?, promise: Promise) {
+    var formatStatus = 0
+    private suspend fun handleFormatting(devId: String?, promise: Promise) {
         val mTuyaCameraDevice: ITuyaCameraDevice?  = TuyaCameraDeviceControlSDK.getCameraDeviceInstance(devId)
         formatStatus = 0
         if (mTuyaCameraDevice != null) {
-          mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDFormatStatus.ID, object : ITuyaCameraDeviceControlCallback<Int> {
-            override fun onSuccess(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, o: Int) {
-              //showPublishTxt.setText("LAN/Cloud query result: " + o);
-              Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormatStatus-onSuccess : $s, $o")
-              //hideProgressDialog();
-              //ToastUtil.shortToast(StorageSettingActivity.this,"Successfully Formatted.");
-              formatStatus = o
-            }
+            mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDFormatStatus.ID, object : ITuyaCameraDeviceControlCallback<Int> {
+                override fun onSuccess(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, o: Int) {
+                    //showPublishTxt.setText("LAN/Cloud query result: " + o);
+                    Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormatStatus-onSuccess : $s, $o")
+                    //hideProgressDialog();
+                    //ToastUtil.shortToast(StorageSettingActivity.this,"Successfully Formatted.");
+                    formatStatus = o
+                }
 
-            override fun onFailure(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, s1: String, s2: String) {
-              Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormatStatus-onFailure : $s, $s1, $s2")
-              //hideProgressDialog();
-              //ToastUtil.shortToast(StorageSettingActivity.this,"Format failed.");
-              formatStatus = -1
-            }
-          })
-          mTuyaCameraDevice.publishCameraDps(DpSDFormatStatus.ID, null)
+                override fun onFailure(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, s1: String, s2: String) {
+                    Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormatStatus-onFailure : $s, $s1, $s2")
+                    //hideProgressDialog();
+                    //ToastUtil.shortToast(StorageSettingActivity.this,"Format failed.");
+                    formatStatus = -1
+                }
+            })
+            mTuyaCameraDevice.publishCameraDps(DpSDFormatStatus.ID, null)
         } else {
-          formatStatus = -1
+            formatStatus = -1
         }
 
         //Log.d(TAG, "elango-publishCameraDps-DpSDFormatStatus");
@@ -299,28 +299,31 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
         // 30 second timeout
         var i = 30
         while (i > 0) {
-          if (formatStatus >= 0 && formatStatus < 100) {
-            try {
-              Thread.sleep(1000)
-            } catch (e: InterruptedException) {
-              e.printStackTrace()
+            if (formatStatus >= 0 && formatStatus < 100) {
+                /*try {
+                  Thread.sleep(1000)
+                } catch (e: InterruptedException) {
+                  e.printStackTrace()
+                }*/
+                delay(1000L)
+                mTuyaCameraDevice?.publishCameraDps(DpSDFormatStatus.ID, null)
+                //Log.d(TAG, "elango-publishCameraDps-DpSDFormatStatus :" + mTuyaCameraDevice.queryIntegerCurrentCameraDps(DpSDFormatStatus.ID));
+            } else if (formatStatus == 100) {
+                break
+            } else {
+                break
             }
-            mTuyaCameraDevice?.publishCameraDps(DpSDFormatStatus.ID, null)
-            //Log.d(TAG, "elango-publishCameraDps-DpSDFormatStatus :" + mTuyaCameraDevice.queryIntegerCurrentCameraDps(DpSDFormatStatus.ID));
-          } else if (formatStatus == 100) {
-            break
-          } else {
-            break
-          }
-          i--
+            i--
         }
 
-        promise.resolve(TuyaReactUtils.parseToWritableMap("success"))
+        val map: WritableMap = Arguments.createMap()
+        map.putString("success", "true")
+        promise.resolve(map)
         try {
-          mTuyaCameraDevice?.onDestroy()
+            mTuyaCameraDevice?.onDestroy()
         } catch (ex: Exception) {
-          ex.printStackTrace()
+            ex.printStackTrace()
         }
-      }
+    }
 
 }
