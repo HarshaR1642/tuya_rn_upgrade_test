@@ -296,7 +296,7 @@
     [self checkPhotoPermision:^(BOOL result) {
         if (result) {
             [self.camera snapShoot:^{
-                [TuyaAppProgressUtils showAlertForView:self withMessage:@"A Screenshot has been saved to your photos gallery." withTitle:@"Success"];
+                [TuyaAppProgressUtils showAlertForView:self withMessage:@"A screenshot has been saved to your photo gallery." withTitle:@"Success"];
             } failure:^(NSError *error) {
                 [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to save" withTitle:@"Failed"];
             }];
@@ -309,7 +309,7 @@
         if (result) {
             if (self.camera.isRecording) {
                 [self.camera stopRecord:^{
-                    [TuyaAppProgressUtils showAlertForView:self withMessage:@"Video has been saved to your photos gallery." withTitle:@"Success"];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:@"A video has been saved to your photo gallery." withTitle:@"Success"];
                 } failure:^(NSError *error) {
                     [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to save" withTitle:@"Error"];
                 }];
