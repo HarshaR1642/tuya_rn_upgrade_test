@@ -186,7 +186,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             //ToastUtil.shortToast(CameraLivePreviewActivity.this, "record success " + msg.obj);
             AlertDialog.Builder builder = new AlertDialog.Builder(CameraLivePreviewActivity.this);
             builder.setTitle("Success");
-            builder.setMessage("Video has been saved to your photos gallery.");
+            builder.setMessage("A video has been saved to your photo gallery.");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
@@ -204,7 +204,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             //ToastUtil.shortToast(CameraLivePreviewActivity.this, "snapshot success " + msg.obj);
             AlertDialog.Builder builder = new AlertDialog.Builder(CameraLivePreviewActivity.this);
             builder.setTitle("Success");
-            builder.setMessage("A screenshot has been saved to your photos gallery.");
+            builder.setMessage("A screenshot has been saved to your photo gallery.");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();

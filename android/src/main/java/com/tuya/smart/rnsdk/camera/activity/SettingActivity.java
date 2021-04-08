@@ -155,6 +155,17 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     public void run() {
                         Log.d(TAG, "elango-RemoveDevice onFailure-:" + message);
                         hideProgressDialog();
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+                        builder.setTitle("Error");
+                        builder.setMessage("Error in removing the camera.");
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
                     }
                 });
             }
@@ -367,8 +378,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 case 1: // Mechanical
                     txt_ChimeType.setText("Mechanical");
                     break;
-                case 2: // Wireless
-                    txt_ChimeType.setText("Wireless");
+                case 2: // Digital
+                    txt_ChimeType.setText("Digital");
                     break;
                 case 3: // No Bells
                     txt_ChimeType.setText("No Bells");
@@ -536,7 +547,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         builder.setTitle("Chime Type");
 
         // add a list
-        String[] strings = {"Mechanical", "Wireless", "No Bells"};
+        String[] strings = {"Mechanical", "Digital", "No Bells"};
         builder.setItems(strings, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -555,7 +566,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         });
                         break;
-                    case 1: // Wireless
+                    case 1: // Digital
                         showProgressDialog();
                         mTuyaDevice.publishDps("{\"165\": \"2\"}", new IResultCallback() {
                             @Override
