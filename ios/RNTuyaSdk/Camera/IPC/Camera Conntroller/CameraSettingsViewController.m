@@ -105,7 +105,7 @@
             FCAlertView *alert = [[FCAlertView alloc] init];
             [alert showAlertInView:weakSelf
                          withTitle:@"Error"
-                      withSubtitle:@"Error in deleting the camera from asset"
+                      withSubtitle:@"Error in removing the camera."
                    withCustomImage:nil
                withDoneButtonTitle:@"OK"
                         andButtons:nil];
@@ -157,7 +157,7 @@
             return @"Mechanical";
             break;
         case 2:
-            return @"Wireless";
+            return @"Digital";
             break;
         case 3:
             return @"No Bells";
@@ -379,7 +379,7 @@
 - (void)changeChimeSettingsAction {
     NSArray *options = @[@{kTitle: @"Mechanical",
                            kValue: @"1"},
-                         @{kTitle: @"Wireless",
+                         @{kTitle: @"Digital",
                            kValue: @"2"},
                          @{kTitle: @"No Bells",
                            kValue: @"3"}];
