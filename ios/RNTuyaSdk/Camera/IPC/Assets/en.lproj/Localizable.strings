@@ -755,9 +755,9 @@
 "ipc_electric_power_source_batt" = "Battery";
 "ipc_electric_power_source_wire" = "Power Cable (Charging Battery)";
 "ipc_electric_title" = "Power Management Settings";
-"ipc_errmsg_change_definition_failed" = "Failed to change definition";
+"ipc_errmsg_change_definition_failed" = "Failed to change the video resolution";
 "ipc_errmsg_device_unavailable" = "Failed to connect to the device";
-"ipc_errmsg_mic_failed" = "Timeout, dialog failed";
+"ipc_errmsg_mic_failed" = "Two way communication failed";
 "ipc_errmsg_preview_failed" = "Failed to load preview";
 "ipc_errmsg_record_failed" = "Timeout, recording failed";
 "ipc_errmsg_record_pause_failed" = "Failed to pause playback";
@@ -821,8 +821,8 @@
 "End" = "End";
 "Change Speed Failed" = "Change Speed Failed";
 "Switch Table" = "Switch Table";
-"enable mute failed" = "enable mute failed";
-"record failed" = "Record Failed";
+"enable mute failed" = "Failed to mute";
+"record failed" = "Failed to record the video";
 "Photo library permission denied" = "Photo library permission denied";
 "Video failed save to photo library" = "Video failed save to photo library";
 "Normal" = "Normal";
