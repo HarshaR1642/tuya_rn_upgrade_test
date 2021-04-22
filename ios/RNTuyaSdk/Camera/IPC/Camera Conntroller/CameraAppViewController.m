@@ -249,7 +249,7 @@
     [self.camera enableMute:!self.camera.isMuted success:^{
         NSLog(@"enable mute success");
     } failure:^(NSError *error) {
-        [TuyaAppProgressUtils showAlertForView:self withMessage:@"enable mute failed" withTitle:@""];
+        [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to mute" withTitle:@""];
     }];
 }
 
@@ -347,7 +347,7 @@
         [self.camera enableMute:TRUE success:^{
             NSLog(@"enable mute success");
         } failure:^(NSError *error) {
-            [TuyaAppProgressUtils showAlertForView:self withMessage:@"enable mute failed" withTitle:@""];
+            [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to mute" withTitle:@""];
         }];
     }else {
         [self.camera startTalk:^{
