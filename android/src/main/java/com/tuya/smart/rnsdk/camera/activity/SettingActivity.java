@@ -314,7 +314,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private void showProgressDialog() {
         progressDialog = new ProgressDialog(SettingActivity.this);
         progressDialog.setMessage("Loading..");
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(true);
         progressDialog.show();
     }
 
