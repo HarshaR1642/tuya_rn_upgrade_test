@@ -471,7 +471,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     dialog.dismiss();
 
                     rnOperationHelper.performOperation(RNOperationHelper.Operation.REMOVE_CAMERA, devId);
-                    showProgressDialog();
+                    showProgressDialog(false);
                 }
             });
             builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
