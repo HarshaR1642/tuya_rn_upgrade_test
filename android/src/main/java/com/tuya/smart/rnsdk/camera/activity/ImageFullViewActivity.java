@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.squareup.picasso.Picasso;
 import com.tuya.drawee.view.DecryptImageView;
 import com.tuya.smart.rnsdk.R;
 
@@ -22,8 +23,8 @@ public class ImageFullViewActivity extends AppCompatActivity {
 
         private ScaleGestureDetector mScaleGestureDetector;
         private float mScaleFactor = 1.0f;
-        //private ImageView mImageView;
         private DecryptImageView mImageView;
+        //private ImageView mImageView;
 
     String TAG = "ImageFullViewActivity";
 
@@ -57,15 +58,16 @@ public class ImageFullViewActivity extends AppCompatActivity {
                 }
                 DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).build();
                 mImageView.setController(controller);
-                /*try {
-                    Log.d(TAG, "elango-attachPics-url:" + attachPics);
-                    URL url = new URL(attachPics);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    mImageView.setImageBitmap(bmp);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }*/
             }
+            /*try {
+                Picasso.get()
+                        .load(attachPics)
+                        .placeholder(R.drawable.img_place_holder)
+                        .error(R.drawable.img_place_holder)
+                        .into(mImageView);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }*/
         }
 
         @Override
