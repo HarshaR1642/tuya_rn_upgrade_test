@@ -15,7 +15,7 @@
 static TuyaAppTheme *_theme = nil;
 + (TuyaAppTheme *)theme {
     if (!_theme) {
-        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"ThemeColor1" ofType:@"plist"];
+        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"RentlyCameraTheme" ofType:@"plist"];
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
         for (NSString *key in [dict.allKeys copy]) {
             NSString *value = [dict objectForKey:key];

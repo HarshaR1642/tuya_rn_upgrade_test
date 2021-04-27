@@ -336,26 +336,18 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         hideProgressDialog();
         if(key.equalsIgnoreCase(DpBasicFlip.ID)) {
-            toggle_FlipScreen.setOnCheckedChangeListener (null); // removing listener
             toggle_FlipScreen.setChecked(Boolean.parseBoolean(value));
-            toggle_FlipScreen.setOnCheckedChangeListener(this); // adding listener
         } else if(key.equalsIgnoreCase(DpBasicOSD.ID)) {
-            toggle_OSD.setOnCheckedChangeListener (null); // removing listener
             toggle_OSD.setChecked(Boolean.parseBoolean(value));
-            toggle_OSD.setOnCheckedChangeListener(this); // adding listener
         } else if(key.equalsIgnoreCase(DpMotionSwitch.ID)) {
-            toggle_MotionDetection.setOnCheckedChangeListener (null); // removing listener
             toggle_MotionDetection.setChecked(Boolean.parseBoolean(value));
-            toggle_MotionDetection.setOnCheckedChangeListener(this); // adding listener
             if(Boolean.parseBoolean(value)) {
                 layout_MotionSensitivity.setVisibility(View.VISIBLE);
             } else {
                 layout_MotionSensitivity.setVisibility(View.GONE);
             }
         } else if(key.equalsIgnoreCase(DpSDRecordSwitch.ID)) {
-            toggle_LocalRecording.setOnCheckedChangeListener (null); // removing listener
             toggle_LocalRecording.setChecked(Boolean.parseBoolean(value));
-            toggle_LocalRecording.setOnCheckedChangeListener(this); // adding listener
             if(Boolean.parseBoolean(value)) {
                 layout_RecordType.setVisibility(View.VISIBLE);
             } else {
@@ -479,7 +471,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     dialog.dismiss();
 
                     rnOperationHelper.performOperation(RNOperationHelper.Operation.REMOVE_CAMERA, devId);
-                    showProgressDialog(false);
+                    showProgressDialog();
                 }
             });
             builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
