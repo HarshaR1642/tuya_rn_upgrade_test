@@ -2,23 +2,27 @@ package com.tuya.smart.rnsdk.camera.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.squareup.picasso.Picasso;
 import com.tuya.drawee.view.DecryptImageView;
 import com.tuya.smart.rnsdk.R;
 import com.tuya.smart.rnsdk.camera.bean.CameraMessageBean;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -31,6 +35,7 @@ import javax.crypto.NoSuchPaddingException;
 
 public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAdapter.MyViewHolder> {
 
+    private Context context;
     private LayoutInflater mInflater;
     private List<CameraMessageBean> cameraMessageBeans;
     private OnItemListener listener;
@@ -39,6 +44,7 @@ public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAd
 
     public AlarmDetectionAdapter(Context context, List<CameraMessageBean> cameraMessageBeans) {
         mInflater = LayoutInflater.from(context);
+        this.context = context;
         this.cameraMessageBeans = cameraMessageBeans;
     }
 
@@ -92,7 +98,8 @@ public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAd
     class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView mTvStartTime;
         private TextView mTvDescription;
-        private DecryptImageView mSnapshot;
+        //private DecryptImageView mSnapshot;
+        private ImageView mSnapshot;
 
         public MyViewHolder(final View view) {
             super(view);
@@ -105,28 +112,13 @@ public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAd
         private void showPicture(CameraMessageBean cameraMessageBean) {
             String attachPics = cameraMessageBean.getAttachPics();
             mSnapshot.setVisibility(View.VISIBLE);
-            if (attachPics.contains("@")) {
+            /*if (attachPics.contains("@")) {
                 int index = attachPics.lastIndexOf("@");
                 try {
                     String decryption = attachPics.substring(index + 1);
                     String imageUrl = attachPics.substring(0, index);
                     Log.d(TAG, "elango message showPicture : " + imageUrl +", " + decryption);
                     mSnapshot.setImageURI(imageUrl, decryption.getBytes());
-
-                    /*ITuyaIPCTool tool = TuyaIPCSdk.getTool();
-                    if (tool != null) {
-                        tool.downloadEncryptedImg(imageUrl, decryption, new ITuyaResultCallback<Bitmap>() {
-                            @Override
-                            public void onSuccess(Bitmap result) {
-                                Log.d(TAG, "elango message downloadEncryptedImg onSuccess : " + result);
-                            }
-
-                            @Override
-                            public void onError(String errorCode, String errorMessage) {
-                                Log.d(TAG, "elango message downloadEncryptedImg onSuccess : " + errorCode +", " + errorMessage);
-                            }
-                        });
-                    }*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -139,6 +131,15 @@ public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAd
                 }
                 DraweeController controller = Fresco.newDraweeControllerBuilder().setUri(uri).build();
                 mSnapshot.setController(controller);
+            }*/
+            try {
+                Picasso.get()
+                        .load(attachPics)
+                        .placeholder(R.drawable.img_place_holder)
+                        .error(R.drawable.img_place_holder)
+                        .into(mSnapshot);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

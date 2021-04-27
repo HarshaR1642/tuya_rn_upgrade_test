@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/tuya_page_bg"
-    tools:context="com.tuya.smart.rnsdk.camera.activity.ImageFullViewActivity">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:fresco="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/tuya_page_bg"
+             tools:context="com.tuya.smart.rnsdk.camera.activity.ImageFullViewActivity">
 
     <!--<ImageView
         android:id="@+id/imageView"
@@ -37,12 +37,22 @@
         </LinearLayout>
     </ScrollView>-->
     <com.tuya.drawee.view.DecryptImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            fresco:actualImageScaleType="fitCenter"
+            fresco:roundedCornerRadius="@dimen/dp_4"
+            fresco:viewAspectRatio="1.85"/>
+    <!--fresco:placeholderImage="@drawable/img_place_holder"/>-->
+
+    <!-- to show the place holder properly above one has place holder alignment problem (only for image without encryption imageview will work)-->
+    <!--image alignment problem-->
+    <!--<ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        fresco:actualImageScaleType="fitCenter"
-        fresco:roundedCornerRadius="@dimen/dp_4"
-        fresco:viewAspectRatio="1.85"
-        />
+        android:src="@drawable/img_place_holder"
+        />-->
 </FrameLayout>
