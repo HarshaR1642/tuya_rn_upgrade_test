@@ -1054,8 +1054,24 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         super.onPause();
         mVideoView.onPause();
         if (isSpeaking) {
-            mCameraP2P.stopAudioTalk(null);
+            //mCameraP2P.stopAudioTalk(null);
+            mCameraP2P.stopAudioTalk(new OperationDelegateCallBack() {
+                @Override
+                public void onSuccess(int sessionId, int requestId, String data) {
+                    isSpeaking = false;
+                    mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_TALK_BACK_OVER, Constants.ARG1_OPERATE_SUCCESS));
+                }
+
+                @Override
+                public void onFailure(int sessionId, int requestId, int errCode) {
+                    isSpeaking = false;
+                    mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_TALK_BACK_OVER, Constants.ARG1_OPERATE_FAIL));
+
+                }
+            });
+            //muteOrUnMute(false);
         }
+        muteOrUnMute(false);
         if (isPlay) {
             mCameraP2P.stopPreview(new OperationDelegateCallBack() {
                 @Override
