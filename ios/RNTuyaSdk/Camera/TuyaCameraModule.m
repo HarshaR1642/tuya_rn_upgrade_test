@@ -33,12 +33,12 @@ RCT_EXPORT_METHOD(openLivePreview:(NSDictionary *)params resolver:(RCTPromiseRes
     NSString *uid = params[@"uid"];
     NSString *passwd = params[@"passwd"];
     NSString *devId = params[@"devId"];
-    NSArray *hideCameraOptionsArray = params[@"options"];
+//    NSArray *hideCameraOptionsArray = params[@"options"];
     
-    if(hideCameraOptionsArray != nil || [hideCameraOptionsArray count] != 0) {
-//        [[NSUserDefaults standardUserDefaults] setObject:hideCameraOptionsArray forKey:@"OPTIONS_ARRAY"];
-//        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
+//    if(hideCameraOptionsArray != nil || [hideCameraOptionsArray count] != 0) {
+////        [[NSUserDefaults standardUserDefaults] setObject:hideCameraOptionsArray forKey:@"OPTIONS_ARRAY"];
+////        [[NSUserDefaults standardUserDefaults] synchronize];
+//    }
 
     [[TuyaSmartUser sharedInstance] loginOrRegisterWithCountryCode:countryCode uid:uid password:passwd createHome:false success:^(id result) {
         [TuyaSmartDevice syncDeviceInfoWithDevId:devId homeId:nil success:^{

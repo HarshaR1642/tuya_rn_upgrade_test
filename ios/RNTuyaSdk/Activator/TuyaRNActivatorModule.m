@@ -129,7 +129,8 @@ RCT_EXPORT_METHOD(stopConfig:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromi
 }
 
 RCT_EXPORT_METHOD(registerForPushNotification:(NSDictionary *)params resolver:(RCTPromiseResolveBlock)resolver rejecter:(RCTPromiseRejectBlock)rejecter) {
-    if (params[@"token"]) {
+    NSString *token = params[@"token"];
+    if ([token length] != 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [TuyaSmartSDK sharedInstance].deviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"TUYA_DEVICE_TOKEN"];
         });
