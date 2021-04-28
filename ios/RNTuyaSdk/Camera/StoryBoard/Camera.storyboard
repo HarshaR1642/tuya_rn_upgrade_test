@@ -288,7 +288,6 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="lR4-D2-9UK"/>
                                         <exclude reference="0db-Co-54Y"/>
                                         <exclude reference="6ih-ie-i1y"/>
                                         <exclude reference="Smz-Lh-rMw"/>
@@ -300,6 +299,7 @@
                                         <exclude reference="VvU-f5-oge"/>
                                         <exclude reference="c3b-JI-oJL"/>
                                         <exclude reference="e51-k1-RkR"/>
+                                        <exclude reference="lR4-D2-9UK"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=compact">
@@ -314,12 +314,12 @@
                                 </variation>
                                 <variation key="heightClass=regular">
                                     <mask key="constraints">
-                                        <include reference="lR4-D2-9UK"/>
                                         <include reference="6ih-ie-i1y"/>
                                         <include reference="jBX-Gl-42Y"/>
                                         <include reference="F5Q-Th-UtG"/>
                                         <include reference="Ger-MS-mJR"/>
                                         <include reference="VvU-f5-oge"/>
+                                        <include reference="lR4-D2-9UK"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -945,6 +945,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1YG-iQ-INw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2662.3188405797105" y="152.67857142857142"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="oDt-2c-2wO">
+            <objects>
+                <viewController id="cpu-iJ-HYk" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vxb-jf-ZFn">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="N1P-om-yJr"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qTJ-6I-aQH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3319" y="89"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="k6U-TD-mZF">
