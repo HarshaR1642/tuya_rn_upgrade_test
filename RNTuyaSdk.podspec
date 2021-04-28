@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/Volst/react-native-tuya.git", :tag => "v#{s.version}" }
   s.source_files  = "ios/**/*.{h,m}"
   s.resource_bundles = {
-    'Resources' => ['ios/RNTuyaSdk/Camera/IPC/Assets/**/*.{lproj,png,strings}']
+    'Resources' => ['ios/RNTuyaSdk/Camera/**/*.{lproj,png,strings,storyboard}']
   }
 
   s.dependency 'React'
