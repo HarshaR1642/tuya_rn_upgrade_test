@@ -12,8 +12,7 @@ import com.tuya.smart.home.sdk.builder.ActivatorBuilder
 import com.tuya.smart.home.sdk.builder.TuyaCameraActivatorBuilder
 import com.tuya.smart.home.sdk.builder.TuyaGwActivatorBuilder
 import com.tuya.smart.home.sdk.builder.TuyaGwSubDevActivatorBuilder
-import com.tuya.smart.rnsdk.camera.activity.StorageSettingActivity
-import com.tuya.smart.rnsdk.camera.utils.ToastUtil
+import com.tuya.smart.rnsdk.utils.AirbrakeUtil
 import com.tuya.smart.rnsdk.utils.Constant.DEVID
 import com.tuya.smart.rnsdk.utils.Constant.HOMEID
 import com.tuya.smart.rnsdk.utils.Constant.PASSWORD
@@ -27,14 +26,6 @@ import com.tuya.smart.rnsdk.utils.TuyaReactUtils
 import com.tuya.smart.sdk.api.*
 import com.tuya.smart.sdk.bean.DeviceBean
 import com.tuya.smart.sdk.enums.ActivatorModelEnum
-import com.tuyasmart.camera.devicecontrol.ITuyaCameraDevice
-import com.tuyasmart.camera.devicecontrol.TuyaCameraDeviceControlSDK
-import com.tuyasmart.camera.devicecontrol.api.ITuyaCameraDeviceControlCallback
-import com.tuyasmart.camera.devicecontrol.bean.DpSDFormat
-import com.tuyasmart.camera.devicecontrol.bean.DpSDFormatStatus
-import com.tuyasmart.camera.devicecontrol.bean.DpSDRecordModel
-import com.tuyasmart.camera.devicecontrol.model.DpNotifyModel
-import com.tuyasmart.camera.devicecontrol.model.RecordMode
 
 
 class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -208,6 +199,10 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
        */
       override fun onError(var1: String, var2: String) {
         Log.d("elango-initActForQRCode-onError", var1 + ", " + var2)
+
+        AirbrakeUtil.init(reactApplicationContext)
+        AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - onError", var1 + ", " + var2)
+
         //promise.reject(var1, var2)
         if (var1.equals("1006") && var2.equals("time out", true)) {
           val map: WritableMap = Arguments.createMap()
@@ -223,6 +218,10 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
        */
       override fun onActiveSuccess(var1: DeviceBean) {
         Log.d("elango-initActForQRCode-onActiveSuccess", var1.toString())
+
+        AirbrakeUtil.init(reactApplicationContext)
+        AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - onActiveSuccess", var1.toString())
+
         //Log.d("elango-initActForQRCode", var1.toString())
         Log.d("elango-initActForQRCode", var1.getDevId())
         Log.d("elango-initActForQRCode", TuyaReactUtils.parseToWritableMap(var1).toString())
