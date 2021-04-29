@@ -59,6 +59,7 @@ import com.tuya.smart.home.sdk.callback.ITuyaHomeResultCallback;
 import com.tuya.smart.rnsdk.R;
 import com.tuya.smart.rnsdk.camera.utils.Constants;
 import com.tuya.smart.rnsdk.camera.utils.ToastUtil;
+import com.tuya.smart.rnsdk.utils.AirbrakeUtil;
 import com.tuya.smart.sdk.api.ITuyaGetBeanCallback;
 import com.tuya.smart.sdk.bean.DeviceBean;
 import com.tuyasmart.camera.devicecontrol.ITuyaCameraDevice;
@@ -319,6 +320,9 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                 }
             });
         }
+
+        AirbrakeUtil.init(this);
+        AirbrakeUtil.notifyLog("Camera Logs!", "Camera live feed - opened");
     }
 
     public static void afterLogin() {
