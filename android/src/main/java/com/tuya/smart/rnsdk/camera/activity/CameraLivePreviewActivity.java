@@ -1056,46 +1056,50 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
     @Override
     protected void onPause() {
         super.onPause();
-        mVideoView.onPause();
-        if (isSpeaking) {
-            //mCameraP2P.stopAudioTalk(null);
-            mCameraP2P.stopAudioTalk(new OperationDelegateCallBack() {
-                @Override
-                public void onSuccess(int sessionId, int requestId, String data) {
-                    isSpeaking = false;
-                    mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_TALK_BACK_OVER, Constants.ARG1_OPERATE_SUCCESS));
-                }
+        try {
+            mVideoView.onPause();
+            if (isSpeaking) {
+                //mCameraP2P.stopAudioTalk(null);
+                mCameraP2P.stopAudioTalk(new OperationDelegateCallBack() {
+                    @Override
+                    public void onSuccess(int sessionId, int requestId, String data) {
+                        isSpeaking = false;
+                        mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_TALK_BACK_OVER, Constants.ARG1_OPERATE_SUCCESS));
+                    }
 
-                @Override
-                public void onFailure(int sessionId, int requestId, int errCode) {
-                    isSpeaking = false;
-                    mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_TALK_BACK_OVER, Constants.ARG1_OPERATE_FAIL));
+                    @Override
+                    public void onFailure(int sessionId, int requestId, int errCode) {
+                        isSpeaking = false;
+                        mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_TALK_BACK_OVER, Constants.ARG1_OPERATE_FAIL));
 
-                }
-            });
-            //muteOrUnMute(false);
-        }
-        muteOrUnMute(false);
-        if (isPlay) {
-            mCameraP2P.stopPreview(new OperationDelegateCallBack() {
-                @Override
-                public void onSuccess(int sessionId, int requestId, String data) {
+                    }
+                });
+                //muteOrUnMute(false);
+            }
+            muteOrUnMute(false);
+            if (isPlay) {
+                mCameraP2P.stopPreview(new OperationDelegateCallBack() {
+                    @Override
+                    public void onSuccess(int sessionId, int requestId, String data) {
 
-                }
+                    }
 
-                @Override
-                public void onFailure(int sessionId, int requestId, int errCode) {
+                    @Override
+                    public void onFailure(int sessionId, int requestId, int errCode) {
 
-                }
-            });
-            isPlay = false;
-        }
-        if (null != mCameraP2P) {
-            mCameraP2P.removeOnP2PCameraListener();
-        }
-        AudioUtils.changeToNomal(this);
-        if (mSmartCameraP2P != null) {
-            mSmartCameraP2P.destroyCameraBusiness();
+                    }
+                });
+                isPlay = false;
+            }
+            if (null != mCameraP2P) {
+                mCameraP2P.removeOnP2PCameraListener();
+            }
+            AudioUtils.changeToNomal(this);
+            if (mSmartCameraP2P != null) {
+                mSmartCameraP2P.destroyCameraBusiness();
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
