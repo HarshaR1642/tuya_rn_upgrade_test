@@ -16,14 +16,14 @@ public class AirbrakeUtil {
     }
 
     public static void notifyLog(String title, String msg) {
-        RuntimeException e = new RuntimeException("Doorbell Logs - "+title + " - sapphire - " + android.os.Build.MODEL + " - " + getTimestamp());
+        RuntimeException e = new RuntimeException("Doorbell Logs - "+title + " - " + android.os.Build.MODEL + " - " + getTimestamp());
         HashMap<String, String> map = new HashMap<>();
         map.put("data", msg);
         AirbrakeNotifier.notify(e, map);
     }
 
     public static void notifyLog(String title, String msg1, String msg2) {
-        RuntimeException e = new RuntimeException("Doorbell Logs - "+title + " - sapphire - " + android.os.Build.MODEL + " - " + getTimestamp());
+        RuntimeException e = new RuntimeException("Doorbell Logs - "+title + " - " + android.os.Build.MODEL + " - " + getTimestamp());
         HashMap<String, String> map = new HashMap<>();
         map.put("data1", msg1);
         map.put("data2", msg2);
