@@ -196,28 +196,38 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
     fun resetDevice(params: ReadableMap, promise: Promise) {
         Log.d("elango-resetDevice", "elango-resetDevice")
 
-        AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - resetDevice")
+        AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - resetDevice - " + params)
 
         if (ReactParamsCheck.checkParams(arrayOf(DEVID), params)) {
             try {
                 val mTuyaCameraDevice: ITuyaCameraDevice?  = TuyaCameraDeviceControlSDK.getCameraDeviceInstance(params.getString(DEVID))
                 val mTuyaDevice: ITuyaDevice? = TuyaHomeSdk.newDeviceInstance(params.getString(DEVID))
+                AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - resetDevice - mTuyaCameraDevice : " + mTuyaCameraDevice + " - mTuyaDevice : " + mTuyaDevice)
 
                 //set Chime setting to Mechanical
                 if (mTuyaDevice != null) {
+                    AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - resetDevice - mTuyaDevice : " + mTuyaDevice)
                     mTuyaDevice.publishDps("{\"165\": \"1\"}", object : IResultCallback {
                         override fun onError(code: String, error: String) {
                             //Log.d(TAG, " publishDps - onError : " + error);
+                            AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - resetDevice - Chime setting - onError")
                         }
 
                         override fun onSuccess() {
                             //Log.d(TAG, " publishDps - onSuccess : ");
+                            AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - resetDevice - Chime setting - onSuccess")
                         }
                     })
                 }
 
-                if(mTuyaCameraDevice != null && mTuyaCameraDevice.isSupportCameraDps(DpSDRecordModel.ID) && mTuyaCameraDevice.isSupportCameraDps(DpSDStatus.ID) ) {
-                    Log.d("elango-resetDevice", "elango-resetDevice , " + mTuyaCameraDevice + ", " + mTuyaCameraDevice.isSupportCameraDps("165") + ", " + mTuyaCameraDevice.isSupportCameraDps(DpSDRecordModel.ID) + ", " + mTuyaCameraDevice.isSupportCameraDps(DpSDStatus.ID))
+                var chime = mTuyaCameraDevice?.isSupportCameraDps("165")
+                var sdRecordModel = mTuyaCameraDevice?.isSupportCameraDps(DpSDRecordModel.ID)
+                var sdStatus = mTuyaCameraDevice?.isSupportCameraDps(DpSDStatus.ID)
+                AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - resetDevice - mTuyaCameraDevice : " + mTuyaCameraDevice +", " + sdRecordModel + ", " + sdStatus)
+
+                if(mTuyaCameraDevice != null && sdRecordModel == true && sdStatus == true ) {
+                    AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - resetDevice - mTuyaCameraDevice : " + mTuyaCameraDevice + ", " + sdRecordModel + ", " + sdStatus)
+                    Log.d("elango-resetDevice", "elango-resetDevice , " + mTuyaCameraDevice +", " + sdRecordModel + ", " + sdStatus)
                     //set Recording to Event Recording
                     mTuyaCameraDevice.publishCameraDps(DpSDRecordModel.ID, RecordMode.EVENT.dpValue)
 
@@ -237,11 +247,11 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                                 val map: WritableMap = Arguments.createMap()
                                 map.putString("success", "false")
                                 promise.resolve(map)
-                                try {
+                                /*try {
                                     mTuyaCameraDevice.onDestroy()
                                 } catch (ex: Exception) {
                                     ex.printStackTrace()
-                                }
+                                }*/
                             }
                         }
 
@@ -257,14 +267,15 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                             val map: WritableMap = Arguments.createMap()
                             map.putString("success", "false")
                             promise.resolve(map)
-                            try {
+                            /*try {
                                 mTuyaCameraDevice.onDestroy()
                             } catch (ex: Exception) {
                                 ex.printStackTrace()
-                            }
+                            }*/
                         }
                     })
                     mTuyaCameraDevice.publishCameraDps(DpSDStatus.ID, true)
+                    AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDStatus ")
 
                 } else {
                     Log.d("elango-resetDevice", "elango-resetDevice , " + mTuyaCameraDevice + ", fails")
@@ -316,14 +327,15 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                 val map: WritableMap = Arguments.createMap()
                 map.putString("success", "false")
                 promise.resolve(map)
-                try {
+                /*try {
                     mTuyaCameraDevice.onDestroy()
                 } catch (ex: Exception) {
                     ex.printStackTrace()
-                }
+                }*/
             }
         })
         mTuyaCameraDevice.publishCameraDps(DpSDFormat.ID, true)
+        AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDFormat ")
     }
 
     var formatStatus = 0
@@ -348,6 +360,7 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                 }
             })
             mTuyaCameraDevice.publishCameraDps(DpSDFormatStatus.ID, null)
+            AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDFormatStatus ")
         } else {
             formatStatus = -1
         }
@@ -380,11 +393,11 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
 
         AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - handleFormatting - DpSDFormatStatus - onSuccess", "formatStatus" + " - "+ formatStatus)
 
-        try {
+        /*try {
             mTuyaCameraDevice?.onDestroy()
         } catch (ex: Exception) {
             ex.printStackTrace()
-        }
+        }*/
     }
 
 }
