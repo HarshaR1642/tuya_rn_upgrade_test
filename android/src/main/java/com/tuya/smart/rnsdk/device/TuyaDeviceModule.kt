@@ -282,6 +282,12 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
 
                 AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - onException", e.message)
             }
+        } else {
+            val map: WritableMap = Arguments.createMap()
+            map.putString("success", "false")
+            promise.resolve(map)
+
+            AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - Else", params.toString())
         }
     }
 
