@@ -268,6 +268,7 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
 
                 } else {
                     Log.d("elango-resetDevice", "elango-resetDevice , " + mTuyaCameraDevice + ", fails")
+                    AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - Else","elango-resetDevice , " + mTuyaCameraDevice + ", fails")
 
                     val map: WritableMap = Arguments.createMap()
                     map.putString("success", "false")
