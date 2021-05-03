@@ -247,11 +247,11 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                                 val map: WritableMap = Arguments.createMap()
                                 map.putString("success", "false")
                                 promise.resolve(map)
-                                try {
+                                /*try {
                                     mTuyaCameraDevice.onDestroy()
                                 } catch (ex: Exception) {
                                     ex.printStackTrace()
-                                }
+                                }*/
                             }
                         }
 
@@ -267,14 +267,15 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                             val map: WritableMap = Arguments.createMap()
                             map.putString("success", "false")
                             promise.resolve(map)
-                            try {
+                            /*try {
                                 mTuyaCameraDevice.onDestroy()
                             } catch (ex: Exception) {
                                 ex.printStackTrace()
-                            }
+                            }*/
                         }
                     })
                     mTuyaCameraDevice.publishCameraDps(DpSDStatus.ID, true)
+                    AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDStatus ")
 
                 } else {
                     Log.d("elango-resetDevice", "elango-resetDevice , " + mTuyaCameraDevice + ", fails")
@@ -334,6 +335,7 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
             }
         })
         mTuyaCameraDevice.publishCameraDps(DpSDFormat.ID, true)
+        AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDFormat ")
     }
 
     var formatStatus = 0
@@ -358,6 +360,7 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                 }
             })
             mTuyaCameraDevice.publishCameraDps(DpSDFormatStatus.ID, null)
+            AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDFormatStatus ")
         } else {
             formatStatus = -1
         }
