@@ -4,7 +4,7 @@ apply plugin: 'maven'
 
 
 buildscript {
-  ext.kotlin_version = '1.3.31'
+  ext.kotlin_version = '1.3.50'
   repositories {
 
     maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
@@ -49,10 +49,7 @@ android {
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
-  implementation 'com.alibaba:fastjson:1.1.67.android'
-  implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.6.0'
   implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0'
-  implementation 'com.tuya.smart:tuyasmart:3.17.6'
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
   implementation 'com.facebook.react:react-native:+'
   implementation 'de.greenrobot:eventbus:2.4.0'
@@ -60,7 +57,12 @@ dependencies {
   implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
   implementation 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
 
-  // tuya camera module
+  // tuya Home SDK
+  implementation 'com.tuya.smart:tuyasmart:3.17.6'
+  implementation 'com.alibaba:fastjson:1.1.67.android'
+  implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.6.0'
+
+  // tuya camera IPC SDK
   implementation 'com.tuya.smart:tuyasmart-ipc-camera-middleware:3.17.0r139h1'
   implementation 'com.tuya.smart:tuyasmart-ipc-camera-v2:3.17.0r139h1'
   implementation 'com.tuya.smart:tuyasmart-ipc-camera-utils:3.13.0r129h1'
@@ -82,6 +84,7 @@ dependencies {
   implementation "com.tuya.smart:tuyasmart-stencilwrapper:3.17.0.2r139"
   implementation "com.tuya.smart:tuyasmart-framework:3.17.0.2r139-external"
   implementation 'com.tuya.smart:tuyasmart-uispecs:0.0.5'
+
   implementation 'androidx.appcompat:appcompat:1.2.0'
   implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
   implementation "androidx.recyclerview:recyclerview:1.1.0"
@@ -97,8 +100,9 @@ repositories {
     // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
     url "$projectDir/../node_modules/react-native/android"
   }
+  // Tuya IoT repository address
   maven {
-    url 'https://maven-other.tuya.com/repository/maven-releases/'
+    url "https://maven-other.tuya.com/repository/maven-releases/"
   }
   maven {
     url 'https://maven-other.tuya.com/repository/maven-snapshots/'
