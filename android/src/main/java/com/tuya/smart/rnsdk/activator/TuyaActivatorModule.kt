@@ -98,6 +98,9 @@ class TuyaActivatorModule(reactContext: ReactApplicationContext) : ReactContextB
   @ReactMethod
   fun registerForPushNotification(params: ReadableMap) {
     Log.d("elango-registerForPushNotification", params.toString() + "-----" + params.getString("token"))
+    AirbrakeUtil.init(reactApplicationContext)
+    AirbrakeUtil.notifyLog("FCM TOKEN REGISTER!", "registerForPushNotification", params.getString("token"))
+
     if (ReactParamsCheck.checkParams(arrayOf("token"), params)) {
       TuyaHomeSdk.getPushInstance().registerDevice(params.getString("token"), "FCM", object : IResultCallback {
         override fun onError(code: String, error: String) {

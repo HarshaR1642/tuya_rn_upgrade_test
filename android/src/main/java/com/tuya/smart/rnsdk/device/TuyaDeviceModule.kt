@@ -36,6 +36,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.concurrent.timerTask
 
 
 class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -198,6 +200,8 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
 
         AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - resetDevice - " + params)
 
+        val timer = Timer()
+
         if (ReactParamsCheck.checkParams(arrayOf(DEVID), params)) {
             try {
                 val mTuyaCameraDevice: ITuyaCameraDevice?  = TuyaCameraDeviceControlSDK.getCameraDeviceInstance(params.getString(DEVID))
@@ -235,9 +239,10 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                     mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDStatus.ID, object : ITuyaCameraDeviceControlCallback<Int> {
                         override fun onSuccess(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, o: Int) {
                             Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDStatus-onSuccess : $s, $o")
-
                             AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDStatus - onSuccess", s + ", " + o)
-                            //ToastUtil.shortToast(this@StorageSettingActivity, "Successfully Formatted.")
+
+                            // cancel the timeout timer
+                            timer.cancel()
 
                             if (o != 5) { // if(o != 5 && o != 4) {
                                 formatSdCard(mTuyaCameraDevice, params, promise)
@@ -257,10 +262,10 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
 
                         override fun onFailure(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, s1: String, s2: String) {
                             Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDStatus-onFailure : $s, $s1, $s2")
-
                             AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDStatus - onFailure", s + ", "+ s1 + ", " + s2)
 
-                            //ToastUtil.shortToast(this@StorageSettingActivity, "Format failed.")
+                            // cancel the timeout timer
+                            timer.cancel()
 
                             //            promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
                             //promise.reject(s, s1)
@@ -276,6 +281,16 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
                     })
                     mTuyaCameraDevice.publishCameraDps(DpSDStatus.ID, true)
                     AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDStatus ")
+
+                    timer.schedule(timerTask {
+                        Log.d("elango-resetDevice", "Tuya Add Doorbell - DpSDStatus - timeout")
+                        AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDStatus - timeout")
+
+                        val map: WritableMap = Arguments.createMap()
+                        map.putString("success", "false")
+                        promise.resolve(map)
+                    }, 10000)
+
 
                 } else {
                     Log.d("elango-resetDevice", "elango-resetDevice , " + mTuyaCameraDevice + ", fails")
@@ -304,11 +319,17 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
     }
 
     private fun formatSdCard(mTuyaCameraDevice: ITuyaCameraDevice, params: ReadableMap, promise: Promise) {
+        val timer = Timer()
+
         // Format the camera
         mTuyaCameraDevice.registorTuyaCameraDeviceControlCallback(DpSDFormat.ID, object : ITuyaCameraDeviceControlCallback<Boolean> {
             override fun onSuccess(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, o: Boolean) {
                 Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormat-onSuccess : $s, $o")
                 AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDFormat - onSuccess", s + ", "+ o)
+
+                // cancel the timeout timer
+                timer.cancel()
+
                 //ToastUtil.shortToast(this@StorageSettingActivity, "Successfully Formatted.")
 
                 //            promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
@@ -320,6 +341,10 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
             override fun onFailure(s: String, action: DpNotifyModel.ACTION, sub_action: DpNotifyModel.SUB_ACTION, s1: String, s2: String) {
                 Log.d("elango-resetDevice", "elango-registorTuyaCameraDeviceControlCallback-DpSDFormat-onFailure : $s, $s1, $s2")
                 AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDFormat - onFailure", s + ", "+ s1 + ", " + s2)
+
+                // cancel the timeout timer
+                timer.cancel()
+
                 //ToastUtil.shortToast(this@StorageSettingActivity, "Format failed.")
 
                 //            promise.resolve(TuyaReactUtils.parseToWritableMap(var1))
@@ -336,6 +361,15 @@ class TuyaDeviceModule(reactContext: ReactApplicationContext) : ReactContextBase
         })
         mTuyaCameraDevice.publishCameraDps(DpSDFormat.ID, true)
         AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDFormat ")
+
+        timer.schedule(timerTask {
+            Log.d("elango-resetDevice", "Tuya Add Doorbell - DpSDFormat - timeout")
+            AirbrakeUtil.notifyLog("Camera Logs!", "Tuya Add Doorbell - DpSDFormat - timeout")
+
+            val map: WritableMap = Arguments.createMap()
+            map.putString("success", "false")
+            promise.resolve(map)
+        }, 10000)
     }
 
     var formatStatus = 0
