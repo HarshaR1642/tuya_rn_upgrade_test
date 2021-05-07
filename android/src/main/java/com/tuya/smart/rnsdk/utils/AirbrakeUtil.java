@@ -19,7 +19,8 @@ public class AirbrakeUtil {
         RuntimeException e = new RuntimeException("Doorbell Logs - "+title + " - " + android.os.Build.MODEL + " - " + getTimestamp());
         HashMap<String, String> map = new HashMap<>();
         map.put("data", msg);
-        AirbrakeNotifier.notify(e, map);
+        // no more airbrake logs needed
+        // AirbrakeNotifier.notify(e, map);
     }
 
     public static void notifyLog(String title, String msg1, String msg2) {
@@ -27,7 +28,8 @@ public class AirbrakeUtil {
         HashMap<String, String> map = new HashMap<>();
         map.put("data1", msg1);
         map.put("data2", msg2);
-        AirbrakeNotifier.notify(e, map);
+        // no more airbrake logs needed
+        // AirbrakeNotifier.notify(e, map);
     }
 
     private static String getTimestamp() {
