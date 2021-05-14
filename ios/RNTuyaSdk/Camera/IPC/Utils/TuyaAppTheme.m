@@ -95,10 +95,7 @@ static TuyaAppTheme *_theme = nil;
 //    tabBar.translucent = NO;
 }
 
-+ (void)initWebView {
-//    UIWebView *webView = [UIWebView appearance];
-//    webView.backgroundColor = [TuyaAppTheme theme].app_bg_color;
-    
++ (void)initWebView {    
     WKWebView *wkWebView = [WKWebView appearance];
     wkWebView.backgroundColor = [TuyaAppTheme theme].app_bg_color;
 }
