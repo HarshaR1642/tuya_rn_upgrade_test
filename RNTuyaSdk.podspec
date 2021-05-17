@@ -19,9 +19,9 @@ Pod::Spec.new do |s|
   }
 
   s.dependency 'React'
-  s.dependency 'TuyaSmartHomeKit'
+  s.dependency 'TuyaSmartHomeKit','~> 3.25.0'
+  s.dependency 'TuyaSmartCameraKit','~> 4.22.0'
   s.dependency 'TuyaCameraUIKit'
-  s.dependency 'TuyaSmartCameraKit'
   s.dependency 'TYEncryptImage'
   s.dependency 'DACircularProgress'
   s.dependency 'MBProgressHUD', '~> 0.9.2'
