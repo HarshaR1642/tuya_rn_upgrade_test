@@ -23,7 +23,7 @@
 
 
 
-@interface CameraSettingsViewController () <TuyaSmartCameraDPObserver, UITableViewDelegate, UITableViewDataSource>
+@interface CameraSettingsViewController () <TuyaSmartCameraDPObserver, UITableViewDelegate, UITableViewDataSource, ZMJTipViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView                        *settinngsTableView;
 @property (nonatomic, assign) BOOL                                      indicatorOn;
 @property (nonatomic, assign) BOOL                                      flipOn;
@@ -714,14 +714,20 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *data = [[[self.dataSource objectAtIndex:indexPath.section] objectForKey:kValue] objectAtIndex:indexPath.row];
-    if (![data objectForKey:kSwitch]) {
-        NSString *action = [data objectForKey:kAction];
-        if (action) {
-            SEL selector = NSSelectorFromString(action);
-            [self performSelector:selector withObject:nil afterDelay:0];
-        }
-    }
+//    NSDictionary *data = [[[self.dataSource objectAtIndex:indexPath.section] objectForKey:kValue] objectAtIndex:indexPath.row];
+//    if (![data objectForKey:kSwitch]) {
+//        NSString *action = [data objectForKey:kAction];
+//        if (action) {
+//            SEL selector = NSSelectorFromString(action);
+//            [self performSelector:selector withObject:nil afterDelay:0];
+//        }
+//    }
+    
+    ZMJTipView *view = [[ZMJTipView alloc] initWithText:@"Tip view within the green superview. Tap to dismiss."
+                                                    preferences:[TuyaAppTheme getToolTipGlobalPreference]
+                                                       delegate:nil];
+            [view showAnimated:YES forView:self.view withinSuperview:self.view];
+    
 }
 
 
