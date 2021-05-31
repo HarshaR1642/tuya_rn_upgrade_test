@@ -20,10 +20,11 @@
 #define kAction @"action"
 #define kArrow  @"arrow"
 #define kSwitch @"switch"
+#define kTag    @"tag"
 
 
 
-@interface CameraSettingsViewController () <TuyaSmartCameraDPObserver, UITableViewDelegate, UITableViewDataSource, ZMJTipViewDelegate>
+@interface CameraSettingsViewController () <TuyaSmartCameraDPObserver, UITableViewDelegate, UITableViewDataSource /*ZMJTipViewDelegate*/ >
 @property (weak, nonatomic) IBOutlet UITableView                        *settinngsTableView;
 @property (nonatomic, assign) BOOL                                      indicatorOn;
 @property (nonatomic, assign) BOOL                                      flipOn;
@@ -45,6 +46,8 @@
 @property (nonatomic, strong) TuyaSmartDevice                           *device;
 @property (nonatomic, strong) UIView                                    *headerView;
 @property (nonatomic, strong) NSString                                  *chimeSettings;
+@property (nonatomic, strong) ZMJTipView                                *toolTipView;
+@property (nonatomic, strong) NSArray                                   *toolTipArray;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint                 *tableTopConstraiint;
 @property (weak, nonatomic) IBOutlet UIButton                           *removeCameraButton;
 @property (strong, nonatomic) UIRefreshControl                          *refreshControl;
@@ -65,6 +68,9 @@
     } else {
         [self.settinngsTableView addSubview:_refreshControl];
     }
+    
+    self.toolTipArray = @[@"Indicator tool tip", @"Flip screen will flip the doorbell camera in preview screen", @"This enabled the timestamp watermark on video preview", @"Hibernate Tool Tip", @"This setting enables the night vision of the doorbell camera", @"PIR switch Tool tip" ,@"This setting enables the motion detection/ movement in front of camera and has 3 sensitivity levels", @"If Motion detection is on you can choose between 3 sensitivity levels.", @"Sound Detection Tool Tip", @"Sound Detection Sensitivity Tool Tip", @"This Setting let you see the SD card status / total used / capacity and reamiming value", @"SD Recording enables the doorbell recording" ,@"Recording mode lets you select the type of camera recording whether it should record all the time or only for motion detection" ,@"Reset WiFi is used to again add camera with changes WiFi settings / password", @"Battery Lock DP Tool Tip", @"Electric power tool tip", @"Electric power remaining tool tip", @"Chime type lets you select the desired doorbell ring tone for your home"];
+
 }
 
 
@@ -230,55 +236,57 @@
     NSMutableArray *dataSource = [NSMutableArray new];
     NSMutableArray *section0 = [NSMutableArray new];
     if ([self.dpManager isSupportDP:TuyaSmartCameraBasicIndicatorDPName]) {
-        [section0 addObject:@{kTitle:NSLocalizedString(@"ipc_basic_status_indicator", @""), kValue: @(self.indicatorOn), kAction: @"indicatorAction:", kSwitch: @"1"}];
+        [section0 addObject:@{kTitle:NSLocalizedString(@"ipc_basic_status_indicator", @""), kValue: @(self.indicatorOn), kAction: @"indicatorAction:", kSwitch: @"1", kTag: [NSNumber numberWithInt:0]}];
     }
     if ([self.dpManager isSupportDP:TuyaSmartCameraBasicFlipDPName]) {
-        [section0 addObject:@{kTitle: NSLocalizedString(@"ipc_basic_picture_flip", @""), kValue: @(self.flipOn), kAction: @"flipAction:", kSwitch: @"1"}];
+        [section0 addObject:@{kTitle: NSLocalizedString(@"ipc_basic_picture_flip", @""), kValue: @(self.flipOn), kAction: @"flipAction:", kSwitch: @"1", kTag: [NSNumber numberWithInt:1] }];
     }
     
     if ([self.dpManager isSupportDP:TuyaSmartCameraBasicOSDDPName]) {
-        [section0 addObject:@{kTitle: NSLocalizedString(@"ipc_basic_osd_watermark", @""), kValue: @(self.osdOn), kAction: @"osdAction:", kSwitch: @"1"}];
+        [section0 addObject:@{kTitle: NSLocalizedString(@"ipc_basic_osd_watermark", @""), kValue: @(self.osdOn), kAction: @"osdAction:", kSwitch: @"1", kTag: [NSNumber numberWithInt:2]}];
     }
     
     if ([self.dpManager isSupportDP:TuyaSmartCameraBasicPrivateDPName]) {
-        [section0 addObject:@{kTitle: NSLocalizedString(@"ipc_basic_hibernate", @""), kValue: @(self.privateOn), kAction: @"privateAction:", kSwitch: @"1"}];
+        [section0 addObject:@{kTitle: NSLocalizedString(@"ipc_basic_hibernate", @""), kValue: @(self.privateOn), kAction: @"privateAction:", kSwitch: @"1", kTag: [NSNumber numberWithInt:3]}];
     }
     
     if ([self.dpManager isSupportDP:TuyaSmartCameraBasicNightvisionDPName]) {
         NSString *text = [self nightvisionText:self.nightvisionState];
-        [section0 addObject:@{kTitle: NSLocalizedString(@"ipc_basic_night_vision", @""), kValue: text, kAction: @"nightvisionAction", kArrow: @"1"}];
+        [section0 addObject:@{kTitle: NSLocalizedString(@"ipc_basic_night_vision", @""), kValue: text, kAction: @"nightvisionAction", kArrow: @"1", kTag: [NSNumber numberWithInt:4]}];
     }
     
     if ([self.dpManager isSupportDP:TuyaSmartCameraBasicPIRDPName]) {
         NSString *text = [self pirText:self.pirState];
-        [section0 addObject:@{kTitle: NSLocalizedString(@"ipc_pir_switch", @""), kValue: text, kAction: @"pirAction", kArrow: @"1"}];
+        [section0 addObject:@{kTitle: NSLocalizedString(@"ipc_pir_switch", @""), kValue: text, kAction: @"pirAction", kArrow: @"1", kTag: [NSNumber numberWithInt:5]}];
     }
     
     if (section0.count > 0) {
         [dataSource addObject:@{kTitle:NSLocalizedString(@"ipc_settings_page_basic_function_txt", @""), kValue: section0.copy}];
     }
+
     
     NSMutableArray *section1 = [NSMutableArray new];
     if ([self.dpManager isSupportDP:TuyaSmartCameraMotionDetectDPName]) {
-        [section1 addObject:@{kTitle: NSLocalizedString(@"ipc_live_page_cstorage_motion_detected", @""), kValue: @(self.motionDetectOn), kAction: @"motionDetectAction:", kSwitch: @"1"}];
+        [section1 addObject:@{kTitle: NSLocalizedString(@"ipc_live_page_cstorage_motion_detected", @""), kValue: @(self.motionDetectOn), kAction: @"motionDetectAction:", kSwitch: @"1", kTag: [NSNumber numberWithInt:6]}];
     }
-    
+
     if ([self.dpManager isSupportDP:TuyaSmartCameraMotionSensitivityDPName] && self.motionDetectOn) {
         NSString *text = [self motionSensitivityText:self.motionSensitivity];
-        [section1 addObject:@{kTitle: NSLocalizedString(@"ipc_motion_sensitivity_settings", @""), kValue: text, kAction: @"motionSensitivityAction", kArrow: @"1"}];
+        [section1 addObject:@{kTitle: NSLocalizedString(@"ipc_motion_sensitivity_settings", @""), kValue: text, kAction: @"motionSensitivityAction", kArrow: @"1", kTag: [NSNumber numberWithInt:7]}];
     }
+    
     if (section1.count > 0) {
         [dataSource addObject:@{kTitle: NSLocalizedString(@"ipc_live_page_cstorage_motion_detected", @""), kValue: section1.copy}];
     }
     
     NSMutableArray *section2 = [NSMutableArray new];
     if ([self.dpManager isSupportDP:TuyaSmartCameraDecibelDetectDPName]) {
-        [section2 addObject:@{kTitle: NSLocalizedString(@"ipc_sound_detect_switch", @""), kValue: @(self.decibelDetectOn), kAction: @"decibelDetectAction:", kSwitch: @"1"}];
+        [section2 addObject:@{kTitle: NSLocalizedString(@"ipc_sound_detect_switch", @""), kValue: @(self.decibelDetectOn), kAction: @"decibelDetectAction:", kSwitch: @"1", kTag: [NSNumber numberWithInt:8]}];
     }
     
     if ([self.dpManager isSupportDP:TuyaSmartCameraDecibelSensitivityDPName] && self.decibelDetectOn) {
         NSString *text = [self decibelSensitivityText:self.decibelSensitivity];
-        [section2 addObject:@{kTitle: NSLocalizedString(@"ipc_motion_sensitivity_settings", @""), kValue: text, kAction: @"decibelSensitivityAction", kArrow: @"1"}];
+        [section2 addObject:@{kTitle: NSLocalizedString(@"ipc_motion_sensitivity_settings", @""), kValue: text, kAction: @"decibelSensitivityAction", kArrow: @"1", kTag: [NSNumber numberWithInt:9]}];
     }
     if (section2.count > 0) {
         [dataSource addObject:@{kTitle: NSLocalizedString(@"ipc_sound_detected_switch_settings", @""), kValue: section2.copy}];
@@ -287,18 +295,19 @@
     NSMutableArray *section3 = [NSMutableArray new];
     if ([self.dpManager isSupportDP:TuyaSmartCameraSDCardStatusDPName]) {
         NSString *text = [self sdCardStatusText:self.sdCardStatus];
-        [section3 addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_settings", @""), kValue: text, kAction: @"sdCardAction", kArrow: @"1"}];
+        [section3 addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_settings", @""), kValue: text, kAction: @"sdCardAction", kArrow: @"1", kTag: [NSNumber numberWithInt:10]}];
     }
     
     if ([self.dpManager isSupportDP:TuyaSmartCameraSDCardRecordDPName]) {
-        [section3 addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_record_switch", @""), kValue: @(self.sdRecordOn), kAction: @"sdRecordAction:", kSwitch: @"1"}];
+        [section3 addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_record_switch", @""), kValue: @(self.sdRecordOn), kAction: @"sdRecordAction:", kSwitch: @"1", kTag: [NSNumber numberWithInt:11]}];
         if (self.sdRecordOn && [self.dpManager isSupportDP:TuyaSmartCameraRecordModeDPName]) {
                 NSString *text = [self recordModeText:self.recordMode];
-                [section3 addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_record_mode_settings", @""), kValue: text, kAction: @"recordModeAction", kArrow: @"1"}];
+                [section3 addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_record_mode_settings", @""), kValue: text, kAction: @"recordModeAction", kArrow: @"1", kTag: [NSNumber numberWithInt:12 ]}];
         }
     }
     
-    [section3 addObject:@{kTitle: @"Reset WiFi", kValue: @"", kAction: @"resetWifiAction", kArrow: @"1"}];
+    [section3 addObject:@{kTitle: @"Reset WiFi", kValue: @"", kAction: @"resetWifiAction", kArrow: @"1", kTag: [NSNumber numberWithInt:13]}];
+    
     
     if (section3.count > 0) {
         [dataSource addObject:@{kTitle: NSLocalizedString(@"ipc_sdcard_settings", @""), kValue: section3.copy}];
@@ -306,17 +315,17 @@
     
     NSMutableArray *section4 = [NSMutableArray new];
     if ([self.dpManager isSupportDP:TuyaSmartCameraWirelessBatteryLockDPName]) {
-        [section4 addObject:@{kTitle: NSLocalizedString(@"ipc_basic_batterylock", @""), kValue: @(self.batteryLockOn), kAction: @"batteryLockAction:", kSwitch: @"1"}];
+        [section4 addObject:@{kTitle: NSLocalizedString(@"ipc_basic_batterylock", @""), kValue: @(self.batteryLockOn), kAction: @"batteryLockAction:", kSwitch: @"1", kTag: [NSNumber numberWithInt:14]}];
     }
     
     if ([self.dpManager isSupportDP:TuyaSmartCameraWirelessPowerModeDPName]) {
         NSString *text = [self powerModeText:self.powerMode];
-        [section4 addObject:@{kTitle: NSLocalizedString(@"ipc_electric_power_source", @""), kValue: text}];
+        [section4 addObject:@{kTitle: NSLocalizedString(@"ipc_electric_power_source", @""), kValue: text, kTag: [NSNumber numberWithInt:15]}];
     }
     
     if ([self.dpManager isSupportDP:TuyaSmartCameraWirelessElectricityDPName]) {
         NSString *text = [self electricityText];
-        [section4 addObject:@{kTitle: NSLocalizedString(@"ipc_electric_percentage", @""), kValue: text}];
+        [section4 addObject:@{kTitle: NSLocalizedString(@"ipc_electric_percentage", @""), kValue: text, kTag: [NSNumber numberWithInt:16]}];
     }
     
     if (section4.count > 0) {
@@ -325,8 +334,9 @@
     
     NSMutableArray *section5 = [NSMutableArray new];
     if ([self.dpManager isSupportDP:@"165"]) {
-        [section5 addObject:@{kTitle: @"Chime Type", kValue: self.chimeSettings, kAction: @"changeChimeSettingsAction", kArrow: @"1"}];
+        [section5 addObject:@{kTitle: @"Chime Type", kValue: self.chimeSettings, kAction: @"changeChimeSettingsAction", kArrow: @"1", kTag: [NSNumber numberWithInt:17]}];
     }
+
     
     if (section5.count > 0) {
         [dataSource addObject:@{kTitle: @"Bell/Chime Settings", kValue: section5.copy}];
@@ -526,7 +536,7 @@
     __weak typeof(self) weakSelf = self;
     [alert showAlertInView:self
                  withTitle:@"Reset WiFi"
-              withSubtitle:@"Please go to Manage tab then Add Camera and follow the reset instruction video shown on Add Camera Screen and add your camera again."
+              withSubtitle:@"Please go to Manage tab then Add Doorbell and follow the reset instruction video shown on Add Doorbell Screen and add your Doorbell Camera again."
            withCustomImage:nil
        withDoneButtonTitle:@"Reset WiFi"
                 andButtons:nil];
@@ -660,10 +670,6 @@
     return self.dataSource.count;
 }
 
-//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-//    return [[self.dataSource objectAtIndex:section] objectForKey:kTitle];
-//}
-
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     _headerView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 40)];
     UIView *paddinngView = [[UIView alloc] initWithFrame: CGRectMake(0, _headerView.frame.origin.y, 15, 40)];
@@ -703,31 +709,52 @@
         cell.settingsLabel.text = [data objectForKey:kTitle];
         cell.settingSwitch.onTintColor = [TuyaAppTheme theme].button_color;
         [cell.settingSwitch addTarget:self action:action forControlEvents:UIControlEventValueChanged];
-        
+        [cell.disclaimerButton setImage:[TuyaAppViewUtil getImageFromBundleWithName:@"information"] forState:UIControlStateNormal];
+        [cell.disclaimerButton addTarget:self action:@selector(toolTipTaped:) forControlEvents:UIControlEventTouchUpInside];
+        cell.disclaimerButton.tag = [[data objectForKey:kTag] intValue];
         return cell;
     } else {
         CameraSettingsTableViewCell *cell = (CameraSettingsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"SettingArrowCell" forIndexPath:indexPath];
         cell.settingArrowLabel.text = [data objectForKey:kTitle];
         [cell.settingArrowButton setTitle:[data objectForKey:kValue] forState:UIControlStateNormal];
+        cell.disclaimerSecondButton.tag = [[data objectForKey:kTag] intValue];
+        [cell.disclaimerSecondButton setImage:[TuyaAppViewUtil getImageFromBundleWithName:@"information"] forState:UIControlStateNormal];
+        [cell.disclaimerSecondButton addTarget:self action:@selector(toolTipTaped:) forControlEvents:UIControlEventTouchUpInside];
         return cell;
     }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    NSDictionary *data = [[[self.dataSource objectAtIndex:indexPath.section] objectForKey:kValue] objectAtIndex:indexPath.row];
-//    if (![data objectForKey:kSwitch]) {
-//        NSString *action = [data objectForKey:kAction];
-//        if (action) {
-//            SEL selector = NSSelectorFromString(action);
-//            [self performSelector:selector withObject:nil afterDelay:0];
-//        }
-//    }
+    if (self.toolTipView) {
+        [self.toolTipView dismissWithCompletion:nil];
+    }
     
-    ZMJTipView *view = [[ZMJTipView alloc] initWithText:@"Tip view within the green superview. Tap to dismiss."
-                                                    preferences:[TuyaAppTheme getToolTipGlobalPreference]
-                                                       delegate:nil];
-            [view showAnimated:YES forView:self.view withinSuperview:self.view];
+    NSDictionary *data = [[[self.dataSource objectAtIndex:indexPath.section] objectForKey:kValue] objectAtIndex:indexPath.row];
+    if (![data objectForKey:kSwitch]) {
+        NSString *action = [data objectForKey:kAction];
+        if (action) {
+            SEL selector = NSSelectorFromString(action);
+            [self performSelector:selector withObject:nil afterDelay:0];
+        }
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (self.toolTipView) {
+        [self.toolTipView dismissWithCompletion:nil];
+    }
+}
+
+
+- (void)toolTipTaped:(UIButton *)button {
     
+    if (self.toolTipView) {
+        [self.toolTipView dismissWithCompletion:nil];
+    }
+    self.toolTipView = [[ZMJTipView alloc] initWithText:[self.toolTipArray objectAtIndex:button.tag]
+                                            preferences:[TuyaAppTheme getToolTipGlobalPreference]
+                                               delegate:nil];
+    [self.toolTipView showAnimated:YES forView:button withinSuperview:self.view];
 }
 
 

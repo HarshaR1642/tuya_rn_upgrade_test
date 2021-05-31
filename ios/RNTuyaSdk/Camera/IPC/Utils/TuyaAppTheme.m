@@ -120,8 +120,8 @@ static TuyaAppTheme *_theme = nil;
     dispatch_once(&onceToken, ^{
         sharedInstance = [ZMJPreferences new];
         sharedInstance.drawing.font = [UIFont fontWithName:@"Quicksand-Medium" size:16.0];
-        sharedInstance.drawing.backgroundColor = [UIColor colorWithHue:.46 saturation:.99 brightness:.6 alpha:1];
-        sharedInstance.drawing.foregroundColor = [UIColor darkGrayColor];
+        sharedInstance.drawing.backgroundColor = [TuyaAppTheme theme].view_bg_color;
+        sharedInstance.drawing.foregroundColor = [TuyaAppTheme theme].font_color;
         sharedInstance.drawing.textAlignment = NSTextAlignmentCenter;
         sharedInstance.animating.dismissTransform = CGAffineTransformMakeTranslation(100, 0);
         sharedInstance.animating.showInitialTransform =CGAffineTransformMakeTranslation(-100, 0);

@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *settingArrowLabel;
 @property (weak, nonatomic) IBOutlet UIButton *settingArrowButton;
 @property (weak, nonatomic) IBOutlet UIView *settingArrowSepratorView;
+@property (weak, nonatomic) IBOutlet UIButton *disclaimerButton;
+@property (weak, nonatomic) IBOutlet UIButton *disclaimerSecondButton;
 
 @end
 
