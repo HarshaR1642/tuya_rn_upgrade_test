@@ -3,6 +3,7 @@ package com.tuya.smart.rnsdk.camera.activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -13,26 +14,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.facebook.react.ReactApplication;
 import com.facebook.react.bridge.ReadableMap;
+import com.spyhunter99.supertooltips.ToolTip;
+import com.spyhunter99.supertooltips.ToolTipManager;
 import com.tuya.smart.android.common.utils.L;
-import com.tuya.smart.android.device.api.IPropertyCallback;
 import com.tuya.smart.home.sdk.TuyaHomeSdk;
 import com.tuya.smart.rnsdk.R;
 import com.tuya.smart.rnsdk.camera.utils.RNOperationHelper;
 import com.tuya.smart.sdk.api.IDevListener;
-import com.tuya.smart.sdk.api.IDeviceListener;
 import com.tuya.smart.sdk.api.IResultCallback;
 import com.tuya.smart.sdk.api.ITuyaDevice;
 import com.tuya.smart.sdk.bean.DeviceBean;
 import com.tuyasmart.camera.devicecontrol.ITuyaCameraDevice;
 import com.tuyasmart.camera.devicecontrol.TuyaCameraDeviceControlSDK;
-import com.tuyasmart.camera.devicecontrol.api.ITuyaCameraDeviceControlCallback;
 import com.tuyasmart.camera.devicecontrol.bean.DpBasicFlip;
 import com.tuyasmart.camera.devicecontrol.bean.DpBasicIndicator;
 import com.tuyasmart.camera.devicecontrol.bean.DpBasicNightvision;
@@ -40,18 +40,9 @@ import com.tuyasmart.camera.devicecontrol.bean.DpBasicOSD;
 import com.tuyasmart.camera.devicecontrol.bean.DpBasicPrivate;
 import com.tuyasmart.camera.devicecontrol.bean.DpMotionSensitivity;
 import com.tuyasmart.camera.devicecontrol.bean.DpMotionSwitch;
-import com.tuyasmart.camera.devicecontrol.bean.DpRestore;
-import com.tuyasmart.camera.devicecontrol.bean.DpSDFormat;
-import com.tuyasmart.camera.devicecontrol.bean.DpSDFormatStatus;
 import com.tuyasmart.camera.devicecontrol.bean.DpSDRecordModel;
 import com.tuyasmart.camera.devicecontrol.bean.DpSDRecordSwitch;
 import com.tuyasmart.camera.devicecontrol.bean.DpSDStatus;
-import com.tuyasmart.camera.devicecontrol.bean.DpSDStorage;
-import com.tuyasmart.camera.devicecontrol.bean.DpWirelessBatterylock;
-import com.tuyasmart.camera.devicecontrol.bean.DpWirelessElectricity;
-import com.tuyasmart.camera.devicecontrol.bean.DpWirelessLowpower;
-import com.tuyasmart.camera.devicecontrol.bean.DpWirelessPowermode;
-import com.tuyasmart.camera.devicecontrol.model.DpNotifyModel;
 import com.tuyasmart.camera.devicecontrol.model.MotionSensitivityMode;
 import com.tuyasmart.camera.devicecontrol.model.NightStatusMode;
 import com.tuyasmart.camera.devicecontrol.model.RecordMode;
@@ -84,10 +75,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private ProgressDialog progressDialog;
     private RNOperationHelper rnOperationHelper;
 
+    ToolTipManager tooltips;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+        tooltips = new ToolTipManager(this);
 
         handler = new Handler();
 
@@ -132,6 +127,76 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         layout_StorageSetting.setOnClickListener(this);
         layout_ResetWifi.setOnClickListener(this);
         btn_RemoveDevice.setOnClickListener(this);
+
+        findViewById(R.id.tooltip_flipScreen).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "Flip screen will flip the doorbell camera in preview screen");
+            }
+        });
+
+        findViewById(R.id.tooltip_timeWatermark).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "This enabled the timestamp watermark on video preview");
+            }
+        });
+
+        findViewById(R.id.tooltip_nightVision).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "This setting enables the night vision of the doorbell camera");
+            }
+        });
+
+        findViewById(R.id.tooltip_motionDetect).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "This setting enables the motion detection/ movement in front of camera and has 3 sensitivity levels");
+            }
+        });
+
+        findViewById(R.id.tooltip_motionSensitivity).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "If motion detection is on you can choose between 3 sensitivity levels.");
+            }
+        });
+
+        findViewById(R.id.tooltip_storageSetting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "This setting let you see the SD card status / total used / capacity and remaining value");
+            }
+        });
+
+        findViewById(R.id.tooltip_sdRecord).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "SD Recording enables the doorbell recording");
+            }
+        });
+
+        findViewById(R.id.tooltip_recordMode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "Recording mode lets you select the type of camera recording whether it should record all the time or only for motion detection");
+            }
+        });
+
+        findViewById(R.id.tooltip_resetWifi).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "Reset WiFi is used to again add camera with changes WiFi settings / password");
+            }
+        });
+
+        findViewById(R.id.tooltip_chimeType).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "Chime type lets you select the desired doorbell ring tone for your home");
+            }
+        });
 
         ReactApplication rApp = (ReactApplication) getApplication();
         rnOperationHelper = new RNOperationHelper(rApp, SettingActivity.this, new RNOperationHelper.OperationCallback() {
@@ -432,6 +497,25 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         if (mTuyaDevice != null) {
             mTuyaDevice.onDestroy();
         }
+
+        try {
+            tooltips.onDestroy();
+            tooltips = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showTooltip(View v, String msg) {
+        ToolTip toolTip = new ToolTip()
+                .withText(msg)
+                //.withColor(Color.RED)
+                //.withColor(ResourcesCompat.getColor(getResources(), R.color.tuya_txt_gunmetal, null))
+                .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
+                .withShowBelow()
+                .withPosition(ToolTip.Position.LEFT)
+                .withShadow();
+        tooltips.showToolTip(toolTip, v);
     }
 
     @Override
