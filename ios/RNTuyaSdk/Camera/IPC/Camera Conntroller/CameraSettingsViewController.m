@@ -69,7 +69,7 @@
         [self.settinngsTableView addSubview:_refreshControl];
     }
     
-    self.toolTipArray = @[@"Indicator tool tip", @"Flip screen will flip the doorbell camera in preview screen", @"This enabled the timestamp watermark on video preview", @"Hibernate Tool Tip", @"This setting enables the night vision of the doorbell camera", @"PIR switch Tool tip" ,@"This setting enables the motion detection/ movement in front of camera and has 3 sensitivity levels", @"If Motion detection is on you can choose between 3 sensitivity levels.", @"Sound Detection Tool Tip", @"Sound Detection Sensitivity Tool Tip", @"This Setting let you see the SD card status / total used / capacity and reamiming value", @"SD Recording enables the doorbell recording" ,@"Recording mode lets you select the type of camera recording whether it should record all the time or only for motion detection" ,@"Reset WiFi is used to again add camera with changes WiFi settings / password", @"Battery Lock DP Tool Tip", @"Electric power tool tip", @"Electric power remaining tool tip", @"Chime type lets you select the desired doorbell ring tone for your home"];
+    self.toolTipArray = @[@"Indicator tool tip", @"Flip screen will flip the doorbell camera in the preview screen", @"This enabled the timestamp watermark on the doorbell preview", @"Hibernate Tool Tip", @"This setting enables the night vision of the doorbell camera", @"PIR switch Tool tip" ,@"This setting enables the motion detection/ movement in front of the doorbell and has 3 sensitivity levels", @"If Motion detection is on you can choose between 3 sensitivity levels.", @"Sound Detection Tool Tip", @"Sound Detection Sensitivity Tool Tip", @"This Setting let you see the SD card status (available or no SD card attached) / total used / capacity and remaining value", @"SD Recording enables the doorbell recording" ,@"Recording mode lets you select the type of doorbell recording whether it should record all the time or only for motion detection" ,@"Reset WiFi is used to again add doorbell with changes WiFi settings/password", @"Battery Lock DP Tool Tip", @"Electric power tool tip", @"Electric power remaining tool tip", @"Chime type lets you select the desired doorbell ring tone for your home"];
 
 }
 
@@ -536,7 +536,7 @@
     __weak typeof(self) weakSelf = self;
     [alert showAlertInView:self
                  withTitle:@"Reset WiFi"
-              withSubtitle:@"Please go to Manage tab then Add Doorbell and follow the reset instruction video shown on Add Doorbell Screen and add your Doorbell Camera again."
+              withSubtitle:@"Please go to Manage tab then press Add Doorbell and follow the reset instruction video shown on Add Doorbell Screen and add your Doorbell again."
            withCustomImage:nil
        withDoneButtonTitle:@"Reset WiFi"
                 andButtons:nil];
