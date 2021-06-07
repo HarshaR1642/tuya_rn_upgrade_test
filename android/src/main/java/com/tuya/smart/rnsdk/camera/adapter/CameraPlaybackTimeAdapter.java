@@ -30,11 +30,15 @@ public class CameraPlaybackTimeAdapter extends RecyclerView.Adapter<CameraPlayba
     private OnTimeItemListener listener;
     private int row_index = -1;
 
+    private int selectedItem;
+
     public CameraPlaybackTimeAdapter(Context context, List<TimePieceBean> timePieceBeans) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
         this.timePieceBeans = timePieceBeans;
         //setHasStableIds(true);
+
+        selectedItem = 0;
     }
 
     public void setListener(OnTimeItemListener listener) {
@@ -48,6 +52,14 @@ public class CameraPlaybackTimeAdapter extends RecyclerView.Adapter<CameraPlayba
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
+
+        holder.itemView.setTag(timePieceBeans.get(position));
+
+        holder.cardView.setBackgroundColor(ContextCompat.getColor(context, R.color.tuya_list_card_bg_white));
+        if (selectedItem == position) {
+            holder.cardView.setBackgroundColor(ContextCompat.getColor(context, R.color.tuya_list_card_bg_selected));
+        }
+
         final TimePieceBean ipcVideoBean = timePieceBeans.get(position);
         holder.mTvStartTime.setText(timeFormat(ipcVideoBean.getStartTime() * 1000L));
         int lastTime = ipcVideoBean.getEndTime() - ipcVideoBean.getStartTime();
@@ -59,6 +71,12 @@ public class CameraPlaybackTimeAdapter extends RecyclerView.Adapter<CameraPlayba
                 if (null != listener) {
                     /*row_index=position;
                     notifyDataSetChanged();*/
+
+                    int previousItem = selectedItem;
+                    selectedItem = position;
+                    notifyItemChanged(previousItem);
+                    notifyItemChanged(position);
+
                     listener.onClick(ipcVideoBean);
                 }
             }
