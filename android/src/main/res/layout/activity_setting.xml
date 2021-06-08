@@ -218,7 +218,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Motion Sensitivity"
+                    android:text="Motion Sensitivity Level"
                     android:textColor="@color/tuya_txt_gunmetal"
                     android:textSize="@dimen/tuya_settings_txt_size"/>
 

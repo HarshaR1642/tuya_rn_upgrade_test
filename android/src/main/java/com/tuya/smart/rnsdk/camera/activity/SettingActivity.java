@@ -527,7 +527,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private void openMotionSensitivityDialog() {
         // setup the alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
-        builder.setTitle("Motion Sensitivity");
+        builder.setTitle("Motion Sensitivity Level");
 
         // add a list
         String[] strings = {"Low", "Medium", "High"};
