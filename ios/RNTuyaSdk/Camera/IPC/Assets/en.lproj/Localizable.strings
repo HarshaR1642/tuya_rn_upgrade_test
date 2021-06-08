@@ -768,7 +768,7 @@
 "ipc_motion_sensitivity_high" = "High";
 "ipc_motion_sensitivity_low" = "Low";
 "ipc_motion_sensitivity_mid" = "Medium";
-"ipc_motion_sensitivity_settings" = "Alarm Sensitivity Level";
+"ipc_motion_sensitivity_settings" = "Motion Sensitivity Level";
 "ipc_multi_view_photo_saved" = "Screenshot already saved to system album.";
 "ipc_multi_view_video_saved" = "Video already saved to system album.";
 "ipc_panel_button_calendar" = "Date";
