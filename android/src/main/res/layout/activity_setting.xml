@@ -451,7 +451,7 @@
                 android:paddingVertical="@dimen/mg_10"
                 android:paddingHorizontal="@dimen/mg_25"
                 android:textAllCaps="false"
-                android:text="Remove Camera"
+                android:text="Remove Doorbell"
                 android:textColor="@color/tuya_button_txt_white"
                 android:textSize="@dimen/tuya_settings_txt_size"/>
             <!--<Button
