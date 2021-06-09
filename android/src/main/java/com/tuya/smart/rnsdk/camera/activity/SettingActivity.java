@@ -131,7 +131,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.tooltip_flipScreen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Flip screen will flip the doorbell camera in preview screen");
+                showTooltip(v, "Flip screen will flip the doorbell camera view in preview screen");
             }
         });
 
@@ -152,7 +152,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.tooltip_motionDetect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "This setting enables the motion detection/ movement in front of camera and has 3 sensitivity levels");
+                showTooltip(v, "This setting enables the motion detection/ movement in front of doorbell camera and has 3 sensitivity levels");
             }
         });
 
@@ -180,14 +180,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.tooltip_recordMode).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Recording mode lets you select the type of camera recording whether it should record all the time or only for motion detection");
+                showTooltip(v, "Recording mode lets you select the type of doorbell camera recording whether it should record all the time or only for motion detection");
             }
         });
 
         findViewById(R.id.tooltip_resetWifi).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Reset WiFi is used to again add camera with changes WiFi settings / password");
+                showTooltip(v, "Reset WiFi is used to again add doorbell with changes WiFi settings / password");
             }
         });
 
@@ -255,11 +255,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private void initAllDevicePointControl() {
 
         DeviceBean mCameraDevice =  TuyaHomeSdk.getDataInstance().getDeviceBean(devId);
-        Log.d(TAG, "elango-mCameraDevice getDps:" + mCameraDevice.getDps());
-        for (Map.Entry<String, Object> entry : mCameraDevice.getDps().entrySet()) {
-            System.out.println(entry.getKey() + "/" + entry.getValue());
-            if(entry.getKey() != null && entry.getValue() != null)
-                updateSetting(entry.getKey(), entry.getValue().toString());
+        if(mCameraDevice != null) {
+            Log.d(TAG, "elango-mCameraDevice getDps:" + mCameraDevice.getDps());
+            for (Map.Entry<String, Object> entry : mCameraDevice.getDps().entrySet()) {
+                System.out.println(entry.getKey() + "/" + entry.getValue());
+                if (entry.getKey() != null && entry.getValue() != null)
+                    updateSetting(entry.getKey(), entry.getValue().toString());
+            }
         }
 
 
