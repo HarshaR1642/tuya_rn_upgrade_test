@@ -255,11 +255,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private void initAllDevicePointControl() {
 
         DeviceBean mCameraDevice =  TuyaHomeSdk.getDataInstance().getDeviceBean(devId);
-        Log.d(TAG, "elango-mCameraDevice getDps:" + mCameraDevice.getDps());
-        for (Map.Entry<String, Object> entry : mCameraDevice.getDps().entrySet()) {
-            System.out.println(entry.getKey() + "/" + entry.getValue());
-            if(entry.getKey() != null && entry.getValue() != null)
-                updateSetting(entry.getKey(), entry.getValue().toString());
+        if(mCameraDevice != null) {
+            Log.d(TAG, "elango-mCameraDevice getDps:" + mCameraDevice.getDps());
+            for (Map.Entry<String, Object> entry : mCameraDevice.getDps().entrySet()) {
+                System.out.println(entry.getKey() + "/" + entry.getValue());
+                if (entry.getKey() != null && entry.getValue() != null)
+                    updateSetting(entry.getKey(), entry.getValue().toString());
+            }
         }
 
 
