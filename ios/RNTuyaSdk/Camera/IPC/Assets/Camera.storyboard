@@ -511,7 +511,7 @@
                                                 <constraint firstAttribute="width" constant="200" id="ylR-Fl-IFJ"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" name="Quicksand-Medium" family="Quicksand Medium" pointSize="18"/>
-                                            <state key="normal" title="Remove Camera">
+                                            <state key="normal" title="Remove Doorbell">
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <connections>
