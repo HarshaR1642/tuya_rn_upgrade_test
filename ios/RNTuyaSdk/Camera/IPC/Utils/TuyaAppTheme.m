@@ -114,6 +114,25 @@ static TuyaAppTheme *_theme = nil;
     }
 }
 
++ (ZMJPreferences *)getToolTipGlobalPreference {
+    static ZMJPreferences *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedInstance = [ZMJPreferences new];
+        sharedInstance.drawing.font = [UIFont fontWithName:@"Quicksand-Medium" size:16.0];
+        sharedInstance.drawing.backgroundColor = [TuyaAppTheme theme].view_bg_color;
+        sharedInstance.drawing.foregroundColor = [TuyaAppTheme theme].font_color;
+        sharedInstance.drawing.textAlignment = NSTextAlignmentCenter;
+        sharedInstance.animating.dismissTransform = CGAffineTransformMakeTranslation(100, 0);
+        sharedInstance.animating.showInitialTransform =CGAffineTransformMakeTranslation(-100, 0);
+        sharedInstance.animating.showInitialAlpha = 0;
+        sharedInstance.animating.showDuration = 1;
+        sharedInstance.animating.dismissDuration = 1;
+        ZMJTipView.globalPreferences = sharedInstance;
+    });
+    return sharedInstance;
+}
+
 @end
 
 @implementation UIViewController(Appearance)
