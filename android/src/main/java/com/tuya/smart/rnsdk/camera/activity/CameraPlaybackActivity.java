@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,6 +79,7 @@ import static com.tuya.smart.rnsdk.utils.Constant.MSG_MUTE;
 public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCameraListener, View.OnClickListener, TuyaCameraView.CreateVideoViewCallback {
 
     private static final String TAG = "CameraPlaybackActivity";
+
     private Toolbar toolbar;
     private TuyaCameraView mVideoView;
     private ImageView muteImg;
@@ -87,6 +89,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
     private Button queryBtn;
     private ImageView record_btn, pauseBtn, photo_btn;
     private TextView txt_NoData;
+    private ProgressBar progressBar_Playback;
 
     private ICameraP2P mCameraP2P;
     private static final int ASPECT_RATIO_WIDTH = 9;
@@ -191,6 +194,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
 
                 // to play first item on opening
                 if(timePieceBeans.size() > 0) {
+                    showProgress();
                     mCameraP2P.startPlayBack(timePieceBeans.get(0).getStartTime(),
                             timePieceBeans.get(0).getEndTime(),
                             timePieceBeans.get(0).getStartTime(), new OperationDelegateCallBack() {
@@ -198,12 +202,14 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                                 public void onSuccess(int sessionId, int requestId, String data) {
                                     //isPlayback = true;
                                     setPlayBackFlag(true);
+                                    hideProgress();
                                 }
 
                                 @Override
                                 public void onFailure(int sessionId, int requestId, int errCode) {
                                     //isPlayback = false;
                                     setPlayBackFlag(false);
+                                    hideProgress();
                                 }
                             }, new OperationDelegateCallBack() {
                                 @Override
@@ -356,6 +362,8 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
         queryRv = findViewById(R.id.query_list);
         txt_NoData = findViewById(R.id.txt_NoData);
 
+        progressBar_Playback = findViewById(R.id.progressBar_Playback);
+
         //播放器view最好宽高比设置16:9
         WindowManager windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
         int width = windowManager.getDefaultDisplay().getWidth();
@@ -420,6 +428,26 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
         });*/
     }
 
+    private void showProgress()
+    {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                progressBar_Playback.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void hideProgress()
+    {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                progressBar_Playback.setVisibility(View.GONE);
+            }
+        });
+    }
+
     DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
 
         @Override
@@ -482,6 +510,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
             @Override
             public void onClick(TimePieceBean timePieceBean) {
 
+                showProgress();
                 mCameraP2P.startPlayBack(timePieceBean.getStartTime(),
                         timePieceBean.getEndTime(),
                         timePieceBean.getStartTime(), new OperationDelegateCallBack() {
@@ -489,6 +518,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                             public void onSuccess(int sessionId, int requestId, String data) {
                                 //isPlayback = true;
                                 setPlayBackFlag(true);
+                                hideProgress();
                             }
 
                             @Override
@@ -496,6 +526,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                                 //isPlayback = false;
                                 setPlayBackFlag(false);
                                 com.tuya.smart.rnsdk.camera.utils.ToastUtil.shortToast(CameraPlaybackActivity.this, "Failed to start playback");
+                                hideProgress();
                             }
                         }, new OperationDelegateCallBack() {
                             @Override
