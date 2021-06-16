@@ -452,7 +452,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         } else if (R.id.layout_ResetWifi == v.getId()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
             builder.setTitle("Reset WiFi");
-            builder.setMessage("Please go to Manage tab then Add Camera and follow the reset instruction video shown on Add Camera screen and add your camera again.");
+            builder.setMessage("Please go to Manage tab then Add Doorbell and follow the reset instruction video shown on Add Doorbell screen and add your doorbell again.");
             builder.setPositiveButton("Reset WiFi", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
@@ -527,7 +527,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private void openMotionSensitivityDialog() {
         // setup the alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
-        builder.setTitle("Motion Sensitivity");
+        builder.setTitle("Motion Sensitivity Level");
 
         // add a list
         String[] strings = {"Low", "Medium", "High"};
