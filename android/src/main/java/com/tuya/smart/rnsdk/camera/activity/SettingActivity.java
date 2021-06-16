@@ -472,8 +472,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             Log.d(TAG, "elango-RemoveDevice devId:" + devId);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
-            builder.setTitle("Remove Device");
-            builder.setMessage("After the device is disconnected, all the device related settings and data will be deleted.");
+            builder.setTitle("Remove Doorbell");
+            builder.setMessage("After the doorbell is disconnected, all the doorbell related settings and data will be deleted.");
             builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();

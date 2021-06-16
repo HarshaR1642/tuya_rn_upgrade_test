@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_playback_date"
-        android:icon="@drawable/ic_action_filter"
+        android:icon="@drawable/ic_calendar"
         android:orderInCategory="100"
         app:showAsAction="always"
         android:title="Date" />

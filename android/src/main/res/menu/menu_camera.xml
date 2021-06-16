@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_action_setting"
+        android:icon="@drawable/ic_setting"
         android:orderInCategory="100"
         app:showAsAction="always"
         android:title="Setting" />

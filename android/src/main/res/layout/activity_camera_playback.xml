@@ -13,9 +13,9 @@
         android:layout_height="?attr/actionBarSize"
         android:gravity="center_vertical"
         style="@style/HeaderBar"
-        app:navigationIcon="@drawable/ic_action_arrow_backward"
+        app:navigationIcon="@drawable/ic_arrow_backward_white"
         app:title="Playback"
-        app:titleTextColor="@color/black"
+        app:titleTextColor="@color/white"
         />
 
     <RelativeLayout

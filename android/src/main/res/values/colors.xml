@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="tuya_header_bg">#f3faff</color>
+    <color name="tuya_header_bg">#000000</color>
     <color name="tuya_header_bg_white">#FFFFFF</color>
+    <color name="tuya_header_bg_black">#000000</color>
+    <color name="tuya_header_bg_grey">#373737</color>
     <color name="tuya_page_bg">#f3faff</color>
     <color name="tuya_page_bg_black">#000000</color>
     <color name="tuya_control_bg">#373737</color>
