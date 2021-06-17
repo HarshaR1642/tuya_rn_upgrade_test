@@ -17,6 +17,7 @@ static TuyaAppTheme *_theme = nil;
     if (!_theme) {
         NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"RentlyCameraTheme" ofType:@"plist"];
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+   
         for (NSString *key in [dict.allKeys copy]) {
             NSString *value = [dict objectForKey:key];
             [dict setValue:[TuyaAppViewUtil colorWithHexString:value] forKey:key];
@@ -37,6 +38,12 @@ static TuyaAppTheme *_theme = nil;
         
     }
     return _theme;
+}
+
++ (NSString *)app_name {
+    NSString *plistPath1 = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+    NSMutableDictionary *dict1 = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath1];
+    return [dict1 valueForKey:@"CFBundleDisplayName"];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
