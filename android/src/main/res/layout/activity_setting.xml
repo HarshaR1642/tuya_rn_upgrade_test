@@ -309,19 +309,20 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Storage Settings"
+                    android:text="Storage Setting"
                     android:textColor="@color/tuya_txt_gunmetal"
                     android:textSize="@dimen/tuya_settings_txt_size" />
 
                 <TextView
+                    android:id="@+id/txt_StorageSetting"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dp_30"
                     android:gravity="end|center_vertical"
                     android:paddingHorizontal="@dimen/dp_5"
-                    android:text="Auto"
+                    android:text=""
                     android:textColor="@color/tuya_txt_gunmetal"
                     android:textSize="@dimen/tuya_settings_txt_size"
-                    android:visibility="invisible" />
+                    android:visibility="visible" />
 
                 <ImageView
                     android:layout_width="wrap_content"

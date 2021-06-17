@@ -67,7 +67,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private String devId;
 
     private ToggleButton toggle_FlipScreen, toggle_OSD, toggle_MotionDetection, toggle_LocalRecording;
-    private TextView txt_NightVision, txt_ChimeType, txt_MotionSensitivity, txt_RecordType;
+    private TextView txt_NightVision, txt_ChimeType, txt_MotionSensitivity, txt_RecordType, txt_StorageSetting;
     private LinearLayout layout_MotionSensitivity, layout_RecordType, layout_StorageSetting, layout_ResetWifi;
     private Button btn_RemoveDevice;
 
@@ -117,6 +117,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         txt_ChimeType = findViewById(R.id.txt_ChimeType);
         txt_RecordType = findViewById(R.id.txt_RecordType);
         txt_MotionSensitivity = findViewById(R.id.txt_MotionSensitivity);
+        txt_StorageSetting = findViewById(R.id.txt_StorageSetting);
 
         btn_RemoveDevice = findViewById(R.id.btn_RemoveDevice);
 
@@ -131,70 +132,70 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.tooltip_flipScreen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Flip screen will flip the doorbell camera view in preview screen");
+                showTooltip(v, "This setting flip the doorbell camera in the preview screen");
             }
         });
 
         findViewById(R.id.tooltip_timeWatermark).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "This enabled the timestamp watermark on video preview");
+                showTooltip(v, "Enable this, a timestamp will be added as the watermark for the doorbell preview");
             }
         });
 
         findViewById(R.id.tooltip_nightVision).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "This setting enables the night vision of the doorbell camera");
+                showTooltip(v, "This setting enables the doorbell’s night vision");
             }
         });
 
         findViewById(R.id.tooltip_motionDetect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "This setting enables the motion detection/ movement in front of doorbell camera and has 3 sensitivity levels");
+                showTooltip(v, "Enable this, any motion detected within the doorbell sensitivity range will be sent to users via push notifications and recorded if SD card recording is enabled");
             }
         });
 
         findViewById(R.id.tooltip_motionSensitivity).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "If motion detection is on you can choose between 3 sensitivity levels.");
+                showTooltip(v, "This setting decides the sensitivity level of the doorbell motion detection");
             }
         });
 
         findViewById(R.id.tooltip_storageSetting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "This setting let you see the SD card status / total used / capacity and remaining value");
+                showTooltip(v, "An indicator SD card status. \"Normally\" indicates the SD card is working properly; “Not available” indicates that the SD might be missing, corrupted, or needs to be formatted, etc.");
             }
         });
 
         findViewById(R.id.tooltip_sdRecord).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "SD Recording enables the doorbell recording");
+                showTooltip(v, "Enable this, the doorbell will record activity based on the recording mode");
             }
         });
 
         findViewById(R.id.tooltip_recordMode).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Recording mode lets you select the type of doorbell camera recording whether it should record all the time or only for motion detection");
+                showTooltip(v, "It allows you to select when to trigger doorbell recording. It can be recording all the time or only recording when motion detected");
             }
         });
 
         findViewById(R.id.tooltip_resetWifi).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Reset WiFi is used to again add doorbell with changes WiFi settings / password");
+                showTooltip(v, "Reset wifi of the doorbell requires re-add the doorbell to the account.");
             }
         });
 
         findViewById(R.id.tooltip_chimeType).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Chime type lets you select the desired doorbell ring tone for your home");
+                showTooltip(v, "You can select a different doorbell sound for your home. Noted that Mechanical type requires the doorbell to be wired to the indoor bell sound system; Digital type does not require that.");
             }
         });
 
@@ -450,6 +451,24 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     break;
                 case 2: // High
                     txt_MotionSensitivity.setText("High");
+                    break;
+            }
+        } else if(key.equalsIgnoreCase(DpSDStatus.ID)) {
+            switch (Integer.parseInt(value)) {
+                case 1: // Normally
+                    txt_StorageSetting.setText("Normally");
+                    break;
+                case 2: // Abnormally
+                    txt_StorageSetting.setText("Abnormally");
+                    break;
+                case 3: // Insufficient capacity
+                    txt_StorageSetting.setText("Insufficient capacity");
+                    break;
+                case 4: // Formatting...
+                    txt_StorageSetting.setText("Formatting...");
+                    break;
+                case 5: // No storage
+                    txt_StorageSetting.setText("No storage");
                     break;
             }
         } else if(key.equalsIgnoreCase("165")) {
