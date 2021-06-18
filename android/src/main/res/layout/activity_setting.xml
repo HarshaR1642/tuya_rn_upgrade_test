@@ -472,7 +472,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_10"
                     android:layout_marginLeft="@dimen/dp_10"
-                    android:src="@drawable/ic_tooltip" />
+                    android:src="@drawable/ic_tooltip"
+                    android:visibility="invisible"/>
             </LinearLayout>
 
             <View
@@ -504,7 +505,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Chime Type"
+                    android:text="Chime Connection Type"
                     android:textColor="@color/tuya_txt_gunmetal"
                     android:textSize="@dimen/tuya_settings_txt_size" />
 

@@ -195,7 +195,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.tooltip_chimeType).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "You can select a different doorbell sound for your home. Noted that Mechanical type requires the doorbell to be wired to the indoor bell sound system; Digital type does not require that.");
+                showTooltip(v, "Mechanical type requires the doorbell to be wired to the indoor bell sound system; Digital type does not require that.");
             }
         });
 
