@@ -265,7 +265,7 @@
             }
         }];
     } else if ([TuyaAppPermissionUtil isPhotoLibraryDenied]) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedString(@"Photo library permission denied", @"") preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedString(@"photo_permission_denied", @"") preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"ipc_settings_ok", @"") style:UIAlertActionStyleCancel handler:nil];
         [alert addAction:action];
         [self presentViewController:alert animated:YES completion:nil];
@@ -283,7 +283,7 @@
             }
         }];
     } else if ([TuyaAppPermissionUtil isPhotoLibraryDenied]) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedString(@"Photo library permission denied", @"") preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedString(@"photo_permission_denied", @"") preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"ipc_settings_ok", @"") style:UIAlertActionStyleCancel handler:nil];
         [alert addAction:action];
         [self presentViewController:alert animated:YES completion:nil];
@@ -368,7 +368,7 @@
     if ([TuyaAppPermissionUtil isPhotoLibraryNotDetermined]) {
         [TuyaAppPermissionUtil requestPhotoPermission:complete];
     }else if ([TuyaAppPermissionUtil isPhotoLibraryDenied]) {
-        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"Photo library permission denied", @"") withTitle:@""];
+        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"photo_permission_denied", @"") withTitle:@""];
         !complete?:complete(NO);
     }else {
         !complete?:complete(YES);

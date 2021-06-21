@@ -102,6 +102,7 @@
 
 @interface TuyaAppTheme (Appearance)
 
++ (NSString *)app_name;
 + (void)reloadAppearance;
 + (ZMJPreferences *)getToolTipGlobalPreference;
 
