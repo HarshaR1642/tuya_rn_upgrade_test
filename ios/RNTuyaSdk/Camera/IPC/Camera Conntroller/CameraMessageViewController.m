@@ -54,6 +54,9 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    if (@available(iOS 13.0, *)) {
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDarkContent;
+    }
     [self updateMessageViewConstrants];
 }
 

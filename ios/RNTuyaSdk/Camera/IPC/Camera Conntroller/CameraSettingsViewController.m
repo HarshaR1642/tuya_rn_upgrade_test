@@ -87,6 +87,10 @@
     [self getDeviceInfo];
     _removeCameraButton.layer.cornerRadius = _removeCameraButton.frame.size.height / 2;
     _removeCameraButton.clipsToBounds = YES;
+    
+    if (@available(iOS 13.0, *)) {
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDarkContent;
+    }
 }
 
 - (NSString *)titleForCenterItem {
@@ -704,11 +708,14 @@
         cell.settingSwitch.onTintColor = [TuyaAppTheme theme].button_color;
         [cell.settingSwitch addTarget:self action:action forControlEvents:UIControlEventValueChanged];
         
+        
+        cell.settingSepratorView.backgroundColor = [UIColor whiteColor];
         return cell;
     } else {
         CameraSettingsTableViewCell *cell = (CameraSettingsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"SettingArrowCell" forIndexPath:indexPath];
         cell.settingArrowLabel.text = [data objectForKey:kTitle];
         [cell.settingArrowButton setTitle:[data objectForKey:kValue] forState:UIControlStateNormal];
+        cell.settingArrowSepratorView.backgroundColor = [UIColor whiteColor];
         return cell;
     }
 }
