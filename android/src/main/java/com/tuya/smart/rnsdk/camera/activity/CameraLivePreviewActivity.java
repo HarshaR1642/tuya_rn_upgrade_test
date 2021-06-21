@@ -266,7 +266,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
             connect();
         } else {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "create device fail");
+            //ToastUtil.shortToast(CameraLivePreviewActivity.this, "create device fail");
+            txt_Retry.setVisibility(View.VISIBLE);
         }
     }
 
@@ -772,7 +773,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                 @Override
                 public void onFailure(BusinessResponse var1, ConfigCameraBean var2, String var3) {
                     Log.d(TAG, "elango-camera live - requestCameraInfo - onFailure : " + var1 + ", " + var2 + ", " + var3);
-                    ToastUtil.shortToast(CameraLivePreviewActivity.this, "get cameraInfo failed");
+                    //ToastUtil.shortToast(CameraLivePreviewActivity.this, "get cameraInfo failed");
+                    txt_Retry.setVisibility(View.VISIBLE);
                     hideProgressDialog();
                 }
 
