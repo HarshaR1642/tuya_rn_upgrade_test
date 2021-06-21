@@ -69,7 +69,7 @@
         [self.settinngsTableView addSubview:_refreshControl];
     }
     
-    self.toolTipArray = @[@"Indicator tool tip", @"This setting flip the doorbell camera in the preview screen.", @"Enable this, a timestamp will be added as the watermark for the doorbell preview.", @"Hibernate Tool Tip", @"This setting enables the doorbell’s night vision.", @"PIR switch Tool tip" ,@"This setting enables the motion detection/ movement in front of the doorbell and has 3 sensitivity levels", @"If Motion detection is on you can choose between 3 sensitivity levels.", @"Sound Detection Tool Tip", @"Sound Detection Sensitivity Tool Tip", @"This Setting let you see the SD card status (available or no SD card attached) / total used / capacity and remaining value", @"SD Recording enables the doorbell recording" ,@"it allows you to select when to trigger doorbell recording. It can be recording all the time or only recording when motion detected." ,@"From here you can change the WiFi network the doorbell is connected with. Activation of a new doorbell requires a WiFi reset.", @"Battery Lock DP Tool Tip", @"Electric power tool tip", @"Electric power remaining tool tip", @"You can select a different doorbell sound for your home."];
+    self.toolTipArray = @[NSLocalizedString(@"indicator_tip", @""), NSLocalizedString(@"flip_screen", @""), NSLocalizedString(@"time_stamp_tip", @""), NSLocalizedString(@"hibernate_tip", @""), NSLocalizedString(@"night_vision_tip", @""), NSLocalizedString(@"pir_tip", @"") ,NSLocalizedString(@"motion_detection_tip", @""), NSLocalizedString(@"motion_sensitivity_tip", @""), NSLocalizedString(@"sound_tip", @""), NSLocalizedString(@"sound_sensitivity_tip", @""), NSLocalizedString(@"sd_card_tip", @""), NSLocalizedString(@"sd_recording_tip", @"") ,NSLocalizedString(@"recording_mode_tip", @"") ,NSLocalizedString(@"reset_wifi", @""), NSLocalizedString(@"battery_tip", @""), NSLocalizedString(@"electric_tip", @""), NSLocalizedString(@"electric_power_tip", @""), NSLocalizedString(@"chime_tip", @"")];
 
 }
 
@@ -142,13 +142,13 @@
 - (IBAction)removeCameraButtonAction:(UIButton *)sender {
     FCAlertView *alert = [[FCAlertView alloc] init];
     [alert showAlertInView:self
-                 withTitle:@"Remove Device"
-              withSubtitle:@"After the device is disconnected, all the device related settings and data will be deleted."
+                 withTitle:NSLocalizedString(@"remove_doorbell_title", @"")
+              withSubtitle:NSLocalizedString(@"remove_doorbell", @"")
            withCustomImage:nil
-       withDoneButtonTitle:@"Remove"
+       withDoneButtonTitle:NSLocalizedString(@"remove_button_title", @"")
                 andButtons:nil];
     
-    [alert addButton:@"Cancel" withActionBlock:nil];
+    [alert addButton:NSLocalizedString(@"cancel", @"") withActionBlock:nil];
     [alert doneActionBlock:^{
         [self removeAction];
     }];
@@ -712,6 +712,11 @@
     } else {
         CameraSettingsTableViewCell *cell = (CameraSettingsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"SettingArrowCell" forIndexPath:indexPath];
         cell.settingArrowLabel.text = [data objectForKey:kTitle];
+        if ([[data objectForKey:kTitle] isEqualToString:@"Reset WiFi"]) {
+            [cell.disclaimerSecondButton setHidden:true];
+        } else {
+            [cell.disclaimerSecondButton setHidden:false];
+        }
         [cell.settingArrowButton setTitle:[data objectForKey:kValue] forState:UIControlStateNormal];
         cell.disclaimerSecondButton.tag = [[data objectForKey:kTag] intValue];
         [cell.disclaimerSecondButton setImage:[TuyaAppViewUtil getImageFromBundleWithName:@"information"] forState:UIControlStateNormal];
