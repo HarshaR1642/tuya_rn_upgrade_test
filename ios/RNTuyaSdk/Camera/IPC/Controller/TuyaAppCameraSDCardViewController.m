@@ -120,6 +120,7 @@
     NSMutableAttributedString *attributedText2 = [[NSMutableAttributedString alloc] initWithString:[data objectForKey:kValue] attributes:attribs];
     [cell.textLabel setAttributedText: attributedText1];
     [cell.detailTextLabel setAttributedText:attributedText2];
+    cell.backgroundColor = [UIColor whiteColor];
     return cell;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {

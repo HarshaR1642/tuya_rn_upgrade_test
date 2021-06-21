@@ -366,7 +366,7 @@
     else
         descriptionLabel.font = [UIFont systemFontOfSize:16.0f weight:UIFontWeightRegular];
     
-    descriptionLabel.textColor = self.subTitleColor;
+    descriptionLabel.textColor = [UIColor blackColor];
     if (_subTitle == nil)
         descriptionLabel.attributedText = self.attributedSubTitle;
     else
@@ -386,7 +386,7 @@
     
     titleLabel.font = self.titleFont;
     titleLabel.numberOfLines = 1;
-    titleLabel.textColor = self.titleColor;
+    titleLabel.textColor = [UIColor blackColor];
     if (_title == nil)
         titleLabel.attributedText = self.attributedTitle;
     else
