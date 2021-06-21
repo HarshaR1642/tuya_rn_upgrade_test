@@ -105,6 +105,10 @@
     self.camera.videoView.scaleToFill = NO;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    if (@available(iOS 13.0, *)) {
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    }
 }
 
 
