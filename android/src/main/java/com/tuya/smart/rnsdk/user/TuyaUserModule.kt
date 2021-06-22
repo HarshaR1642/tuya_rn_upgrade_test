@@ -1,5 +1,6 @@
 package com.tuya.smart.rnsdk.user
 
+import android.util.Log
 import com.facebook.react.bridge.*
 import com.tuya.smart.android.user.api.*
 import com.tuya.smart.android.user.bean.User
@@ -209,6 +210,21 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
     /* uid 登陆*/
     @ReactMethod
     fun loginWithUid(params: ReadableMap, promise: Promise) {
+        Log.d("loginWithUid- ", params.toString())
+        try{
+            TuyaHomeSdk.getUserInstance().logout(object : ILogoutCallback {
+                override fun onSuccess() {
+                    //promise.resolve(Constant.SUCCESS)
+                }
+
+                override fun onError(code: String?, error: String?) {
+                    //promise.reject(code, error)
+                }
+
+            })
+        } catch (e : Exception) {
+            e.printStackTrace()
+        }
         if (ReactParamsCheck.checkParams(arrayOf(COUNTRYCODE, UID, PASSWORD), params)) {
             TuyaHomeSdk.getUserInstance().loginWithUid(
                     params.getString(COUNTRYCODE),
