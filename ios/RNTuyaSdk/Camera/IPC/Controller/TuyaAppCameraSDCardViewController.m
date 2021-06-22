@@ -39,7 +39,7 @@
 }
 
 - (NSString *)titleForCenterItem {
-    return @"SD Card";
+    return NSLocalizedString(@"sd_card", @"");
 }
 
 - (void)reloadTable {
@@ -62,13 +62,13 @@
     __weak typeof(self) weakSelf = self;
     FCAlertView *alert = [[FCAlertView alloc] init];
     [alert showAlertInView:self
-                 withTitle:@"Format SD Card ?"
-              withSubtitle:@"Formatting the SD Card will erase all your saved videos"
+                 withTitle:NSLocalizedString(@"format", @"")
+              withSubtitle:NSLocalizedString(@"format_instruction", @"")
            withCustomImage:nil
-       withDoneButtonTitle:@"Format"
+       withDoneButtonTitle:NSLocalizedString(@"format_confirm", @"")
                 andButtons:nil];
     
-    [alert addButton:@"Cancel" withActionBlock:nil];
+    [alert addButton:NSLocalizedString(@"cancel", @"") withActionBlock:nil];
     [alert doneActionBlock:^{
         self.formatButton.enabled = NO;
         [self.dpManager setValue:@(YES) forDP:TuyaSmartCameraSDCardFormatDPName success:^(id result) {

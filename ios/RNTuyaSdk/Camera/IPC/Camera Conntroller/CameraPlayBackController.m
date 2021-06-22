@@ -216,7 +216,7 @@ UITableViewDelegate>
     [self checkPhotoPermision:^(BOOL result) {
         if (result) {
             [self.camera snapShoot:^{
-                [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"photo_save", @"") withTitle:@""];
+                [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"photo_save", @"") withTitle:NSLocalizedString(@"success", @"")];
             } failure:^(NSError *error) {
                 [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"photo_save_fail", @"") withTitle:@""];
             }];
