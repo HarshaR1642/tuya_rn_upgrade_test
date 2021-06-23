@@ -69,6 +69,9 @@
         [self.settinngsTableView addSubview:_refreshControl];
     }
     
+    _settinngsTableView.estimatedRowHeight = 100.0;
+    _settinngsTableView.rowHeight = UITableViewAutomaticDimension;
+    
     self.toolTipArray = @[NSLocalizedString(@"indicator_tip", @""), NSLocalizedString(@"flip_screen", @""), NSLocalizedString(@"time_stamp_tip", @""), NSLocalizedString(@"hibernate_tip", @""), NSLocalizedString(@"night_vision_tip", @""), NSLocalizedString(@"pir_tip", @"") ,NSLocalizedString(@"motion_detection_tip", @""), NSLocalizedString(@"motion_sensitivity_tip", @""), NSLocalizedString(@"sound_tip", @""), NSLocalizedString(@"sound_sensitivity_tip", @""), NSLocalizedString(@"sd_card_tip", @""), NSLocalizedString(@"sd_recording_tip", @"") ,NSLocalizedString(@"recording_mode_tip", @"") ,NSLocalizedString(@"reset_wifi", @""), NSLocalizedString(@"battery_tip", @""), NSLocalizedString(@"electric_tip", @""), NSLocalizedString(@"electric_power_tip", @""), NSLocalizedString(@"chime_tip", @"")];
 
 }
@@ -100,7 +103,7 @@
 }
 
 - (NSString *)titleForCenterItem {
-    return @"Settings";
+    return NSLocalizedString(@"settings", @"");
 }
 
 - (void)removeDeviceFromAsset {
@@ -114,10 +117,10 @@
         } else {
             FCAlertView *alert = [[FCAlertView alloc] init];
             [alert showAlertInView:weakSelf
-                         withTitle:@"Error"
-                      withSubtitle:@"Error in removing the camera."
+                         withTitle:NSLocalizedString(@"error", @"")
+                      withSubtitle:NSLocalizedString(@"error_doorbell", @"")
                    withCustomImage:nil
-               withDoneButtonTitle:@"OK"
+               withDoneButtonTitle:NSLocalizedString(@"ok", @"")
                         andButtons:nil];
         }
     }];
@@ -338,12 +341,12 @@
     
     NSMutableArray *section5 = [NSMutableArray new];
     if ([self.dpManager isSupportDP:@"165"]) {
-        [section5 addObject:@{kTitle: @"Chime Type", kValue: self.chimeSettings, kAction: @"changeChimeSettingsAction", kArrow: @"1", kTag: [NSNumber numberWithInt:17]}];
+        [section5 addObject:@{kTitle: NSLocalizedString(@"chime_type", @""), kValue: self.chimeSettings, kAction: @"changeChimeSettingsAction", kArrow: @"1", kTag: [NSNumber numberWithInt:17]}];
     }
 
     
     if (section5.count > 0) {
-        [dataSource addObject:@{kTitle: @"Bell/Chime Settings", kValue: section5.copy}];
+        [dataSource addObject:@{kTitle: NSLocalizedString(@"chime_settings", @""), kValue: section5.copy}];
     }
 
     
@@ -399,7 +402,7 @@
                            kValue: @"3"}];
     
     __weak typeof(self) weakSelf = self;
-    [self showActionSheet:options withTitle:@"Chime Type" selectedHandler:^(id result) {
+    [self showActionSheet:options withTitle:NSLocalizedString(@"chime_type", @"") selectedHandler:^(id result) {
         [self.dpManager setValue:result forDP:@"165" success:^(id result) {
             NSInteger Number = [result integerValue];
             weakSelf.chimeSettings = [weakSelf returnChimeTypeForValue:Number];
@@ -539,12 +542,12 @@
     FCAlertView *alert = [[FCAlertView alloc] init];
     __weak typeof(self) weakSelf = self;
     [alert showAlertInView:self
-                 withTitle:@"Reset WiFi"
-              withSubtitle:@"Please go to Manage tab then press Add Doorbell and follow the reset instruction video shown on Add Doorbell Screen and add your Doorbell again."
+                 withTitle:NSLocalizedString(@"reset_wifi", @"")
+              withSubtitle:NSLocalizedString(@"reset_instrucrtion", @"")
            withCustomImage:nil
-       withDoneButtonTitle:@"Reset WiFi"
+       withDoneButtonTitle:NSLocalizedString(@"reset_wifi", @"")
                 andButtons:nil];
-    [alert addButton:@"Cancel" withActionBlock:nil];
+    [alert addButton:NSLocalizedString(@"cancel", @"") withActionBlock:nil];
     [alert doneActionBlock:^{
         [weakSelf.navigationController popToRootViewControllerAnimated:YES];
     }];
@@ -699,6 +702,10 @@
     return 40;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewAutomaticDimension;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *data = [[[self.dataSource objectAtIndex:indexPath.section] valueForKey:kValue] objectAtIndex:indexPath.row];
     if ([data objectForKey:kSwitch]) {
@@ -713,11 +720,17 @@
         [cell.disclaimerButton addTarget:self action:@selector(toolTipTaped:) forControlEvents:UIControlEventTouchUpInside];
         cell.disclaimerButton.tag = [[data objectForKey:kTag] intValue];
         cell.settingSepratorView.backgroundColor = [UIColor whiteColor];
+        if ([[data objectForKey:kTitle] isEqualToString:NSLocalizedString(@"ipc_live_page_cstorage_motion_detected", @"")]) {
+            [cell.settingSepratorView setHidden:YES];
+        } else {
+            [cell.settingSepratorView setHidden:NO];
+        }
+        
         return cell;
     } else {
         CameraSettingsTableViewCell *cell = (CameraSettingsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:@"SettingArrowCell" forIndexPath:indexPath];
         cell.settingArrowLabel.text = [data objectForKey:kTitle];
-        if ([[data objectForKey:kTitle] isEqualToString:@"Reset WiFi"]) {
+        if ([[data objectForKey:kTitle] isEqualToString:NSLocalizedString(@"reset_wifi", @"")]) {
             [cell.disclaimerSecondButton setHidden:true];
         } else {
             [cell.disclaimerSecondButton setHidden:false];
