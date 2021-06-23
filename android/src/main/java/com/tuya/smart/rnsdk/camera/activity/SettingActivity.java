@@ -3,6 +3,7 @@ package com.tuya.smart.rnsdk.camera.activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -13,26 +14,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.facebook.react.ReactApplication;
 import com.facebook.react.bridge.ReadableMap;
+import com.spyhunter99.supertooltips.ToolTip;
+import com.spyhunter99.supertooltips.ToolTipManager;
 import com.tuya.smart.android.common.utils.L;
-import com.tuya.smart.android.device.api.IPropertyCallback;
 import com.tuya.smart.home.sdk.TuyaHomeSdk;
 import com.tuya.smart.rnsdk.R;
 import com.tuya.smart.rnsdk.camera.utils.RNOperationHelper;
 import com.tuya.smart.sdk.api.IDevListener;
-import com.tuya.smart.sdk.api.IDeviceListener;
 import com.tuya.smart.sdk.api.IResultCallback;
 import com.tuya.smart.sdk.api.ITuyaDevice;
 import com.tuya.smart.sdk.bean.DeviceBean;
 import com.tuyasmart.camera.devicecontrol.ITuyaCameraDevice;
 import com.tuyasmart.camera.devicecontrol.TuyaCameraDeviceControlSDK;
-import com.tuyasmart.camera.devicecontrol.api.ITuyaCameraDeviceControlCallback;
 import com.tuyasmart.camera.devicecontrol.bean.DpBasicFlip;
 import com.tuyasmart.camera.devicecontrol.bean.DpBasicIndicator;
 import com.tuyasmart.camera.devicecontrol.bean.DpBasicNightvision;
@@ -40,18 +40,9 @@ import com.tuyasmart.camera.devicecontrol.bean.DpBasicOSD;
 import com.tuyasmart.camera.devicecontrol.bean.DpBasicPrivate;
 import com.tuyasmart.camera.devicecontrol.bean.DpMotionSensitivity;
 import com.tuyasmart.camera.devicecontrol.bean.DpMotionSwitch;
-import com.tuyasmart.camera.devicecontrol.bean.DpRestore;
-import com.tuyasmart.camera.devicecontrol.bean.DpSDFormat;
-import com.tuyasmart.camera.devicecontrol.bean.DpSDFormatStatus;
 import com.tuyasmart.camera.devicecontrol.bean.DpSDRecordModel;
 import com.tuyasmart.camera.devicecontrol.bean.DpSDRecordSwitch;
 import com.tuyasmart.camera.devicecontrol.bean.DpSDStatus;
-import com.tuyasmart.camera.devicecontrol.bean.DpSDStorage;
-import com.tuyasmart.camera.devicecontrol.bean.DpWirelessBatterylock;
-import com.tuyasmart.camera.devicecontrol.bean.DpWirelessElectricity;
-import com.tuyasmart.camera.devicecontrol.bean.DpWirelessLowpower;
-import com.tuyasmart.camera.devicecontrol.bean.DpWirelessPowermode;
-import com.tuyasmart.camera.devicecontrol.model.DpNotifyModel;
 import com.tuyasmart.camera.devicecontrol.model.MotionSensitivityMode;
 import com.tuyasmart.camera.devicecontrol.model.NightStatusMode;
 import com.tuyasmart.camera.devicecontrol.model.RecordMode;
@@ -76,7 +67,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private String devId;
 
     private ToggleButton toggle_FlipScreen, toggle_OSD, toggle_MotionDetection, toggle_LocalRecording;
-    private TextView txt_NightVision, txt_ChimeType, txt_MotionSensitivity, txt_RecordType;
+    private TextView txt_NightVision, txt_ChimeType, txt_MotionSensitivity, txt_RecordType, txt_StorageSetting;
     private LinearLayout layout_MotionSensitivity, layout_RecordType, layout_StorageSetting, layout_ResetWifi;
     private Button btn_RemoveDevice;
 
@@ -84,10 +75,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private ProgressDialog progressDialog;
     private RNOperationHelper rnOperationHelper;
 
+    ToolTipManager tooltips;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+
+        tooltips = new ToolTipManager(this);
 
         handler = new Handler();
 
@@ -122,6 +117,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         txt_ChimeType = findViewById(R.id.txt_ChimeType);
         txt_RecordType = findViewById(R.id.txt_RecordType);
         txt_MotionSensitivity = findViewById(R.id.txt_MotionSensitivity);
+        txt_StorageSetting = findViewById(R.id.txt_StorageSetting);
 
         btn_RemoveDevice = findViewById(R.id.btn_RemoveDevice);
 
@@ -132,6 +128,76 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         layout_StorageSetting.setOnClickListener(this);
         layout_ResetWifi.setOnClickListener(this);
         btn_RemoveDevice.setOnClickListener(this);
+
+        findViewById(R.id.tooltip_flipScreen).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "This setting flip the doorbell camera in the preview screen");
+            }
+        });
+
+        findViewById(R.id.tooltip_timeWatermark).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "Enable this, a timestamp will be added as the watermark for the doorbell preview");
+            }
+        });
+
+        findViewById(R.id.tooltip_nightVision).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "This setting enables the doorbell’s night vision");
+            }
+        });
+
+        findViewById(R.id.tooltip_motionDetect).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "Enable this, any motion detected within the doorbell sensitivity range will be sent to users via push notifications and recorded if SD card recording is enabled");
+            }
+        });
+
+        findViewById(R.id.tooltip_motionSensitivity).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "This setting decides the sensitivity level of the doorbell motion detection");
+            }
+        });
+
+        findViewById(R.id.tooltip_storageSetting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "An indicator SD card status. \"Normally\" indicates the SD card is working properly; “Not available” indicates that the SD might be missing, corrupted, or needs to be formatted, etc.");
+            }
+        });
+
+        findViewById(R.id.tooltip_sdRecord).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "Enable this, the doorbell will record activity based on the recording mode");
+            }
+        });
+
+        findViewById(R.id.tooltip_recordMode).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "It allows you to select when to trigger doorbell recording. It can be recording all the time or only recording when motion detected");
+            }
+        });
+
+        findViewById(R.id.tooltip_resetWifi).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "Reset wifi of the doorbell requires re-add the doorbell to the account.");
+            }
+        });
+
+        findViewById(R.id.tooltip_chimeType).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTooltip(v, "Mechanical type requires the doorbell to be wired to the indoor bell sound system; Digital type does not require that.");
+            }
+        });
 
         ReactApplication rApp = (ReactApplication) getApplication();
         rnOperationHelper = new RNOperationHelper(rApp, SettingActivity.this, new RNOperationHelper.OperationCallback() {
@@ -190,11 +256,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private void initAllDevicePointControl() {
 
         DeviceBean mCameraDevice =  TuyaHomeSdk.getDataInstance().getDeviceBean(devId);
-        Log.d(TAG, "elango-mCameraDevice getDps:" + mCameraDevice.getDps());
-        for (Map.Entry<String, Object> entry : mCameraDevice.getDps().entrySet()) {
-            System.out.println(entry.getKey() + "/" + entry.getValue());
-            if(entry.getKey() != null && entry.getValue() != null)
-                updateSetting(entry.getKey(), entry.getValue().toString());
+        if(mCameraDevice != null) {
+            Log.d(TAG, "elango-mCameraDevice getDps:" + mCameraDevice.getDps());
+            for (Map.Entry<String, Object> entry : mCameraDevice.getDps().entrySet()) {
+                System.out.println(entry.getKey() + "/" + entry.getValue());
+                if (entry.getKey() != null && entry.getValue() != null)
+                    updateSetting(entry.getKey(), entry.getValue().toString());
+            }
         }
 
 
@@ -385,6 +453,24 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     txt_MotionSensitivity.setText("High");
                     break;
             }
+        } else if(key.equalsIgnoreCase(DpSDStatus.ID)) {
+            switch (Integer.parseInt(value)) {
+                case 1: // Normally
+                    txt_StorageSetting.setText("Normally");
+                    break;
+                case 2: // Abnormally
+                    txt_StorageSetting.setText("Abnormally");
+                    break;
+                case 3: // Insufficient capacity
+                    txt_StorageSetting.setText("Insufficient capacity");
+                    break;
+                case 4: // Formatting...
+                    txt_StorageSetting.setText("Formatting...");
+                    break;
+                case 5: // No storage
+                    txt_StorageSetting.setText("No storage");
+                    break;
+            }
         } else if(key.equalsIgnoreCase("165")) {
             switch (Integer.parseInt(value)) {
                 case 0: // none
@@ -432,6 +518,25 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         if (mTuyaDevice != null) {
             mTuyaDevice.onDestroy();
         }
+
+        try {
+            tooltips.onDestroy();
+            tooltips = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showTooltip(View v, String msg) {
+        ToolTip toolTip = new ToolTip()
+                .withText(msg)
+                //.withColor(Color.RED)
+                //.withColor(ResourcesCompat.getColor(getResources(), R.color.tuya_txt_gunmetal, null))
+                .withAnimationType(ToolTip.AnimationType.FROM_MASTER_VIEW)
+                .withShowBelow()
+                .withPosition(ToolTip.Position.LEFT)
+                .withShadow();
+        tooltips.showToolTip(toolTip, v);
     }
 
     @Override
@@ -452,7 +557,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         } else if (R.id.layout_ResetWifi == v.getId()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
             builder.setTitle("Reset WiFi");
-            builder.setMessage("Please go to Manage tab then Add Camera and follow the reset instruction video shown on Add Camera screen and add your camera again.");
+            builder.setMessage("Please go to Manage tab then Add Doorbell and follow the reset instruction video shown on Add Doorbell screen and add your doorbell again.");
             builder.setPositiveButton("Reset WiFi", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
@@ -472,8 +577,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             Log.d(TAG, "elango-RemoveDevice devId:" + devId);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
-            builder.setTitle("Remove Device");
-            builder.setMessage("After the device is disconnected, all the device related settings and data will be deleted.");
+            builder.setTitle("Remove Doorbell");
+            builder.setMessage("After the doorbell is disconnected, all the doorbell related settings and data will be deleted.");
             builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
@@ -527,7 +632,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private void openMotionSensitivityDialog() {
         // setup the alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
-        builder.setTitle("Motion Sensitivity");
+        builder.setTitle("Motion Sensitivity Level");
 
         // add a list
         String[] strings = {"Low", "Medium", "High"};

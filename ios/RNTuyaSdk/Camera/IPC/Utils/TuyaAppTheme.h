@@ -45,6 +45,7 @@
 //----------------------------------------//
 
 #import <Foundation/Foundation.h>
+#import <ZMJTipView/ZMJTipView.h>
 
 @interface TuyaAppTheme : NSObject
 
@@ -101,6 +102,8 @@
 
 @interface TuyaAppTheme (Appearance)
 
++ (NSString *)app_name;
 + (void)reloadAppearance;
++ (ZMJPreferences *)getToolTipGlobalPreference;
 
 @end

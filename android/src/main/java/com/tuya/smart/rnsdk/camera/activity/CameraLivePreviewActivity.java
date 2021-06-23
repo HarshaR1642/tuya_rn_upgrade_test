@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -169,7 +170,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             speakTxt.setSelected(false);
             //ToastUtil.shortToast(CameraLivePreviewActivity.this, "stop talk success" + msg.obj);
         } else {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
+            ToastUtil.shortToast(CameraLivePreviewActivity.this, "Two way communication failed");
         }
     }
 
@@ -178,7 +179,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             speakTxt.setSelected(true);
             //ToastUtil.shortToast(CameraLivePreviewActivity.this, "start talk success" + msg.obj);
         } else {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
+            ToastUtil.shortToast(CameraLivePreviewActivity.this, "Two way communication failed");
         }
     }
 
@@ -196,7 +197,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             AlertDialog alert = builder.create();
             alert.show();
         } else {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
+            ToastUtil.shortToast(CameraLivePreviewActivity.this, "Failed to record the video");
         }
     }
 
@@ -214,7 +215,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             AlertDialog alert = builder.create();
             alert.show();
         } else {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
+            ToastUtil.shortToast(CameraLivePreviewActivity.this, "Failed to save the photo");
         }
     }
 
@@ -222,7 +223,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
             muteImg.setSelected(previewMute == ICameraP2P.MUTE);
         } else {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
+            ToastUtil.shortToast(CameraLivePreviewActivity.this, "Failed to mute/unmute");
         }
 
         if(previewMute == ICameraP2P.MUTE) {
@@ -246,7 +247,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
             qualityTv.setText(videoClarity == ICameraP2P.HD ? "HD" : "SD");
         } else {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
+            //ToastUtil.shortToast(CameraLivePreviewActivity.this, "operation fail");
+            ToastUtil.shortToast(CameraLivePreviewActivity.this, "Failed to change the video resolution");
         }
     }
 
@@ -264,7 +266,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
             connect();
         } else {
-            ToastUtil.shortToast(CameraLivePreviewActivity.this, "create device fail");
+            //ToastUtil.shortToast(CameraLivePreviewActivity.this, "create device fail");
+            txt_Retry.setVisibility(View.VISIBLE);
         }
     }
 
@@ -357,6 +360,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                 onBackPressed();
             }
         });
+
+        toolbar.setBackground(new ColorDrawable(getResources().getColor(R.color.tuya_header_bg_grey)));
 
         mVideoView = findViewById(R.id.camera_video_view);
         muteImg = findViewById(R.id.camera_mute);
@@ -768,7 +773,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                 @Override
                 public void onFailure(BusinessResponse var1, ConfigCameraBean var2, String var3) {
                     Log.d(TAG, "elango-camera live - requestCameraInfo - onFailure : " + var1 + ", " + var2 + ", " + var3);
-                    ToastUtil.shortToast(CameraLivePreviewActivity.this, "get cameraInfo failed");
+                    //ToastUtil.shortToast(CameraLivePreviewActivity.this, "get cameraInfo failed");
+                    txt_Retry.setVisibility(View.VISIBLE);
                     hideProgressDialog();
                 }
 
@@ -917,7 +923,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                 }
             });
         } else {
-            Constants.requestPermission(CameraLivePreviewActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "Please enable the storage permission in app setting.");
+            Constants.requestPermission(CameraLivePreviewActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "Please enable the storage permission in app setting");
         }
     }
 
@@ -993,7 +999,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
 
                 muteOrUnMute(true);
             } else {
-                Constants.requestPermission(CameraLivePreviewActivity.this, Manifest.permission.RECORD_AUDIO, Constants.EXTERNAL_AUDIO_REQ_CODE, "open_recording");
+                Constants.requestPermission(CameraLivePreviewActivity.this, Manifest.permission.RECORD_AUDIO, Constants.EXTERNAL_AUDIO_REQ_CODE, "Please enable the microphone permission in the app setting");
             }
         }
     }

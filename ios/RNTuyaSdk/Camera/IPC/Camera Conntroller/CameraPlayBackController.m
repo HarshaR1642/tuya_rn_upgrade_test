@@ -18,6 +18,7 @@
 #import "CameraPlaybackTableViewCell.h"
 #import "TuyaAppPermissionUtil.h"
 #import "TuyaAppProgressUtils.h"
+#import "FCAlertView.h"
 
 @interface CameraPlayBackController () <
 TuyaSmartCameraObserver,
@@ -76,15 +77,17 @@ UITableViewDelegate>
     [self.stateLabel setHidden:YES];
     [self.retryButton setHidden: YES];
     [self retryAction];
-    self.title = self.camera.device.deviceModel.name;
+//    self.title = self.camera.device.deviceModel.name;
+    self.title = NSLocalizedString(@"playbackScreen", @"");
     [self.playbackTableView setBackgroundColor:[TuyaAppTheme theme].navbar_bg_color];
     _playbackContentView.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0];
     [self.view setBackgroundColor:[UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0]];
     [self.bottomTabControlView setBackgroundColor:[UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0]];
     self.addLeftBarBackButtonEnabled = YES;
-    [self setRightBarButtonWithImage:@"keyless_filter"];
+    [self setRightBarButtonWithImage:@"calendar"];
     self.camera.videoView.scaleToFill = YES;
     self.noDataAvialbleLabel.textColor = [TuyaAppTheme theme].font_color;
+    self.noDataAvialbleLabel.text = NSLocalizedString(@"ipc_playback_no_records_today", @"");
 }
 
 
@@ -118,15 +121,6 @@ UITableViewDelegate>
     [self retryAction];
 }
 
-- (void)showAlertWithMessage:(NSString *)msg complete:(void(^)(void))complete {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:msg preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"ipc_settings_ok", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        !complete?:complete();
-    }];
-    [alert addAction:action];
-    [self presentViewController:alert animated:YES completion:nil];
-}
-
 #pragma mark - Action
 
 - (void)actionRightBarButton: (id)obj {
@@ -144,7 +138,19 @@ UITableViewDelegate>
     if ([TuyaAppPermissionUtil isPhotoLibraryNotDetermined]) {
         [TuyaAppPermissionUtil requestPhotoPermission:complete];
     }else if ([TuyaAppPermissionUtil isPhotoLibraryDenied]) {
-        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"Photo library permission denied", @"") withTitle:@""];
+        
+        FCAlertView *alert = [[FCAlertView alloc] init];
+        [alert showAlertInView:self
+                     withTitle:@""
+                  withSubtitle:[NSString stringWithFormat:@"%@ %@", [TuyaAppTheme app_name], NSLocalizedString(@"photo_permission_denied", @"")]
+               withCustomImage:nil
+           withDoneButtonTitle: NSLocalizedString(@"settings", @"")
+                    andButtons:nil];
+        [alert addButton:NSLocalizedString(@"cancel", @"") withActionBlock:nil];
+        [alert doneActionBlock:^{
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+        }];
+        
         !complete?:complete(NO);
     }else {
         !complete?:complete(YES);
@@ -154,11 +160,10 @@ UITableViewDelegate>
 - (IBAction)soundButtonAction:(UIButton *)sender {
     [sender setSelected:!sender.isSelected];
     [self.camera enableMute:!self.camera.isMuted success:^{
-        NSLog(@"enable mute success");
 //        [sender setSelected: YES];
     } failure:^(NSError *error) {
 //        [sender setSelected: NO];
-        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"fail", @"") withTitle:@""];
+        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"mute_failed", @"") withTitle:@""];
     }];
 }
 - (IBAction)recodButtonAction:(UIButton *)sender {
@@ -166,17 +171,17 @@ UITableViewDelegate>
         if (result) {
             if (self.camera.isRecording) {
                 [self.camera stopRecord:^{
-                    [TuyaAppProgressUtils showAlertForView:self withMessage:@"A video has been saved to your photo gallery." withTitle:@"Success"];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"video_saved", @"") withTitle:NSLocalizedString(@"success", @"")];
                     [self.recordButton setSelected:NO];
                 } failure:^(NSError *error) {
                     [self.recordButton setSelected:NO];
-                    [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"record failed", @"") withTitle:@""];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"failed_record_playback", @"") withTitle:@""];
                 }];
             }else {
                 [self.camera startRecord:^{
                     [self.recordButton setSelected:YES];
                 } failure:^(NSError *error) {
-                    [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"record failed", @"") withTitle:@""];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"failed_record_playback", @"") withTitle:@""];
                     [self.recordButton setSelected:YES];
                 }];
             }
@@ -193,7 +198,7 @@ UITableViewDelegate>
             [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_pause"] forState: UIControlStateSelected];
         } failure:^(NSError *error) {
             [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_play_playback"] forState: UIControlStateNormal];
-            [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"fail", @"") withTitle:@""];
+            [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"pause_fail", @"") withTitle:@""];
         }];
     }else if (self.camera.isPlaybacking) {
         [self.camera pausePlayback:^{
@@ -201,7 +206,7 @@ UITableViewDelegate>
             self.recordButton.enabled = NO;
             [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_play_playback"] forState: UIControlStateNormal];
         } failure:^(NSError *error) {
-            [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"fail", @"") withTitle:@""];
+            [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"resume_fail", @"") withTitle:@""];
             [self.pauseButton setImage:[TuyaAppViewUtil getOriginalImageFromBundleWithName:@"keyless_pause"] forState: UIControlStateSelected];
         }];
     }
@@ -211,9 +216,9 @@ UITableViewDelegate>
     [self checkPhotoPermision:^(BOOL result) {
         if (result) {
             [self.camera snapShoot:^{
-                [TuyaAppProgressUtils showAlertForView:self withMessage:@"A screenshot has been saved to your photo gallery." withTitle:@""];
+                [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"photo_save", @"") withTitle:NSLocalizedString(@"success", @"")];
             } failure:^(NSError *error) {
-                [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to save" withTitle:@""];
+                [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"photo_save_fail", @"") withTitle:@""];
             }];
         }
     }];

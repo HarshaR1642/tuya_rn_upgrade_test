@@ -3,6 +3,7 @@ package com.tuya.smart.rnsdk.camera.activity;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,6 +79,7 @@ import static com.tuya.smart.rnsdk.utils.Constant.MSG_MUTE;
 public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCameraListener, View.OnClickListener, TuyaCameraView.CreateVideoViewCallback {
 
     private static final String TAG = "CameraPlaybackActivity";
+
     private Toolbar toolbar;
     private TuyaCameraView mVideoView;
     private ImageView muteImg;
@@ -86,6 +89,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
     private Button queryBtn;
     private ImageView record_btn, pauseBtn, photo_btn;
     private TextView txt_NoData;
+    private ProgressBar progressBar_Playback;
 
     private ICameraP2P mCameraP2P;
     private static final int ASPECT_RATIO_WIDTH = 9;
@@ -153,7 +157,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
             AlertDialog alert = builder.create();
             alert.show();
         } else {
-            //ToastUtil.shortToast(CameraPlaybackActivity.this, "operation fail");
+            ToastUtil.shortToast(CameraPlaybackActivity.this, "Failed to record the video");
         }
     }
 
@@ -171,7 +175,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
             AlertDialog alert = builder.create();
             alert.show();
         } else {
-            //ToastUtil.shortToast(CameraPlaybackActivity.this, "operation fail");
+            ToastUtil.shortToast(CameraPlaybackActivity.this, "Failed to save the photo");
         }
     }
 
@@ -190,6 +194,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
 
                 // to play first item on opening
                 if(timePieceBeans.size() > 0) {
+                    showProgress();
                     mCameraP2P.startPlayBack(timePieceBeans.get(0).getStartTime(),
                             timePieceBeans.get(0).getEndTime(),
                             timePieceBeans.get(0).getStartTime(), new OperationDelegateCallBack() {
@@ -197,12 +202,14 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                                 public void onSuccess(int sessionId, int requestId, String data) {
                                     //isPlayback = true;
                                     setPlayBackFlag(true);
+                                    hideProgress();
                                 }
 
                                 @Override
                                 public void onFailure(int sessionId, int requestId, int errCode) {
                                     //isPlayback = false;
                                     setPlayBackFlag(false);
+                                    hideProgress();
                                 }
                             }, new OperationDelegateCallBack() {
                                 @Override
@@ -289,7 +296,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
         if (msg.arg1 == ARG1_OPERATE_SUCCESS) {
             muteImg.setSelected(mPlaybackMute == ICameraP2P.MUTE);
         } else {
-            ToastUtil.shortToast(CameraPlaybackActivity.this, "operation fail");
+            ToastUtil.shortToast(CameraPlaybackActivity.this, "Failed to mute/unmute");
         }
 
         if(mPlaybackMute == ICameraP2P.MUTE) {
@@ -338,6 +345,9 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                 onBackPressed();
             }
         });
+
+        toolbar.setBackground(new ColorDrawable(getResources().getColor(R.color.tuya_header_bg_grey)));
+
         mVideoView = findViewById(R.id.camera_video_view);
         muteImg = findViewById(R.id.camera_mute);
         dateInputEdt = findViewById(R.id.date_input_edt);
@@ -351,6 +361,8 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
 
         queryRv = findViewById(R.id.query_list);
         txt_NoData = findViewById(R.id.txt_NoData);
+
+        progressBar_Playback = findViewById(R.id.progressBar_Playback);
 
         //播放器view最好宽高比设置16:9
         WindowManager windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
@@ -416,6 +428,26 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
         });*/
     }
 
+    private void showProgress()
+    {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                progressBar_Playback.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void hideProgress()
+    {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                progressBar_Playback.setVisibility(View.GONE);
+            }
+        });
+    }
+
     DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
 
         @Override
@@ -478,6 +510,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
             @Override
             public void onClick(TimePieceBean timePieceBean) {
 
+                showProgress();
                 mCameraP2P.startPlayBack(timePieceBean.getStartTime(),
                         timePieceBean.getEndTime(),
                         timePieceBean.getStartTime(), new OperationDelegateCallBack() {
@@ -485,12 +518,15 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                             public void onSuccess(int sessionId, int requestId, String data) {
                                 //isPlayback = true;
                                 setPlayBackFlag(true);
+                                hideProgress();
                             }
 
                             @Override
                             public void onFailure(int sessionId, int requestId, int errCode) {
                                 //isPlayback = false;
                                 setPlayBackFlag(false);
+                                com.tuya.smart.rnsdk.camera.utils.ToastUtil.shortToast(CameraPlaybackActivity.this, "Failed to start playback");
+                                hideProgress();
                             }
                         }, new OperationDelegateCallBack() {
                             @Override
@@ -610,7 +646,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
 
             @Override
             public void onFailure(int sessionId, int requestId, int errCode) {
-
+                ToastUtil.shortToast(CameraPlaybackActivity.this, "Failed to start playback");
             }
         });
     }
@@ -624,7 +660,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
 
             @Override
             public void onFailure(int sessionId, int requestId, int errCode) {
-
+                ToastUtil.shortToast(CameraPlaybackActivity.this, "Failed to pause playback");
             }
         });
     }
@@ -711,7 +747,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                     });
                     recordStatue(true);
                 } else {
-                    Constants.requestPermission(CameraPlaybackActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "Please enable the storage permission in app setting.");
+                    Constants.requestPermission(CameraPlaybackActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "Please enable the storage permission in app setting");
                 }
             } else {
                 mCameraP2P.stopRecordLocalMp4(new OperationDelegateCallBack() {
@@ -756,7 +792,7 @@ public class CameraPlaybackActivity extends AppCompatActivity implements OnP2PCa
                 }
             });
         } else {
-            Constants.requestPermission(CameraPlaybackActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "Please enable the storage permission in app setting.");
+            Constants.requestPermission(CameraPlaybackActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, Constants.EXTERNAL_STORAGE_REQ_CODE, "Please enable the storage permission in app setting");
         }
     }
 

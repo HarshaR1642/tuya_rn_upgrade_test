@@ -38,6 +38,7 @@
     _refreshControl = [[UIRefreshControl alloc]init];
     [_refreshControl setTintColor:[TuyaAppTheme theme].button_color];
     self.noDataLabel.textColor = [TuyaAppTheme theme].font_color;
+    [self.noDataLabel setText:NSLocalizedString(@"no_message_available", "")];
     [self.noDataLabel setHidden:YES];
     [_refreshControl addTarget:self action:@selector(refreshTable) forControlEvents:UIControlEventValueChanged];
     if (@available(iOS 10.0, *)) {
@@ -75,7 +76,7 @@
 }
 
 - (NSString *)titleForCenterItem {
-    return @"Messages";
+    return NSLocalizedString(@"message_screen", @"");
 }
 
 - (void)getMessageScehemes {

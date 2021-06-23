@@ -13,9 +13,9 @@
         android:layout_height="?attr/actionBarSize"
         android:gravity="center_vertical"
         style="@style/HeaderBar"
-        app:navigationIcon="@drawable/ic_action_arrow_backward"
+        app:navigationIcon="@drawable/ic_arrow_backward_white"
         app:title="Playback"
-        app:titleTextColor="@color/black"
+        app:titleTextColor="@color/white"
         />
 
     <RelativeLayout
@@ -39,6 +39,16 @@
             android:layout_margin="10dp"
             android:gravity="center"
             android:src="@drawable/camera_mute_btn" />-->
+        <ProgressBar
+            android:id="@+id/progressBar_Playback"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/progress_bg"
+            android:progress="0"
+            />
 
     </RelativeLayout>
 

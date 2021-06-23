@@ -21,6 +21,7 @@
 #import "CameraPlayBackController.h"
 #import "CameraSettingsViewController.h"
 #import "TuyaAppTheme.h"
+#import "FCAlertView.h"
 
 #define kControlTalk        @"talk"
 #define kControlRecord      @"record"
@@ -129,7 +130,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = self.camera.device.deviceModel.name ? self.camera.device.deviceModel.name : @"Video Doorbell Camera";
+    self.title = self.camera.device.deviceModel.name ? self.camera.device.deviceModel.name : NSLocalizedString(@"doorbell", "");
    
     // Do any additional setup after loading the view.
 }
@@ -253,7 +254,7 @@
     [self.camera enableMute:!self.camera.isMuted success:^{
         NSLog(@"enable mute success");
     } failure:^(NSError *error) {
-        [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to mute" withTitle:@""];
+        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"mute_failed", @"") withTitle:@""];
     }];
 }
 
@@ -269,58 +270,66 @@
             }
         }];
     } else if ([TuyaAppPermissionUtil isPhotoLibraryDenied]) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedString(@"Photo library permission denied", @"") preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"ipc_settings_ok", @"") style:UIAlertActionStyleCancel handler:nil];
-        [alert addAction:action];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self noPhotoAccessWithTitle:NSLocalizedString(@"photo_permission_denied", @"")];
     }else {
         [self photoAction];
     }
 }
 
 - (IBAction)recordVideoAction:(UIButton *)sender {
-    [sender setSelected:!sender.isSelected];
     if ([TuyaAppPermissionUtil isPhotoLibraryNotDetermined]) {
         [TuyaAppPermissionUtil requestPhotoPermission:^(BOOL result) {
             if (result) {
-                [self recordAction];
+                [self recordAction:sender];
             }
         }];
     } else if ([TuyaAppPermissionUtil isPhotoLibraryDenied]) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedString(@"Photo library permission denied", @"") preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"ipc_settings_ok", @"") style:UIAlertActionStyleCancel handler:nil];
-        [alert addAction:action];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self noPhotoAccessWithTitle:NSLocalizedString(@"photo_permission_denied", @"")];
     }else {
-        [self recordAction];
+        [self recordAction:sender];
     }
+}
+
+- (void)noPhotoAccessWithTitle:(NSString *)title {
+    FCAlertView *alert = [[FCAlertView alloc] init];
+    [alert showAlertInView:self
+                 withTitle:@""
+              withSubtitle:[NSString stringWithFormat:@"%@ %@", [TuyaAppTheme app_name], title]
+           withCustomImage:nil
+       withDoneButtonTitle: NSLocalizedString(@"settings", @"")
+                andButtons:nil];
+    [alert addButton:NSLocalizedString(@"cancel", @"") withActionBlock:nil];
+    [alert doneActionBlock:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    }];
 }
 
 - (void)photoAction {
     [self checkPhotoPermision:^(BOOL result) {
         if (result) {
             [self.camera snapShoot:^{
-                [TuyaAppProgressUtils showAlertForView:self withMessage:@"A screenshot has been saved to your photo gallery." withTitle:@"Success"];
+                [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"photo_save", @"") withTitle:NSLocalizedString(@"success", @"")];
             } failure:^(NSError *error) {
-                [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to save" withTitle:@"Failed"];
+                [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"photo_save_fail", @"") withTitle:@""];
             }];
         }
     }];
 }
 
-- (void)recordAction {
+- (void)recordAction:(UIButton *)sender {
     [self checkPhotoPermision:^(BOOL result) {
         if (result) {
+            [sender setSelected:!sender.isSelected];
             if (self.camera.isRecording) {
                 [self.camera stopRecord:^{
-                    [TuyaAppProgressUtils showAlertForView:self withMessage:@"A video has been saved to your photo gallery." withTitle:@"Success"];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"video_saved", @"") withTitle:NSLocalizedString(@"success", @"")];
                 } failure:^(NSError *error) {
-                    [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to save" withTitle:@"Error"];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"failed_record_playback", @"") withTitle:@""];
                 }];
             }else {
                 [self.camera startRecord:^{
                 } failure:^(NSError *error) {
-                    [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to save" withTitle:@"Error"];
+                    [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"failed_record_playback", @"") withTitle:@""];
                 }];
             }
         }
@@ -335,10 +344,7 @@
             }
         }];
     }else if ([TuyaAppPermissionUtil microDenied]) {
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"" message:NSLocalizedString(@"Micro permission denied", @"") preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"ipc_settings_ok", @"") style:UIAlertActionStyleCancel handler:nil];
-        [alert addAction:action];
-        [self presentViewController:alert animated:YES completion:nil];
+        [self noPhotoAccessWithTitle:NSLocalizedString(@"micro_permission_denied", @"")];
     }else {
         [self _talkAction];
     }
@@ -351,7 +357,7 @@
         [self.camera enableMute:TRUE success:^{
             NSLog(@"enable mute success");
         } failure:^(NSError *error) {
-            [TuyaAppProgressUtils showAlertForView:self withMessage:@"Failed to mute" withTitle:@""];
+            [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"mute_failed", @"") withTitle:@""];
         }];
     }else {
         [self.camera startTalk:^{
@@ -362,7 +368,7 @@
                 //[self showAlertWithMessage:NSLocalizedString(@"enable mute failed", @"") complete:nil];
             }];
         } failure:^(NSError *error) {
-            [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"ipc_errmsg_mic_failed", @"") withTitle:@""];
+            [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"mute_failed", @"") withTitle:@""];
         }];
     }
 }
@@ -372,20 +378,11 @@
     if ([TuyaAppPermissionUtil isPhotoLibraryNotDetermined]) {
         [TuyaAppPermissionUtil requestPhotoPermission:complete];
     }else if ([TuyaAppPermissionUtil isPhotoLibraryDenied]) {
-        [TuyaAppProgressUtils showAlertForView:self withMessage:NSLocalizedString(@"Photo library permission denied", @"") withTitle:@""];
+        [self noPhotoAccessWithTitle:NSLocalizedString(@"photo_permission_denied", @"")];
         !complete?:complete(NO);
     }else {
         !complete?:complete(YES);
     }
-}
-
-- (void)showAlertWithMessage:(NSString *)msg complete:(void(^)(void))complete {
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:msg preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *action = [UIAlertAction actionWithTitle:NSLocalizedString(@"ipc_settings_ok", @"") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        !complete?:complete();
-    }];
-    [alert addAction:action];
-    [self presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - Application entering background/foreground methods
