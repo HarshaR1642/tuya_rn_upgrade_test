@@ -210,7 +210,7 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
     /* uid 登陆*/
     @ReactMethod
     fun loginWithUid(params: ReadableMap, promise: Promise) {
-        Log.d("loginWithUid- ", params.toString())
+        /*Log.d("loginWithUid- ", params.toString())
         try{
             TuyaHomeSdk.getUserInstance().logout(object : ILogoutCallback {
                 override fun onSuccess() {
@@ -224,7 +224,7 @@ class TuyaUserModule(reactContext: ReactApplicationContext) : ReactContextBaseJa
             })
         } catch (e : Exception) {
             e.printStackTrace()
-        }
+        }*/
         if (ReactParamsCheck.checkParams(arrayOf(COUNTRYCODE, UID, PASSWORD), params)) {
             TuyaHomeSdk.getUserInstance().loginWithUid(
                     params.getString(COUNTRYCODE),
