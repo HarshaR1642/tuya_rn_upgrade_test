@@ -132,35 +132,35 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.tooltip_flipScreen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "This setting flip the doorbell camera in the preview screen");
+                showTooltip(v, "This setting flip the doorbell camera in the preview screen.");
             }
         });
 
         findViewById(R.id.tooltip_timeWatermark).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Enable this, a timestamp will be added as the watermark for the doorbell preview");
+                showTooltip(v, "Enable this, a timestamp will be added as the watermark for the doorbell preview.");
             }
         });
 
         findViewById(R.id.tooltip_nightVision).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "This setting enables the doorbell’s night vision");
+                showTooltip(v, "This setting enables the doorbell’s night vision.");
             }
         });
 
         findViewById(R.id.tooltip_motionDetect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Enable this, any motion detected within the doorbell sensitivity range will be sent to users via push notifications and recorded if SD card recording is enabled");
+                showTooltip(v, "Enable this, any motion detected within the doorbell sensitivity range will be sent to users via push notifications and recorded if SD card recording is enabled.");
             }
         });
 
         findViewById(R.id.tooltip_motionSensitivity).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "This setting decides the sensitivity level of the doorbell motion detection");
+                showTooltip(v, "This setting decides the sensitivity level of the doorbell motion detection.");
             }
         });
 
@@ -174,14 +174,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.tooltip_sdRecord).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Enable this, the doorbell will record activity based on the recording mode");
+                showTooltip(v, "Enable this, the doorbell will record activity based on the recording mode.");
             }
         });
 
         findViewById(R.id.tooltip_recordMode).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "It allows you to select when to trigger doorbell recording. It can be recording all the time or only recording when motion detected");
+                showTooltip(v, "It allows you to select when to trigger doorbell recording. It can be recording all the time or only recording when motion detected.");
             }
         });
 
