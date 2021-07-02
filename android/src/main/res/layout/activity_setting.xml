@@ -489,7 +489,7 @@
                 android:background="@color/tuya_header_bg_white"
                 android:paddingHorizontal="@dimen/dp_20"
                 android:paddingVertical="@dimen/dp_10"
-                android:text="Bell/Chime Settings"
+                android:text="Bell/Chime Connection Settings"
                 android:textColor="@color/tuya_txt_gunmetal"
                 android:textSize="@dimen/tuya_settings_txt_size"
                 android:textStyle="bold" />
@@ -505,7 +505,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Chime Connection Type"
+                    android:text="Chime Type"
                     android:textColor="@color/tuya_txt_gunmetal"
                     android:textSize="@dimen/tuya_settings_txt_size" />
 
