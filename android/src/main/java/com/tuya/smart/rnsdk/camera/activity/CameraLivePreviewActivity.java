@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -88,7 +89,8 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
     private TextView qualityTv;
     private TextView speakTxt, settingTxt, cloudStorageTxt;
     private ProgressDialog progressDialog;
-    private TextView txt_Retry;
+    //private TextView txt_Retry;
+    private LinearLayout layout_Retry, btn_Retry;
 
     private ICameraP2P mCameraP2P;
     private static final int ASPECT_RATIO_WIDTH = 9;
@@ -257,7 +259,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             preview();
         } else {
             //ToastUtil.shortToast(CameraLivePreviewActivity.this, "connect fail");
-            txt_Retry.setVisibility(View.VISIBLE);
+            layout_Retry.setVisibility(View.VISIBLE);
         }
     }
 
@@ -267,7 +269,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
             connect();
         } else {
             //ToastUtil.shortToast(CameraLivePreviewActivity.this, "create device fail");
-            txt_Retry.setVisibility(View.VISIBLE);
+            layout_Retry.setVisibility(View.VISIBLE);
         }
     }
 
@@ -375,13 +377,14 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         cloudStorageTxt = findViewById(R.id.cloud_Txt);
         message_btn =  findViewById(R.id.message_btn);
 
-        txt_Retry =  findViewById(R.id.txt_Retry);
-        SpannableString ss = new SpannableString("Connect failed, click retry");
+        layout_Retry =  findViewById(R.id.layout_Retry);
+        btn_Retry =  findViewById(R.id.btn_Retry);
+        /*SpannableString ss = new SpannableString("Connect failed, click retry");
         ClickableSpan clickableTerms = new ClickableSpan() {
             @Override
             public void onClick(View textView) {
                 // show toast here
-                txt_Retry.setVisibility(View.GONE);
+                layout_Retry.setVisibility(View.GONE);
                 showProgressDialog();
                 getHomeData();
             }
@@ -397,7 +400,16 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         txt_Retry.setText(ss);
         txt_Retry.setMovementMethod(LinkMovementMethod.getInstance());
         //txt_Retry.setHighlightColor(Color.TRANSPARENT);
-        txt_Retry.setVisibility(View.GONE);
+        txt_Retry.setVisibility(View.GONE);*/
+        btn_Retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout_Retry.setVisibility(View.GONE);
+                showProgressDialog();
+                getHomeData();
+            }
+        });
+        layout_Retry.setVisibility(View.GONE);
 
         /*WindowManager windowManager = (WindowManager) this.getSystemService(WINDOW_SERVICE);
         int width = windowManager.getDefaultDisplay().getWidth();
@@ -519,7 +531,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                 //mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_CONNECT, Constants.ARG1_OPERATE_FAIL, errorMsg));
                 ToastUtil.shortToast(CameraLivePreviewActivity.this, errorMsg);
                 hideProgressDialog();
-                txt_Retry.setVisibility(View.VISIBLE);
+                layout_Retry.setVisibility(View.VISIBLE);
             }
         });
         TuyaHomeSdk.newHomeInstance(HOME_ID).registerHomeStatusListener(new ITuyaHomeStatusListener() {
@@ -774,7 +786,7 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                 public void onFailure(BusinessResponse var1, ConfigCameraBean var2, String var3) {
                     Log.d(TAG, "elango-camera live - requestCameraInfo - onFailure : " + var1 + ", " + var2 + ", " + var3);
                     //ToastUtil.shortToast(CameraLivePreviewActivity.this, "get cameraInfo failed");
-                    txt_Retry.setVisibility(View.VISIBLE);
+                    layout_Retry.setVisibility(View.VISIBLE);
                     hideProgressDialog();
                 }
 
