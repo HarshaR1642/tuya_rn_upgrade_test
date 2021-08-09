@@ -15,6 +15,9 @@
         <array key="Quicksand-Medium.ttf">
             <string>Quicksand-Medium</string>
         </array>
+        <array key="Quicksand-Regular.otf">
+            <string>Quicksand-Regular</string>
+        </array>
     </customFonts>
     <scenes>
         <!--Camera App View Controller-->
@@ -180,13 +183,26 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xal-1R-hNY">
-                                        <rect key="frame" x="116.5" y="334.5" width="181" height="35"/>
+                                        <rect key="frame" x="142" y="334.5" width="130" height="35"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="35" id="taa-Tj-KpR"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Quicksand-Medium" family="Quicksand Medium" pointSize="15"/>
-                                        <state key="normal" title="Connect failed, click retry">
+                                        <state key="normal" title="Connection Failed!">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tbl-Yu-WWi">
+                                        <rect key="frame" x="132" y="379.5" width="150" height="45"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="150" id="2eM-72-OnA"/>
+                                            <constraint firstAttribute="height" constant="45" id="H9F-Hu-JuB"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Quicksand-Regular" family="Quicksand" pointSize="16"/>
+                                        <inset key="imageEdgeInsets" minX="-10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" title="Tap to retry" image="refresh.png">
+                                            <color key="titleColor" systemColor="systemTealColor"/>
                                         </state>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VHr-Xk-z3D">
@@ -261,10 +277,12 @@
                                         <variation key="heightClass=compact" constant="20"/>
                                     </constraint>
                                     <constraint firstItem="aEn-do-yec" firstAttribute="centerX" secondItem="MPS-GI-8V4" secondAttribute="centerX" id="6ih-ie-i1y"/>
+                                    <constraint firstItem="tbl-Yu-WWi" firstAttribute="centerX" secondItem="Xal-1R-hNY" secondAttribute="centerX" id="891-4T-9qo"/>
                                     <constraint firstItem="Xal-1R-hNY" firstAttribute="centerX" secondItem="lxw-wq-uDM" secondAttribute="centerX" id="98a-sQ-ETf"/>
                                     <constraint firstAttribute="bottom" secondItem="Ifh-pz-vaf" secondAttribute="bottom" id="DUz-gz-s0c"/>
                                     <constraint firstItem="Qib-gR-4E5" firstAttribute="centerY" secondItem="aEn-do-yec" secondAttribute="centerY" id="F5Q-Th-UtG"/>
                                     <constraint firstItem="3Ls-ld-iCS" firstAttribute="centerX" secondItem="lxw-wq-uDM" secondAttribute="centerX" id="FI1-FA-yJX"/>
+                                    <constraint firstItem="tbl-Yu-WWi" firstAttribute="top" secondItem="Xal-1R-hNY" secondAttribute="bottom" constant="10" id="Fd0-Cl-feV"/>
                                     <constraint firstItem="VHr-Xk-z3D" firstAttribute="centerY" secondItem="aEn-do-yec" secondAttribute="centerY" id="Ger-MS-mJR"/>
                                     <constraint firstItem="Ifh-pz-vaf" firstAttribute="leading" secondItem="MPS-GI-8V4" secondAttribute="leading" id="HTl-50-a7A"/>
                                     <constraint firstAttribute="trailing" secondItem="lxw-wq-uDM" secondAttribute="trailing" id="KjM-eO-JSS"/>
@@ -349,6 +367,7 @@
                         <outlet property="scrollView" destination="8he-cd-3n4" id="4kQ-xo-NWg"/>
                         <outlet property="stateLabel" destination="eXy-O6-VyJ" id="DAF-UJ-aRj"/>
                         <outlet property="superContentView" destination="VxQ-1r-EeE" id="7gK-JM-Nfh"/>
+                        <outlet property="tabToRetryButton" destination="tbl-Yu-WWi" id="NiJ-9q-Xmh"/>
                         <outlet property="takePhotoButton" destination="mmF-ff-Uur" id="bJ6-8r-MBt"/>
                         <outlet property="talkButton" destination="aEn-do-yec" id="2EK-IG-LUk"/>
                         <outlet property="tempUiImageView" destination="K7m-B4-w72" id="1KC-Q2-eRt"/>
@@ -1026,6 +1045,7 @@
         <image name="keyless_speak_off.png" width="240" height="90"/>
         <image name="keyless_speak_on.png" width="169" height="69"/>
         <image name="pps_right_arrow.png" width="16" height="30"/>
+        <image name="refresh.png" width="19" height="19"/>
         <image name="ty_camera_control_hd_normal" width="128" height="128"/>
         <image name="ty_camera_control_sd_normal.png" width="30" height="20"/>
         <systemColor name="systemBackgroundColor">
@@ -1033,6 +1053,9 @@
         </systemColor>
         <systemColor name="systemGrayColor">
             <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemTealColor">
+            <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
