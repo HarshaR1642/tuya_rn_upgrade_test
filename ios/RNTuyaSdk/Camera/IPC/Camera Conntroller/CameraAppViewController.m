@@ -146,16 +146,14 @@
 - (void)showLoadingWithTitle:(NSString *)title {
     self.indicatorView.hidden = NO;
     [self.indicatorView startAnimating];
-//    self.stateLabel.hidden = NO;
-    [self.tabToRetryButton setHidden: NO];
-//    self.stateLabel.text = title;
+    self.stateLabel.hidden = NO;
+    self.stateLabel.text = title;
 }
 
 - (void)stopLoading {
     [self.indicatorView stopAnimating];
     self.indicatorView.hidden = YES;
-//    self.stateLabel.hidden = YES;
-    [self.tabToRetryButton setHidden: YES];
+    self.stateLabel.hidden = YES;
 }
 
 - (UIBarButtonItem *)rightSettingButton {
@@ -419,6 +417,7 @@
         } failure:^(NSError *error) {
             [self stopLoading];
             self.retryButton.hidden = NO;
+            self.tabToRetryButton.hidden = NO;
         }];
     }
 
@@ -430,7 +429,7 @@
 
 - (void)retryAction {
     if (!self.camera.device.deviceModel.isOnline) {
-//        self.stateLabel.hidden = NO;
+        self.stateLabel.hidden = YES;
         [self.tabToRetryButton setHidden: NO];
         [self makeButtonEnable:NO];
         self.retryButton.hidden = NO;
@@ -449,11 +448,14 @@
         }else {
             [self stopLoading];
             self.retryButton.hidden = NO;
+            self.tabToRetryButton.hidden = NO;
+            
         }
     }];
     [self showLoadingWithTitle:NSLocalizedString(@"loading", @"")];
     self.retryButton.hidden = YES;
     [self makeButtonEnable:YES];
+    self.tabToRetryButton.hidden = YES;
 }
 
 - (void)connectCamera:(void(^)(BOOL success))complete {
@@ -478,8 +480,10 @@
 
 #pragma mark - TuyaSmartCameraObserver
 - (void)cameraDidDisconnected:(TuyaSmartCamera *)camera {
+    [self stopLoading];
     [self makeButtonEnable:NO];
     self.retryButton.hidden = NO;
+    self.tabToRetryButton.hidden = NO;
 }
 
 - (void)makeButtonEnable: (BOOL)boolValue {
