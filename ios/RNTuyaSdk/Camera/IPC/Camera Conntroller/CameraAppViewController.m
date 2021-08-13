@@ -22,6 +22,7 @@
 #import "CameraSettingsViewController.h"
 #import "TuyaAppTheme.h"
 #import "FCAlertView.h"
+#import <QuartzCore/QuartzCore.h>
 
 #define kControlTalk        @"talk"
 #define kControlRecord      @"record"
@@ -51,6 +52,7 @@
 @property (weak, nonatomic) IBOutlet UIButton                       *hdButton;
 @property (weak, nonatomic) IBOutlet UIScrollView                   *scrollView;
 @property (weak, nonatomic) IBOutlet UIImageView                    *tempUiImageView;
+@property (weak, nonatomic) IBOutlet UIButton                       *tabToRetryButton;
 
 @end
 
@@ -92,10 +94,16 @@
     [self.indicatorView setHidden:YES];
     [self.stateLabel setHidden:YES];
     [self.retryButton setHidden: YES];
+    [self.tabToRetryButton setHidden: YES];
+    [self.tabToRetryButton.layer setBorderWidth:1.0];
+    [self.tabToRetryButton.layer setBorderColor:[UIColor colorWithRed:90.0/255.0 green:200/255.0 blue:250.0/255.0 alpha:1.0].CGColor];
+    [self.tabToRetryButton.layer setCornerRadius:self.tabToRetryButton.frame.size.height / 2];
+    [self.tabToRetryButton setClipsToBounds:TRUE];
     _superContentView.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0];
     _bottomControlView.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0];
     self.addLeftBarBackButtonEnabled = YES;
-    [self.retryButton addTarget:self action:@selector(retryConnect) forControlEvents:UIControlEventTouchUpInside];
+//    [self.retryButton addTarget:self action:@selector(retryConnect) forControlEvents:UIControlEventTouchUpInside];
+    [self.tabToRetryButton addTarget:self action:@selector(retryConnect) forControlEvents:UIControlEventTouchUpInside];
     [self.topBarView setHidden:YES];
     [self.hdButton addTarget:self action:@selector(hdAction) forControlEvents:UIControlEventTouchUpInside];
     self.view.accessibilityLabel = @"CameraAppViewController";
@@ -409,6 +417,7 @@
         } failure:^(NSError *error) {
             [self stopLoading];
             self.retryButton.hidden = NO;
+            self.tabToRetryButton.hidden = NO;
         }];
     }
 
@@ -420,10 +429,11 @@
 
 - (void)retryAction {
     if (!self.camera.device.deviceModel.isOnline) {
-        self.stateLabel.hidden = NO;
+        self.stateLabel.hidden = YES;
+        [self.tabToRetryButton setHidden: NO];
         [self makeButtonEnable:NO];
         self.retryButton.hidden = NO;
-        self.stateLabel.text = NSLocalizedString(@"title_device_offline", @"");
+//        self.stateLabel.text = NSLocalizedString(@"title_device_offline", @"");
         return;
     }
     if ([self isDoorbell]) {
@@ -438,11 +448,14 @@
         }else {
             [self stopLoading];
             self.retryButton.hidden = NO;
+            self.tabToRetryButton.hidden = NO;
+            
         }
     }];
     [self showLoadingWithTitle:NSLocalizedString(@"loading", @"")];
     self.retryButton.hidden = YES;
     [self makeButtonEnable:YES];
+    self.tabToRetryButton.hidden = YES;
 }
 
 - (void)connectCamera:(void(^)(BOOL success))complete {
@@ -467,8 +480,10 @@
 
 #pragma mark - TuyaSmartCameraObserver
 - (void)cameraDidDisconnected:(TuyaSmartCamera *)camera {
+    [self stopLoading];
     [self makeButtonEnable:NO];
     self.retryButton.hidden = NO;
+    self.tabToRetryButton.hidden = NO;
 }
 
 - (void)makeButtonEnable: (BOOL)boolValue {
