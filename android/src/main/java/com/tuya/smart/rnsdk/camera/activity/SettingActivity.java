@@ -17,12 +17,16 @@ import android.widget.ToggleButton;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.facebook.react.ReactApplication;
 import com.facebook.react.bridge.ReadableMap;
-import com.spyhunter99.supertooltips.ToolTip;
-import com.spyhunter99.supertooltips.ToolTipManager;
+import com.skydoves.balloon.ArrowOrientation;
+import com.skydoves.balloon.ArrowPositionRules;
+import com.skydoves.balloon.Balloon;
+import com.skydoves.balloon.BalloonAnimation;
+import com.skydoves.balloon.BalloonSizeSpec;
 import com.tuya.smart.android.common.utils.L;
 import com.tuya.smart.home.sdk.TuyaHomeSdk;
 import com.tuya.smart.rnsdk.R;
@@ -75,14 +79,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private ProgressDialog progressDialog;
     private RNOperationHelper rnOperationHelper;
 
-    ToolTipManager tooltips;
+    // ToolTipManager tooltips;
+    Balloon balloon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        tooltips = new ToolTipManager(this);
+        // tooltips = new ToolTipManager(this);
 
         handler = new Handler();
 
@@ -519,16 +524,23 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             mTuyaDevice.onDestroy();
         }
 
-        try {
+        /*try {
             tooltips.onDestroy();
             tooltips = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+
+        try{
+            if(balloon != null)
+                balloon.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void showTooltip(View v, String msg) {
-        ToolTip toolTip = new ToolTip()
+        /*ToolTip toolTip = new ToolTip()
                 .withText(msg)
                 //.withColor(Color.RED)
                 //.withColor(ResourcesCompat.getColor(getResources(), R.color.tuya_txt_gunmetal, null))
@@ -536,7 +548,32 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 .withShowBelow()
                 .withPosition(ToolTip.Position.LEFT)
                 .withShadow();
-        tooltips.showToolTip(toolTip, v);
+        tooltips.showToolTip(toolTip, v);*/
+
+        balloon = new Balloon.Builder(SettingActivity.this)
+                .setWidth(BalloonSizeSpec.WRAP)
+                .setHeight(BalloonSizeSpec.WRAP)
+                .setArrowSize(10)
+                .setArrowOrientation(ArrowOrientation.TOP)
+                .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                .setArrowPosition(0.5f)
+                .setMarginHorizontal(10)
+                .setPadding(10)
+                .setElevation(4)
+                .setCornerRadius(8f)
+                .setTextSize(16f)
+
+                //.setAlpha(0.9f)
+                .setText(msg)
+                .setTextColor(ContextCompat.getColor(SettingActivity.this, R.color.tuya_txt_gunmetal))
+                //.setTextIsHtml(true)
+                //.setIconDrawable(ContextCompat.getDrawable(SettingActivity.this, R.drawable.ic_profile))
+                .setBackgroundColor(ContextCompat.getColor(SettingActivity.this, R.color.white))
+                //.setOnBalloonClickListener(onBalloonClickListener)
+                .setBalloonAnimation(BalloonAnimation.OVERSHOOT)
+                //.setLifecycleOwner(lifecycleOwner)
+                .build();
+        balloon.showAlignBottom(v);
     }
 
     @Override
