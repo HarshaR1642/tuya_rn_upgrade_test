@@ -132,70 +132,70 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         findViewById(R.id.tooltip_flipScreen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "This setting flip the doorbell camera in the preview screen.");
+                showTooltip(v, "Flip the doorbell camera preview screen.");
             }
         });
 
         findViewById(R.id.tooltip_timeWatermark).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Enable this, a timestamp will be added as the watermark for the doorbell preview.");
+                showTooltip(v, "Enabling this will display a timestamp on the doorbell camera preview feed.");
             }
         });
 
         findViewById(R.id.tooltip_nightVision).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "This setting enables the doorbell’s night vision.");
+                showTooltip(v, "Doorbell camera’s night vision settings.");
             }
         });
 
         findViewById(R.id.tooltip_motionDetect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Enable this, any motion detected within the doorbell sensitivity range will be sent to users via push notifications and recorded if SD card recording is enabled.");
+                showTooltip(v, "Enable motion detection. Any motion detected within the sensor’s range will be recorded if “SD Card Recording” is enabled and you will be notified via push notifications.");
             }
         });
 
         findViewById(R.id.tooltip_motionSensitivity).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "This setting decides the sensitivity level of the doorbell motion detection.");
+                showTooltip(v, "Adjust motion detection sensitivity levels.");
             }
         });
 
         findViewById(R.id.tooltip_storageSetting).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "An indicator SD card status. \"Normally\" indicates the SD card is working properly; “Not available” indicates that the SD might be missing, corrupted, or needs to be formatted, etc.");
+                showTooltip(v, "SD card status indicator. “Normally” indicates that the SD is working properly. “Not Available” indicates that there is an error with the SD card and might need to be formatted, is missing, or is corrupted.");
             }
         });
 
         findViewById(R.id.tooltip_sdRecord).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Enable this, the doorbell will record activity based on the recording mode.");
+                showTooltip(v, "Enabling this will allow the doorbell to record activity based on the selected recording mode.");
             }
         });
 
         findViewById(R.id.tooltip_recordMode).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "It allows you to select when to trigger doorbell recording. It can be recording all the time or only recording when motion detected.");
+                showTooltip(v, "Setting for continuous recording or recording when motion is detected.");
             }
         });
 
         findViewById(R.id.tooltip_resetWifi).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Reset wifi of the doorbell requires re-add the doorbell to the account.");
+                showTooltip(v, "Please go to the Manage tab > Add Doorbell then follow the reset instruction video to re-add your doorbell.");
             }
         });
 
         findViewById(R.id.tooltip_chimeType).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTooltip(v, "Mechanical type requires the doorbell to be wired to the indoor bell sound system; Digital type does not require that.");
+                showTooltip(v, "Mechanical chime type requires the doorbell to be wired to the home doorbell chime system. Digital chime does not require to be wired.");
             }
         });
 
@@ -557,7 +557,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         } else if (R.id.layout_ResetWifi == v.getId()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
             builder.setTitle("Reset WiFi");
-            builder.setMessage("Please go to Manage tab then Add Doorbell and follow the reset instruction video shown on Add Doorbell screen and add your doorbell again.");
+            builder.setMessage("Please go to the Manage tab > Add Doorbell then follow the reset instruction video to re-add your doorbell.");
             builder.setPositiveButton("Reset WiFi", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     dialog.dismiss();
