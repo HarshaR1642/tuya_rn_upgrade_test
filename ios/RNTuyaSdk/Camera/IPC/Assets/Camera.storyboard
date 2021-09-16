@@ -188,7 +188,7 @@
                                             <constraint firstAttribute="height" constant="35" id="taa-Tj-KpR"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="Quicksand-Medium" family="Quicksand Medium" pointSize="15"/>
-                                        <state key="normal" title="Connection Failed!">
+                                        <state key="normal" title="Connection failed!">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                     </button>
