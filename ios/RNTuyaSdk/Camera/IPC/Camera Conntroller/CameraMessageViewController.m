@@ -110,7 +110,7 @@
     NSDateFormatter *formatter = [NSDateFormatter new];
     formatter.dateFormat = @"yyyy-MM-dd"; 
     NSDate *date = [formatter dateFromString:@"2019-09-17"];
-    [self.cameraMessage messagesWithMessageCodes:schemeModel.msgCodes Offset:0 limit:20000 startTime:[date timeIntervalSince1970] endTime:[[NSDate new] timeIntervalSince1970] success:^(NSArray<TuyaSmartCameraMessageModel *> *result) {
+    [self.cameraMessage messagesWithMessageCodes:schemeModel.msgCodes Offset:0 limit:1000 startTime:[date timeIntervalSince1970] endTime:[[NSDate new] timeIntervalSince1970] success:^(NSArray<TuyaSmartCameraMessageModel *> *result) {
         self.messageModelList = result;
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         if (result.count > 0) {
