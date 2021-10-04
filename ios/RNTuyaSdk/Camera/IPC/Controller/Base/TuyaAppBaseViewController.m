@@ -137,7 +137,7 @@
         self.topBarView.rightItem = self.rightTitleItem;
         
     }
-    
+    self.topBarView.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:55.0/255.0 blue:55.0/255.0 alpha:1.0];    
     [self.view addSubview:self.topBarView];
 }
 
