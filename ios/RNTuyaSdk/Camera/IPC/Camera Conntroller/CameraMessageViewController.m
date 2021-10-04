@@ -14,17 +14,20 @@
 #import "ImagePopUpViewController.h"
 #import "MBProgressHUD.h"
 
-@interface CameraMessageViewController () <UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate>
+#define LIMIT 4
+
+@interface CameraMessageViewController () <UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, UIScrollViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView                                *messageTableView;
 @property (weak, nonatomic) IBOutlet UIView                                     *messageContentView;
 @property (nonatomic, strong) TuyaSmartCameraMessage                            *cameraMessage;
 @property (nonatomic, strong) NSArray<TuyaSmartCameraMessageSchemeModel *>      *schemeModels;
-@property (nonatomic, strong) NSArray<TuyaSmartCameraMessageModel *>            *messageModelList;
+@property (nonatomic, strong) NSMutableArray<TuyaSmartCameraMessageModel *>     *messageModelList;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint                         *messageTableViewTopConstraint;
 @property (strong, nonatomic) UIRefreshControl                                  *refreshControl;
 @property (weak, nonatomic) IBOutlet UILabel                                    *noDataLabel;
 
+@property (assign) NSInteger offset;
 
 @end
 
@@ -33,6 +36,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    self.messageModelList = [NSMutableArray new];
+    self.offset = 0;
     [self getMessageScehemes];
     
     _refreshControl = [[UIRefreshControl alloc]init];
@@ -108,12 +113,12 @@
 
 - (void)reloadMessageListWithScheme:(TuyaSmartCameraMessageSchemeModel *)schemeModel {
     NSDateFormatter *formatter = [NSDateFormatter new];
-    formatter.dateFormat = @"yyyy-MM-dd"; 
+    formatter.dateFormat = @"yyyy-MM-dd";
     NSDate *date = [formatter dateFromString:@"2019-09-17"];
-    [self.cameraMessage messagesWithMessageCodes:schemeModel.msgCodes Offset:0 limit:20000 startTime:[date timeIntervalSince1970] endTime:[[NSDate new] timeIntervalSince1970] success:^(NSArray<TuyaSmartCameraMessageModel *> *result) {
-        self.messageModelList = result;
+    [self.cameraMessage messagesWithMessageCodes:schemeModel.msgCodes Offset:self.offset limit:LIMIT startTime:[date timeIntervalSince1970] endTime:[[NSDate new] timeIntervalSince1970] success:^(NSArray<TuyaSmartCameraMessageModel *> *result) {
+        [self.messageModelList addObjectsFromArray:result];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-        if (result.count > 0) {
+        if (self.messageModelList.count > 0) {
             [self.noDataLabel setHidden:YES];
         } else {
             [self.noDataLabel setHidden:NO];
@@ -122,6 +127,17 @@
     } failure:^(NSError *error) {
         NSLog(@"error: %@", error);
     }];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (scrollView == self.messageTableView) {
+        if ((scrollView.contentOffset.y + scrollView.frame.size.height) >= scrollView.contentSize.height) {
+            self.offset = self.messageModelList.count;
+            [self reloadMessageListWithScheme:self.schemeModels.firstObject];
+        }
+    }
 }
 
 
