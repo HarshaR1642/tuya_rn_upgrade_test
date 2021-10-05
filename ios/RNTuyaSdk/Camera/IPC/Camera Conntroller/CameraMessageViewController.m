@@ -14,7 +14,7 @@
 #import "ImagePopUpViewController.h"
 #import "MBProgressHUD.h"
 
-#define LIMIT 4
+#define LIMIT 20
 
 @interface CameraMessageViewController () <UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, UIScrollViewDelegate>
 
