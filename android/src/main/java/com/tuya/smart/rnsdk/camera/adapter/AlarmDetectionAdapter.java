@@ -33,12 +33,17 @@ import javax.crypto.NoSuchPaddingException;
  * Created by huangdaju on 2018/3/5.
  */
 
-public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAdapter.MyViewHolder> {
-
+public class AlarmDetectionAdapter extends RecyclerView.Adapter {
     private Context context;
     private LayoutInflater mInflater;
     private List<CameraMessageBean> cameraMessageBeans;
     private OnItemListener listener;
+
+    // Items type
+    public final int TYPE_ITEM = 0;
+    public final int TYPE_LOAD = 1;
+    OnLoadMoreListener loadMoreListener;
+    boolean isLoading = false, isMoreDataAvailable = true;
 
     String TAG = "AlarmDetectionActivity";
 
@@ -61,38 +66,67 @@ public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAd
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MyViewHolder(mInflater.inflate(R.layout.camera_newui_more_motion_recycle_item, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType==TYPE_ITEM){
+            return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.camera_newui_more_motion_recycle_item, parent, false));
+        }else{
+            return new LoadHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_load,parent,false));
+        }
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        Log.d("elango-onBindViewHolder",position +", getItemCount():" +getItemCount() +", isMoreDataAvailable:" + isMoreDataAvailable +", isLoading:"+isLoading+", loadMoreListener:"+loadMoreListener);
+        if(position>=getItemCount()-1 && isMoreDataAvailable && !isLoading && loadMoreListener!=null){
+            isLoading = true;
+            loadMoreListener.onLoadMore();
+        }
+
         final CameraMessageBean ipcVideoBean = cameraMessageBeans.get(position);
-        holder.mTvStartTime.setText(ipcVideoBean.getDateTime());
-        holder.mTvDescription.setText(ipcVideoBean.getMsgContent());
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (null != listener) {
-                    listener.onLongClick(ipcVideoBean);
+        if(!ipcVideoBean.isLoader()) {
+            MyViewHolder viewHolder = (MyViewHolder) holder;
+            viewHolder.mTvStartTime.setText(ipcVideoBean.getDateTime());
+            viewHolder.mTvDescription.setText(ipcVideoBean.getMsgContent());
+            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (null != listener) {
+                        listener.onLongClick(ipcVideoBean);
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (null != listener) {
-                    listener.onItemClick(ipcVideoBean);
+            });
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (null != listener) {
+                        listener.onItemClick(ipcVideoBean);
+                    }
                 }
-            }
-        });
-        holder.showPicture(ipcVideoBean);
+            });
+            viewHolder.showPicture(ipcVideoBean);
+        }
     }
+
 
     @Override
     public int getItemCount() {
         return cameraMessageBeans.size();
+    }
+
+    class LoadHolder extends RecyclerView.ViewHolder{
+        public LoadHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(cameraMessageBeans.get(position).isLoader()){
+            return TYPE_LOAD;
+        }else{
+            return TYPE_ITEM;
+        }
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -149,5 +183,26 @@ public class AlarmDetectionAdapter extends RecyclerView.Adapter<AlarmDetectionAd
         void onLongClick(CameraMessageBean o);
 
         void onItemClick(CameraMessageBean o);
+    }
+
+    public void setMoreDataAvailable(boolean moreDataAvailable) {
+        isMoreDataAvailable = moreDataAvailable;
+    }
+
+    /* notifyDataSetChanged is final method so we can't override it
+         call adapter.notifyDataChanged(); after update the list
+         */
+    public void notifyDataChanged(){
+        notifyDataSetChanged();
+        isLoading = false;
+    }
+
+
+    public interface OnLoadMoreListener{
+        void onLoadMore();
+    }
+
+    public void setLoadMoreListener(OnLoadMoreListener loadMoreListener) {
+        this.loadMoreListener = loadMoreListener;
     }
 }

@@ -15,6 +15,8 @@ public class CameraMessageBean {
     private boolean isDelete;
     private String msgCode;
 
+    private boolean isLoader = false;
+
     public CameraMessageBean() {
     }
 
@@ -120,5 +122,13 @@ public class CameraMessageBean {
 
     public void setMsgCode(String msgCode) {
         this.msgCode = msgCode;
+    }
+
+    public boolean isLoader() {
+        return isLoader;
+    }
+
+    public void setLoader(boolean loader) {
+        isLoader = loader;
     }
 }
