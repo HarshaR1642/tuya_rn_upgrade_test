@@ -74,7 +74,7 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
     private TextView txt_NoData;
     private AlarmDetectionAdapter adapter;
     private int day, year, month;
-    private int offset = 0;
+    private int offset = 1, limit = 20;
 
     Calendar myCalendar;
     String TAG = "AlarmDetectionActivity";
@@ -125,7 +125,7 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
 
     }
 
-    private void handlAlarmDetectionDateSuccess(Message msg) {
+    private void handlAlarmDetectionDateSuccess(final Message msg) {
         if (null != messageBusiness) {
             long time = DateUtils.getCurrentTime(year, month, day);
             //long startTime = DateUtils.getTodayStart(time);
@@ -138,9 +138,9 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
             object.put("startTime", startTime);
             object.put("endTime", endTime);
             object.put("msgType", 4);
-            object.put("limit", 2000);
-            //object.put("keepOrig", true);
+            object.put("limit", limit);
             object.put("offset", offset);
+            //object.put("keepOrig", true); // encrypted image will receive. not able to decrypt in android
             if (null != selectClassify) {
                 object.put("msgCodes", selectClassify.getMsgCode());
             }
@@ -163,10 +163,39 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
                     } catch (Exception e) {
                         msgList = null;
                     }
+
+                    Log.d("elango-onSuccess", msgList.size()+", offset:" +offset+", msgList:"+msgList );
                     if (msgList != null) {
-                        offset += msgList.size();
-                        mCameraMessageList = msgList;
-                        mHandler.sendMessage(MessageUtil.getMessage(MSG_GET_ALARM_DETECTION, ARG1_OPERATE_SUCCESS));
+
+                        if(offset > 1) {
+                            //remove loading view
+                            mCameraMessageList.remove(mCameraMessageList.size()-1);
+
+                            if(msgList.size()>0){
+                                //add loaded data
+                                mCameraMessageList.addAll(msgList);
+                            }else{//result size 0 means there is no more data available at server
+                                adapter.setMoreDataAvailable(false);
+                                //telling adapter to stop calling load more as no more server data available
+                                //Toast.makeText(context,"No More Data Available",Toast.LENGTH_LONG).show();
+                            }
+                            offset += msgList.size();
+                            adapter.notifyDataChanged();
+                        } else {
+                            offset += msgList.size();
+                            //mCameraMessageList = msgList;
+                            mCameraMessageList.addAll(msgList);
+                            //mHandler.sendMessage(MessageUtil.getMessage(MSG_GET_ALARM_DETECTION, ARG1_OPERATE_SUCCESS));
+                            adapter.notifyDataChanged();
+
+                            if(mCameraMessageList != null && mCameraMessageList.size() > 0) {
+                                queryRv.setVisibility(View.VISIBLE);
+                                txt_NoData.setVisibility(View.GONE);
+                            } else {
+                                queryRv.setVisibility(View.GONE);
+                                txt_NoData.setVisibility(View.VISIBLE);
+                            }
+                        }
                     } else {
                         mHandler.sendMessage(MessageUtil.getMessage(MSG_GET_ALARM_DETECTION, ARG1_OPERATE_FAIL));
                     }
@@ -239,6 +268,27 @@ public class AlarmDetectionActivity extends AppCompatActivity implements View.On
                 intent.putExtra("image", attachPics);
 
                 startActivity(intent);
+            }
+        });
+        adapter.setLoadMoreListener(new AlarmDetectionAdapter.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                queryRv.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("elango-onLoadMore",mCameraMessageList.size() +", limit:" +limit);
+                        if(mCameraMessageList.size() >= limit) {
+                            CameraMessageBean item = new CameraMessageBean();
+                            item.setLoader(true);
+                            mCameraMessageList.add(item);
+                            adapter.notifyItemInserted(mCameraMessageList.size()-1);
+
+                            mHandler.sendEmptyMessage(ALARM_DETECTION_DATE_MONTH_SUCCESS);
+                        }
+                    }
+                });
+                //Calling loadMore function in Runnable to fix the
+                // java.lang.IllegalStateException: Cannot call this method while RecyclerView is computing a layout or scrolling error
             }
         });
         queryRv.setAdapter(adapter);
