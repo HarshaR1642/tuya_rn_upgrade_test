@@ -1,5 +1,6 @@
 package com.tuya.smart.rnsdk.camera.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -58,10 +59,10 @@ public class Constants {
     public static final String INTENT_UID = "intent_uid";
     public static final String INTENT_PASSWD = "intent_passwd";
 
-    public synchronized static boolean hasStoragePermission() {
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "a.log";
+    public synchronized static boolean hasStoragePermission(Context context) {
+        //String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "a.log";
         try {
-            File file = new File(filePath);
+            /*File file = new File(filePath);
             if (!file.exists()) {
                 boolean iscreate = file.createNewFile();
                 if (iscreate) {
@@ -72,6 +73,14 @@ public class Constants {
                 }
             } else {
                 file.delete();
+                return false;
+            }*/
+
+            if (ContextCompat.checkSelfPermission(
+                    context, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                return true;
+            } else {
                 return false;
             }
         } catch (Exception e) {

@@ -3,16 +3,23 @@ package com.tuya.smart.rnsdk.camera.activity;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -73,6 +80,10 @@ import com.tuyasmart.stencil.utils.MessageUtil;
 import com.tuyasmart.stencil.utils.PreferencesUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -205,7 +216,6 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
 
     private void handlesnapshot(Message msg) {
         if (msg.arg1 == Constants.ARG1_OPERATE_SUCCESS) {
-            //ToastUtil.shortToast(CameraLivePreviewActivity.this, "snapshot success " + msg.obj);
             AlertDialog.Builder builder = new AlertDialog.Builder(CameraLivePreviewActivity.this);
             builder.setTitle("Success");
             builder.setMessage("A screenshot has been saved to your photo gallery.");
@@ -863,14 +873,13 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
 
     private void recordClick() {
         if (!isRecording) {
-            if (Constants.hasStoragePermission()) {
-                String picPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Camera/";
-                File file = new File(picPath);
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
-                String fileName = System.currentTimeMillis() + ".mp4";
+            if (Constants.hasStoragePermission(CameraLivePreviewActivity.this)) {
+                File file = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                String picPath = file.getAbsolutePath() + File.separator;
+                //String fileName = System.currentTimeMillis() + ".mp4";
+                String fileName = System.currentTimeMillis() + ""; //extension will automatically added by Tuya SDK
                 videoPath = picPath + fileName;
+                Log.d(TAG, "elango-camera live - record - path : " + videoPath);
                 mCameraP2P.startRecordLocalMp4(picPath, fileName, CameraLivePreviewActivity.this, new OperationDelegateCallBack() {
                     @Override
                     public void onSuccess(int sessionId, int requestId, String data) {
@@ -898,6 +907,22 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
                     isRecording = false;
                     mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_VIDEO_RECORD_OVER, Constants.ARG1_OPERATE_SUCCESS, data));
                     Log.d(TAG, "elango-camera live - stopRecordLocalMp4 - onSuccess : " + sessionId + ", " + requestId + ", " + data);
+
+                    // RB-4281: Added support for scoped storage for android API level 30(android 11) target
+                    File file = new File(videoPath+".mp4"); //extension not added while making the file path
+                    String strFileName = file.getName();
+                    try {
+                        saveVideo(videoPath+".mp4", strFileName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        file.delete();
+                        File f = new File(data);
+                        f.delete();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -912,20 +937,31 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
     }
 
     private void snapShotClick() {
-        if (Constants.hasStoragePermission()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Camera/";
-                File file = new File(path);
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
-                picPath = path;
-            }
+        if (Constants.hasStoragePermission(CameraLivePreviewActivity.this)) {
+            File file = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            picPath = file.getAbsolutePath() + File.separator;
+            Log.d(TAG, "elango-camera live - snapshot - path : " + picPath);
             mCameraP2P.snapshot(picPath, CameraLivePreviewActivity.this, ICameraP2P.PLAYMODE.LIVE, new OperationDelegateCallBack() {
                 @Override
                 public void onSuccess(int sessionId, int requestId, String data) {
                     mHandler.sendMessage(MessageUtil.getMessage(Constants.MSG_SCREENSHOT, Constants.ARG1_OPERATE_SUCCESS, data));
                     Log.d(TAG, "elango-camera live - snapshot - onSuccess : " + sessionId + ", " + requestId + ", " + data);
+
+                    // RB-4281: Added support for scoped storage for android API level 30(android 11) target
+                    File file = new File(data);
+                    String strFileName = file.getName();
+                    Bitmap bitmap = BitmapFactory.decodeFile(data);
+                    try {
+                        saveImage(bitmap, strFileName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        file.delete();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -1235,6 +1271,102 @@ public class CameraLivePreviewActivity extends AppCompatActivity  implements OnP
         }
         // Other 'case' lines to check for other
         // permissions this app might request.
+    }
+
+    private void saveImage(Bitmap bitmap, @NonNull String name) throws IOException {
+        boolean saved;
+        OutputStream fos;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContentResolver resolver = CameraLivePreviewActivity.this.getContentResolver();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
+            contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
+            contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/" + "Doorbell");
+            Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+            fos = resolver.openOutputStream(imageUri);
+        } else {
+            String imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString() + File.separator + "Doorbell";
+            File file = new File(imagesDir);
+            if (!file.exists()) {
+                file.mkdir();
+            }
+
+            //File image = new File(imagesDir, name + ".png");
+            File image = new File(imagesDir, name);
+            fos = new FileOutputStream(image);
+        }
+        saved = bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        fos.flush();
+        fos.close();
+    }
+
+    private void saveVideo(String videoPath, @NonNull String videoFileName) throws IOException {
+        Uri uriSavedVideo;
+        File createdvideo = null;
+        ContentResolver resolver = getContentResolver();
+        //String videoFileName = "video_" + System.currentTimeMillis() + ".mp4";
+        ContentValues valuesvideos;
+        valuesvideos = new ContentValues();
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            valuesvideos.put(MediaStore.Video.Media.RELATIVE_PATH, "DCIM/" + "Doorbell");
+            valuesvideos.put(MediaStore.Video.Media.TITLE, videoFileName);
+            valuesvideos.put(MediaStore.Video.Media.DISPLAY_NAME, videoFileName);
+            valuesvideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+            valuesvideos.put(
+                    MediaStore.Video.Media.DATE_ADDED,
+                    System.currentTimeMillis() / 1000);
+
+            Uri collection =
+                    MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+            uriSavedVideo = resolver.insert(collection, valuesvideos);
+        } else {
+            String directory  = Environment.getExternalStorageDirectory().getAbsolutePath()
+                    + File.separator + Environment.DIRECTORY_DCIM + "/" + "Doorbell";
+            createdvideo = new File(directory, videoFileName);
+
+            valuesvideos.put(MediaStore.Video.Media.TITLE, videoFileName);
+            valuesvideos.put(MediaStore.Video.Media.DISPLAY_NAME, videoFileName);
+            valuesvideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+            valuesvideos.put(
+                    MediaStore.Video.Media.DATE_ADDED,
+                    System.currentTimeMillis() / 1000);
+            valuesvideos.put(MediaStore.Video.Media.DATA, createdvideo.getAbsolutePath());
+
+            uriSavedVideo = getContentResolver().insert(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    valuesvideos);
+        }
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            valuesvideos.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis());
+            valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 1);
+        }
+
+        ParcelFileDescriptor pfd;
+        pfd = getContentResolver().openFileDescriptor(uriSavedVideo, "w");
+
+        FileOutputStream out = new FileOutputStream(pfd.getFileDescriptor());
+        // get the already saved video as fileinputstream
+        File videoFile = new File(videoPath);
+        FileInputStream in = new FileInputStream(videoFile);
+
+        byte[] buf = new byte[8192];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+
+        out.close();
+        in.close();
+        pfd.close();
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            valuesvideos.clear();
+            valuesvideos.put(MediaStore.Video.Media.IS_PENDING, 0);
+            getContentResolver().update(uriSavedVideo, valuesvideos, null, null);
+        }
     }
 }
 
